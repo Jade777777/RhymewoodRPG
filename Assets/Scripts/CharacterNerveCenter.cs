@@ -27,7 +27,7 @@ public class CharacterNerveCenter : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat("Speed", physicalInput.internalVelocity.magnitude);//mov cnc
+        animator.SetFloat("Speed", physicalInput.moveInput.magnitude);//mov cnc
     }
     public void Move(Vector2 input)
     {
