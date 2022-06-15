@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2044576e638cf014fa9e3166ea5ee223, type: 3}
+  m_Name: FastCharacter
+  m_EditorClassIdentifier: 
+  characterBaseStatUpdated: {fileID: 0}
+  primalStats:
+  - name: Vigor
+    flatModifier: 12
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Endurance
+    flatModifier: 12
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Strength
+    flatModifier: 12
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Dexterity
+    flatModifier: 9
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Conviction
+    flatModifier: 6.789
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Move Speed
+    flatModifier: 5
+    multiplyModifiers: []
+    curveModifiers: []
+  emergentStats:
+  - name: Health
+    flatModifier: 300
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Stamina
+    flatModifier: 85
+    multiplyModifiers:
+    - referenceStat: Endurance
+      multiplier: 0.5
+    curveModifiers: []
+  quirkAugur:
+  - name: Physical Damage
+    flatModifier: 0.8
+    multiplyModifiers:
+    - referenceStat: Conviction
+      multiplier: 0
+    curveModifiers: []

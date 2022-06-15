@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e210d4210c62e4d900ddf537ac8899, type: 3}
+  m_Name: Predator
+  m_EditorClassIdentifier: 
+  friendly:
+  - {fileID: 11400000}
+  hostile:
+  - {fileID: 11400000, guid: 81eaf0b876c534044b3d265f735f80f5, type: 2}
+  - {fileID: 11400000, guid: 544d31e4ccd218640b90cef52718d034, type: 2}
+  - {fileID: 11400000, guid: 22a0a2da37164d44588b14446c9bc229, type: 2}
