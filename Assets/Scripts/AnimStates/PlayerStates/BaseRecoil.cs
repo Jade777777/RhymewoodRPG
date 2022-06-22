@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerGroundedMovement : BaseState
+public class BaseRecoil : BaseState
 {
-
 
 }

@@ -26,4 +26,29 @@ public static class JadeUtility
     {
         return new AnimationCurve(new Keyframe(0, value), new Keyframe(1, value));//curves look when the input is to large, so the distance between x1 and x2 doesn't matter.
     }
+
+
+
+    public static T GetComponentInParents<T>(Transform origin)
+    {
+
+        Transform parent = origin.parent;
+        if (parent != null)
+        {
+            if (parent.TryGetComponent<T>(out T component))
+            {
+                return component;
+            }
+            else
+            {
+                Debug.Log("It has worked");
+                return GetComponentInParents<T>(parent);
+            }
+        }
+        else
+        {
+            Debug.Log(parent.name + " does not have a parent with a Character Nerve Center");
+            return default(T);
+        }
+    }
 }

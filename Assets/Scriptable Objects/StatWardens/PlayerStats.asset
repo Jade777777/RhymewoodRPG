@@ -50,8 +50,14 @@ MonoBehaviour:
       multiplier: 0.5
     curveModifiers: []
   quirkAugur:
-  - name: Physical Damage
+  - name: Physical
     flatModifier: 0.8
+    multiplyModifiers:
+    - referenceStat: Conviction
+      multiplier: 0
+    curveModifiers: []
+  - name: typeA
+    flatModifier: 0
     multiplyModifiers:
     - referenceStat: Conviction
       multiplier: 0

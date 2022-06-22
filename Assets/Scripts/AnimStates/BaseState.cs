@@ -182,12 +182,12 @@ public class BaseState : MonoBehaviour
     #endregion
 
     #region Orientation Input
-
+    private bool rotUpdated = false; 
     public void PlayerLookInput(Vector2 input)
     {
         if (this.enabled&&cnc.IsPlayer==true)
         {
-
+            rotUpdated = true;
             Vector2 weightedLookInput = input * cameraInputWeight;
             Vector3 facing = new Vector3(0, weightedLookInput.x, 0) * 0.05f;
             physicalInput.targetRotation = Quaternion.Euler(transform.rotation.eulerAngles + facing);
@@ -202,8 +202,10 @@ public class BaseState : MonoBehaviour
     
     public void NPCLookInput(Vector3 direction)//add in rotation speed
     {
+       
         if (this.enabled&&cnc.IsPlayer == false)
         {
+            rotUpdated = true;
             direction.y = 0f;
             Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
             physicalInput.targetRotation = rot;
@@ -220,8 +222,16 @@ public class BaseState : MonoBehaviour
        
         physicalInput.moveInput = ( Vector3.MoveTowards((physicalInput.moveInput),transform.TransformDirection(inputDirection),smoothMoveInput * Time.deltaTime));
       
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, physicalInput.targetRotation, Time.deltaTime * 360f);
-        //transform.rotation = physicalInput.targetRotation;
+        if(rotUpdated == false)
+        {
+            physicalInput.targetRotation = transform.rotation;
+        }
+        else
+        {
+            rotUpdated = false;
+        }
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, physicalInput.targetRotation, Time.deltaTime * 360f*cameraInputWeight);
+       
     }
     private void LateUpdate()
     {

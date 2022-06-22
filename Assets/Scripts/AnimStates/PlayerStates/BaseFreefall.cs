@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFreefall : BaseState
+public class BaseFreefall : BaseState
 {
 
     protected override void Awake()

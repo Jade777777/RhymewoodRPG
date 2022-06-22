@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDrop : BaseState
+public class BaseJump : BaseState
 {
+    Animator animator;
+    protected override void Awake()
+    {
+        base.Awake();
+        animator = GetComponent<Animator>();
+    }
     protected override void OnEnable()
     {
         base.OnEnable();
-        base.characterController.slopeLimit = 40f;
+        animator.SetFloat("CollisionAngle", 0f);
+        base.characterController.slopeLimit = 180f;
     }
     protected override void OnDisable()
     {

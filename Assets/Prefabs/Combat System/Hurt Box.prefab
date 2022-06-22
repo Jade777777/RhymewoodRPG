@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7701296260793429412}
-  - component: {fileID: -7334305103999787281}
+  - component: {fileID: 1879792480782465433}
   - component: {fileID: -6178901652283271852}
   - component: {fileID: 6771530727532952024}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Hurt Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,8 +34,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &-7334305103999787281
-BoxCollider:
+--- !u!136 &1879792480782465433
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -44,8 +44,9 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-6178901652283271852
 Rigidbody:
@@ -75,3 +76,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b17d7d4fb7ede64a80b6d16f9447452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cnc: {fileID: 0}

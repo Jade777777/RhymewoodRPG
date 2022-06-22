@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerRecoil : BaseState
-{
-
+public class BaseAttack2 : BaseState
+{  
 }

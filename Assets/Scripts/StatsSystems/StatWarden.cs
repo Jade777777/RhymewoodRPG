@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
+
+public delegate void LivingStatEvent();
 public class StatWarden : MonoBehaviour
 {
     public CharacterStats characterStats;
 
     private Dictionary<string, float> livingStats = new(); // 0 represents full health, negative numbers show how much health is missing
 
+    public event LivingStatEvent updateLivingStatEvent;
 
     private void Start()
     {
@@ -26,6 +29,7 @@ public class StatWarden : MonoBehaviour
 
     public float ImpactStat(string stat, float impact, List<string> quirks)
     {
+
         float statFilter = 1f;
         float adjustedImpact = impact;
         foreach (string quirk in quirks)
@@ -41,6 +45,8 @@ public class StatWarden : MonoBehaviour
             }
             float maxStat = characterStats.EmergentStats().TryGetValue(stat, out float value) ? value : 0f;
             livingStats[stat] = Mathf.Clamp(livingStats[stat] + adjustedImpact, -maxStat, 0f);
+
+            updateLivingStatEvent?.Invoke();//********
             return maxStat + livingStats[stat];
         }
         else

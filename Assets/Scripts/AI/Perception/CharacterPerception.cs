@@ -36,7 +36,7 @@ public class CharacterPerception : MonoBehaviour
             if (UpdateSight)
             {
                 float viewRadius = viewDistance / 2;
-                Vector3 viewCenter = transform.position + (transform.forward * (viewRadius+cc.radius))+(cc.center);
+                Vector3 viewCenter = transform.position + (transform.forward * (viewRadius))+(cc.center);//+cc.radius add this to view radius if we dont want the colliders to overlp
                 Collider[] sighted = Physics.OverlapSphere(viewCenter, viewRadius, layerMask, QueryTriggerInteraction.Ignore);
 
 
@@ -46,7 +46,7 @@ public class CharacterPerception : MonoBehaviour
                     Vector3 origin = transform.position + (transform.forward * offset)+cc.center;
                     Vector3 direction = thing.transform.position - transform.position;
 
-                    if (Physics.Raycast(origin, direction,out RaycastHit hitInfo, direction.magnitude)&&hitInfo.collider==thing)
+                    if (Physics.Raycast(origin, direction,out RaycastHit hitInfo, direction.magnitude,layerMask)&&hitInfo.collider==thing)
                     {
                         Debug.DrawRay(origin, direction, Color.red, 0.5f);
                         knowledgeBase.SightCharacter(thing.gameObject);
@@ -63,7 +63,7 @@ public class CharacterPerception : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         float radius = viewDistance / 2;
-        Vector3 origin = transform.position + (transform.forward * (radius+0.4f))+Vector3.up;
+        Vector3 origin = transform.position + (transform.forward * (radius))+Vector3.up;
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(origin, radius);
 

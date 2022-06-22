@@ -57,7 +57,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerDrop
+  m_Name: BaseDrop
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -140,7 +140,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerApex
+  m_Name: BaseApex
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -190,7 +190,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerTestAttack1
+  m_Name: BaseAttack1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -206,7 +206,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: 7400000, guid: 43f19de34d6ed2c4fbf917c0bbfe7cd6, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -430,7 +430,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerSlide
+  m_Name: BaseSlide
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -482,7 +482,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerRecoil
+  m_Name: BaseRecoil
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -509,7 +509,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerDeath
+  m_Name: BaseDeath
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -686,7 +686,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerBlock
+  m_Name: BaseBlock
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -712,7 +712,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerAnimatorController
+  m_Name: BaseCharacterAnimatorController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Speed
@@ -907,7 +907,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerTestAttack2
+  m_Name: BaseAttack2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -970,7 +970,7 @@ AnimatorStateMachine:
     m_Position: {x: 1000, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3747996685480718598}
-    m_Position: {x: 1000, y: 500, z: 0}
+    m_Position: {x: 1010, y: 500, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4796527338382878540}
     m_Position: {x: 1240, y: 300, z: 0}
@@ -1080,7 +1080,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerLanding
+  m_Name: BaseLanding
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1110,7 +1110,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerFalling
+  m_Name: BaseFalling
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1167,7 +1167,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerFreefall
+  m_Name: BaseFreefall
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1193,7 +1193,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerKick
+  m_Name: BaseKick
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1242,7 +1242,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerInteract
+  m_Name: BaseInteract
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1294,7 +1294,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerKnockback
+  m_Name: BaseKnockback
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1368,7 +1368,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerJump
+  m_Name: BaseJump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1424,7 +1424,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerGroundedMovement
+  m_Name: BaseGroundedMovement
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

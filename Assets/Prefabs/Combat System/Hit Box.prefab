@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4006616793337716366}
-  - component: {fileID: 8507516469410578377}
+  - component: {fileID: 3056367006047134945}
   - component: {fileID: -4185891955799250713}
   - component: {fileID: -4930984443667661585}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hit Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,8 +34,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8507516469410578377
-BoxCollider:
+--- !u!136 &3056367006047134945
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -44,8 +44,9 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-4185891955799250713
 Rigidbody:
@@ -75,3 +76,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441cb42e6f4d76544b0e6c41b70f033a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponWarden: {fileID: 0}
+  allQuirks: 1
+  damageQuirks: []
+  multiplier: 1
+  cnc: {fileID: 0}

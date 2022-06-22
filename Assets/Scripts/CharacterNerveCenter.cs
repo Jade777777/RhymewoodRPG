@@ -18,6 +18,7 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         statWarden = GetComponent<StatWarden>();
+        statWarden.updateLivingStatEvent += UpdateLivingStats;
         physicalInput = GetComponent<PhysicalInput>();
         behavior = GetComponent<Behavior>();
         knowledgeBase = GetComponent<KnowledgeBase>();
@@ -83,8 +84,20 @@ public class CharacterNerveCenter : MonoBehaviour
         animator.SetFloat("CollisionAngle", Vector3.Angle(hit.normal, Vector3.up));
     }
 
-
-
+    //Environmental Interaction
+    public void SruckByHitBox(HitBox hitBox)
+    {
+        foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
+        {
+            float val = statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
+        }
+        
+    }
+    public void StrikeHurtBox(HurtBox hurtBox)
+    {
+        if (IsPlayer)
+            Debug.Log(transform.name +" Struck hurtbox " + hurtBox.cnc.transform.name);
+    }
     //stat Warden
     public float ImpactStat(string stat, float impact, List<string> quirks)
     {
@@ -95,8 +108,16 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         statWarden.GetLivingStat(stat, out currentValue, out maxValue);
     }
-
-
+    public void UpdateLivingStats()
+    {
+        statWarden.GetLivingStat("Health", out float currentValue, out float maxValue);
+        if (currentValue <= 0)
+        {
+            animator.SetTrigger("Die");
+        }
+        Debug.Log("Health is now  "+ currentValue );
+    }
+   
     //KnowledgeBase
     public void ImpactAgro(GameObject source,float impact)//impact is the amountof time the character will be agroed for.
     {

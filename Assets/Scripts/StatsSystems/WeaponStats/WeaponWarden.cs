@@ -34,6 +34,11 @@ public class WeaponWarden : MonoBehaviour
     }
 
 
+    private void Awake()
+    {
+        characterStats = JadeUtility.GetComponentInParents<StatWarden>(transform).characterStats;
+        UpdateWeaponStats();
+    }
 
     public void Start()
     {
@@ -44,7 +49,7 @@ public class WeaponWarden : MonoBehaviour
         this.weaponInfusion = weaponInfusion;
         UpdateWeaponStats();
     }
-    public void OnEquip(CharacterStats characterStats)
+    public void SetCharacterStats(CharacterStats characterStats)
     {
         this.characterStats = characterStats;
         UpdateWeaponStats();//use delegate to set weapon stats whenever the player gains new stat points.
@@ -125,8 +130,7 @@ public class WeaponWarden : MonoBehaviour
         //-------------------------------------Final Damage----------------------------------------------
     }
 
-        [SerializeField]
-    public CharacterStats characterStats;
+    private CharacterStats characterStats;
     //------used for calcualtions-----------------------------
     private StatComposite baseFlatDamage;
     private ReferenceStatComposite weaponPrimalAdjustedValue;
