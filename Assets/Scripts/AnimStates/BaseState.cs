@@ -6,17 +6,28 @@ using UnityEngine.InputSystem;
 public class BaseState : MonoBehaviour
 {
     #region Inspector
-    //---------------------------------------------
+    //---------------------------------------------// save these values on awake and reset to default OnEnable.
+    [SerializeField]
     public MovementType movementType = MovementType.Ground;
 
+    [SerializeField]
     [Range(0f, 1f)]
     public float moveInputWeight = 1f;
 
+    [SerializeField]
     [Range(0f, 1f)]
     public float cameraInputWeight = 1f;
 
+    [SerializeField]
     [Range(0f, 1f)]
     public float cameraAnimationWeight = 0.2f;
+
+    [SerializeField]
+    public float turnSpeed = 360;
+
+    [SerializeField]
+    public float smoothMoveInput = 4f;
+
 
     //----------------------------------------------
     #endregion
@@ -28,42 +39,22 @@ public class BaseState : MonoBehaviour
     Transform                       head;
     Transform                       cameraTarget;
     CharacterNerveCenter            cnc;
-
+    AnimatorScriptControl           animatorScriptControl;
     
     public enum MovementType { Ground, Horizontal, Slide, Airborn };
-    public float turnSpeed=360;
-    public float smoothMoveInput =4f;
+
     private Movement movement;
     protected virtual void Awake()
     {
-        switch (movementType)
-        {
-            case MovementType.Ground:
-                movement = () => MoveAllongGround();
-                break;
-            case MovementType.Horizontal:
-                movement = () => MoveHorizontaly();
-                break;
-            case MovementType.Slide:
-                movement = () => Slide();
-                break;
-            case MovementType.Airborn:
-                movement = () => Airborn();
-                break;
-            default:
-                Debug.LogError("Movement Type has not been called");
-                break;
-        }
         physicalInput       = GetComponent<PhysicalInput>();
         characterController = GetComponent<CharacterController>();
-        cnc = GetComponent<CharacterNerveCenter>();
+        cnc                 = GetComponent<CharacterNerveCenter>();
+        animatorScriptControl=GetComponent<AnimatorScriptControl>();
         head                = new List<GameObject>(GameObject.FindGameObjectsWithTag("PlayerHead")).Find(g => g.transform.IsChildOf(this.transform)).transform;
         cameraTarget        = new List<GameObject>(GameObject.FindGameObjectsWithTag("CameraTarget")).Find(g => g.transform.IsChildOf(this.transform)).transform;//GameObject.FindGameObjectsWithTag("CameraTarget")[0].transform;
-
         mainCamera          = Camera.main.transform;
- 
         characterStats = GetComponent<StatWarden>().characterStats;
-        
+
     }
     private void Start()
     {
@@ -76,7 +67,6 @@ public class BaseState : MonoBehaviour
     protected virtual void OnEnable()
     {
     }
-
     protected virtual void OnDisable()
     {
     }
@@ -104,7 +94,7 @@ public class BaseState : MonoBehaviour
     public void MoveInput(Vector2 input)
     {
         
-        Vector2 weightedMoveInput = input * moveInputWeight;
+        Vector2 weightedMoveInput = input * animatorScriptControl.moveInputWeight;
 
         inputDirection = new Vector3(weightedMoveInput.x, 0, weightedMoveInput.y);
         
@@ -188,7 +178,7 @@ public class BaseState : MonoBehaviour
         if (this.enabled&&cnc.IsPlayer==true)
         {
             rotUpdated = true;
-            Vector2 weightedLookInput = input * cameraInputWeight;
+            Vector2 weightedLookInput = input * animatorScriptControl.cameraInputWeight;
             Vector3 facing = new Vector3(0, weightedLookInput.x, 0) * 0.05f;
             physicalInput.targetRotation = Quaternion.Euler(transform.rotation.eulerAngles + facing);
            
@@ -220,7 +210,7 @@ public class BaseState : MonoBehaviour
     void Update()
     {
        
-        physicalInput.moveInput = ( Vector3.MoveTowards((physicalInput.moveInput),transform.TransformDirection(inputDirection),smoothMoveInput * Time.deltaTime));
+        physicalInput.moveInput = ( Vector3.MoveTowards((physicalInput.moveInput),transform.TransformDirection(inputDirection), animatorScriptControl.smoothMoveInput * Time.deltaTime));
       
         if(rotUpdated == false)
         {
@@ -230,12 +220,29 @@ public class BaseState : MonoBehaviour
         {
             rotUpdated = false;
         }
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, physicalInput.targetRotation, Time.deltaTime * 360f*cameraInputWeight);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, physicalInput.targetRotation, Time.deltaTime * animatorScriptControl .turnSpeed* animatorScriptControl.cameraInputWeight);
        
     }
     private void LateUpdate()
     {
-
+        switch (animatorScriptControl.movementType)
+        {
+            case MovementType.Ground:
+                movement = () => MoveAllongGround();
+                break;
+            case MovementType.Horizontal:
+                movement = () => MoveHorizontaly();
+                break;
+            case MovementType.Slide:
+                movement = () => Slide();
+                break;
+            case MovementType.Airborn:
+                movement = () => Airborn();
+                break;
+            default:
+                Debug.LogError("Movement Type has not been called");
+                break;
+        }
 
         movement();
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
@@ -247,7 +254,7 @@ public class BaseState : MonoBehaviour
             camPos = head.TransformPoint(camPos); // change them back to global
 
             Quaternion weightedHeadRotation = head.rotation * Quaternion.Inverse(transform.rotation);
-            weightedHeadRotation = Quaternion.Lerp(Quaternion.identity, weightedHeadRotation, cameraAnimationWeight);
+            weightedHeadRotation = Quaternion.Lerp(Quaternion.identity, weightedHeadRotation, animatorScriptControl.cameraAnimationWeight);
             Quaternion camRot = weightedHeadRotation * cameraTarget.rotation;
 
             mainCamera.SetPositionAndRotation(camPos, camRot);

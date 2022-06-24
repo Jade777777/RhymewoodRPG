@@ -21,6 +21,8 @@ public class PlayerFate : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         spawnPoint = characterInstance.transform.position;
         agent.radius = characterInstance.GetComponent<CharacterController>().radius;
+        cnc = characterInstance.GetComponent<CharacterNerveCenter>();
+        cnc.IsPlayer = true;
     }
 
     private void UpdateIntention()
@@ -32,8 +34,7 @@ public class PlayerFate : MonoBehaviour
 
     private void Start()
     {
-        cnc = characterInstance.GetComponent<CharacterNerveCenter>();
-        cnc.IsPlayer = true;
+
         agent.updatePosition = false;
         agent.speed = cnc.PrimalStats()["Move Speed"];
     }

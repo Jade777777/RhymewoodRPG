@@ -190,8 +190,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6828611147035003804}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.11, y: -0.025, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -200,7 +200,7 @@ Transform:
   - {fileID: 4853337994146303756}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &2868239167230069360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,7 +224,6 @@ MonoBehaviour:
     - primalStat: Endurance
       baseScaling: 0.4
   weaponInfusion: {fileID: 11400000, guid: b5f2c66c7e349f445a8c656b73342baa, type: 2}
-  characterStats: {fileID: 0}
 --- !u!1001 &8412963315721769346
 PrefabInstance:
   m_ObjectHideFlags: 0

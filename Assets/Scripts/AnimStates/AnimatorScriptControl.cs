@@ -9,21 +9,45 @@ public class AnimatorScriptControl : MonoBehaviour
     Animator animator;
     string currentState;
     MonoBehaviour currentScript;
-    void Start()
+
+
+
+
+    // Make this the devault source for the value of base state
+    public BaseState.MovementType movementType = BaseState.MovementType.Ground;
+    [Range(0f, 1f)]
+    public float moveInputWeight = 1f;
+    [Range(0f, 1f)]
+    public float cameraInputWeight = 1f;
+    [Range(0f, 1f)]
+    public float cameraAnimationWeight = 0.2f;
+    public float turnSpeed = 360;
+    public float smoothMoveInput = 4f;
+
+
+
+
+
+
+
+
+
+
+    private void Start()
     {
         MonoBehaviour[] s = GetComponents<BaseState>();
         state = new string[s.Length];
-        for (int i = 0; i< s.Length; i++)
+        for (int i = 0; i < s.Length; i++)
         {
             state[i] = s[i].GetType().ToString();
         }
-        
+
         animator = GetComponent<Animator>();
         currentState = CheckState();
         currentScript = GetComponent(currentState) as MonoBehaviour;
         if (currentScript != null) currentScript.enabled = true;
     }
-    void LateUpdate()
+    private void LateUpdate()
     {
         string newState = CheckState();
         if (currentState != newState)
@@ -31,12 +55,29 @@ public class AnimatorScriptControl : MonoBehaviour
             currentState = newState;
             currentScript.enabled = false;
             currentScript = GetComponent(currentState) as MonoBehaviour;
-            if(currentScript!=null) currentScript.enabled = true;
+            if (currentScript != null)
+            {
+                currentScript.enabled = true;
+                ResetCurrentStateVar();
+            }
         }
     }
-    string CheckState()
+    private void ResetCurrentStateVar()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(currentState)) 
+        BaseState currentState = currentScript as BaseState;
+        movementType = currentState.movementType;
+        moveInputWeight = currentState.moveInputWeight;
+        cameraInputWeight = currentState.cameraInputWeight;
+        cameraAnimationWeight = currentState.cameraAnimationWeight;
+        turnSpeed = currentState.turnSpeed;
+        smoothMoveInput = currentState.smoothMoveInput;
+        // Debug.Log("reset values!" +moveType);
+    }
+
+
+    private string CheckState()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName(currentState))
             return currentState;
 
         foreach (var st in state)
@@ -45,4 +86,32 @@ public class AnimatorScriptControl : MonoBehaviour
         Debug.LogError("Animator not in a recognized state!");
         return "";
     }
+
+
+    public void ASC_SetMovementType(BaseState.MovementType value)
+    {
+        movementType = value;
+    }
+    public void ASC_SetMoveInputWeight01(float value)
+    {
+        moveInputWeight = value;
+    }
+    public void ASC_SetCameraInputWeight01(float value)
+    {
+        cameraInputWeight = value;
+    }
+    public void ASC_SetCameraAnimationWeight01(float value)
+    {
+        cameraAnimationWeight = value;
+    }
+    public void ASC_SetTurnSpeed(float value)
+    {
+        turnSpeed = value;
+    }
+    public void ASC_SetSmoothMoveInput(float value)
+    {
+        smoothMoveInput = value;
+    }
+
 }
+
