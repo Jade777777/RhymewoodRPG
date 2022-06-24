@@ -3407,6 +3407,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: []
+  movementType: 0
+  moveInputWeight: 1
+  cameraInputWeight: 1
+  cameraAnimationWeight: 0.2
+  turnSpeed: 360
+  smoothMoveInput: 4
 --- !u!114 &4042584342670071610
 MonoBehaviour:
   m_ObjectHideFlags: 0

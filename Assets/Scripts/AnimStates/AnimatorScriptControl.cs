@@ -87,7 +87,7 @@ public class AnimatorScriptControl : MonoBehaviour
         return "";
     }
 
-
+    //These values cannot be set during the first frame of the animation or they will be overriden by the default values.
     public void ASC_SetMovementType(BaseState.MovementType value)
     {
         movementType = value;
