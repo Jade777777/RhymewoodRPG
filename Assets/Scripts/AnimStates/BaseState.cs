@@ -93,8 +93,8 @@ public class BaseState : MonoBehaviour
     }
     public void MoveInput(Vector2 input)
     {
-        
-        Vector2 weightedMoveInput = input * animatorScriptControl.moveInputWeight;
+
+        Vector2 weightedMoveInput = input;// * animatorScriptControl.moveInputWeight;
 
         inputDirection = new Vector3(weightedMoveInput.x, 0, weightedMoveInput.y);
         
@@ -210,7 +210,7 @@ public class BaseState : MonoBehaviour
     void Update()
     {
        
-        physicalInput.moveInput = ( Vector3.MoveTowards((physicalInput.moveInput),transform.TransformDirection(inputDirection), animatorScriptControl.smoothMoveInput * Time.deltaTime));
+        physicalInput.moveInput = ( Vector3.MoveTowards((physicalInput.moveInput),transform.TransformDirection(inputDirection * animatorScriptControl.moveInputWeight), animatorScriptControl.smoothMoveInput * Time.deltaTime));
       
         if(rotUpdated == false)
         {
