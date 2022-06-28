@@ -8,7 +8,9 @@ public class EquipedWeapon : MonoBehaviour
     AnimatorOverrideController animatorOverrideController;
 
     [SerializeField]
-    private Weapon equipedWeapon;
+    private Weapon equipedWeapon;//replace with weaponInstance
+    [SerializeField]
+    private WeaponInstance weapon;//this will replace equipedWeapon
 
     [SerializeField]
     private Transform weaponJoint;
@@ -53,6 +55,9 @@ public class EquipedWeapon : MonoBehaviour
 
     private void SetWeapon(Weapon weapon)
     {
+        //TODO:
+        //save weapon infusion.
+
         equipedWeapon = weapon;//save the value of the new weapon
         //instantiate the new weapon model
         modelInstance = Instantiate(equipedWeapon.weaponModel, weaponJoint);

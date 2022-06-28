@@ -145,14 +145,14 @@ public class WeaponWarden : MonoBehaviour
     //total damage is just WeaponBaseDamage+weaponTotalDamage;
 
     [System.Serializable]
-    private struct BaseQuirk// The base damage of the weapon
+    public struct BaseQuirk// The base damage of the weapon
     {
         public string quirkType;// The name of the present damage type (ex. Physical, Fire, Magic)
         public float baseDamage;
         public List<BasePrimalScaling> primalScaling;
     }
     [System.Serializable]
-    private struct BasePrimalScaling// the base scaling of the weapon, scales directly with primal stats;
+    public struct BasePrimalScaling// the base scaling of the weapon, scales directly with primal stats;
     {
         public string primalStat;// The stat name that it scales with (ex. strength, dexterety)
         public float baseScaling;// Flat% valuethis value is multiplied with the WeaponInfusion.Scaling[level] to determine the total scaling
