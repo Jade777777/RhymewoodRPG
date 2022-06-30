@@ -8,7 +8,7 @@ public class AnimatorScriptControl : MonoBehaviour
     string[] state;
     Animator animator;
     string currentState;
-    MonoBehaviour currentScript;
+    BaseState currentScript;
 
 
 
@@ -35,7 +35,7 @@ public class AnimatorScriptControl : MonoBehaviour
 
     private void Start()
     {
-        MonoBehaviour[] s = GetComponents<BaseState>();
+        BaseState[] s = GetComponents<BaseState>();
         state = new string[s.Length];
         for (int i = 0; i < s.Length; i++)
         {
@@ -44,7 +44,7 @@ public class AnimatorScriptControl : MonoBehaviour
 
         animator = GetComponent<Animator>();
         currentState = CheckState();
-        currentScript = GetComponent(currentState) as MonoBehaviour;
+        currentScript = GetComponent(currentState) as BaseState;
         if (currentScript != null) currentScript.enabled = true;
     }
     private void LateUpdate()
@@ -54,7 +54,7 @@ public class AnimatorScriptControl : MonoBehaviour
         {
             currentState = newState;
             currentScript.enabled = false;
-            currentScript = GetComponent(currentState) as MonoBehaviour;
+            currentScript = GetComponent(currentState) as BaseState;
             if (currentScript != null)
             {
                 currentScript.enabled = true;
@@ -64,7 +64,7 @@ public class AnimatorScriptControl : MonoBehaviour
     }
     private void ResetCurrentStateVar()
     {
-        BaseState currentState = currentScript as BaseState;
+        BaseState currentState = currentScript;
         movementType = currentState.movementType;
         moveInputWeight = currentState.moveInputWeight;
         cameraInputWeight = currentState.cameraInputWeight;

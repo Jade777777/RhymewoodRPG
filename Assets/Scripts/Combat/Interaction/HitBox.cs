@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
 public class HitBox : MonoBehaviour
 {
 
@@ -14,26 +15,65 @@ public class HitBox : MonoBehaviour
     List<string> damageQuirks;
     [SerializeField]
     private float multiplier = 1f;
+    [SerializeField]
+    private float knockbackDistance=0f;//the distance the enemy is thrown back after allignment calculations
+    [SerializeField]
+    private float takeGround = 0.2f;//the distance both characters move forward on a strike
     public KnockbackType knockbackType;
 
-    private WeaponWarden weaponWarden;
+
+
+    private EquipedWeapon equipedWeapon;
     public CharacterNerveCenter cnc { get; private set; }
+    public float characterRadius { get; private set; }
+    private float engagementDistance;
     private void Awake()
     {
-        weaponWarden = JadeUtility.GetComponentInParents<WeaponWarden>(transform);
+        Debug.Assert(GetComponent<Collider>().isTrigger == true);
+        Debug.Assert(GetComponent<Rigidbody>().isKinematic == true);
+
+        equipedWeapon = JadeUtility.GetComponentInParents<EquipedWeapon>(transform);
         cnc = JadeUtility.GetComponentInParents<CharacterNerveCenter>(transform);
+        characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
+        engagementDistance = equipedWeapon.equipedWeapon.weapon.engagementDistance; 
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<HurtBox>(out HurtBox hurtBox) && hurtBox.cnc != cnc)
         {
-            cnc.StrikeHurtBox(hurtBox);
+            
+            cnc.StrikeHurtBox(this ,hurtBox);
         }
+    }
+
+    public void GetKnockbackDistance(HurtBox hurtBox, out Vector3 enemyKnockback, out Vector3 selfKnockback)
+    {
+        Vector3 currentOffset = hurtBox.cnc.transform.position - cnc.transform.position;
+        Vector3 direction = currentOffset.normalized;
+        float currentDistance = currentOffset.magnitude-(hurtBox.characterRadius+characterRadius);
+
+ 
+        float desiredChange = engagementDistance - currentDistance;
+
+
+        if (currentDistance < engagementDistance)
+        {
+            selfKnockback = (-desiredChange * 0.5f + takeGround)* direction;
+            enemyKnockback = (desiredChange * 0.5f +knockbackDistance + takeGround) * direction;
+            
+        }
+        else // I'm not sure if i want this, it might make it too easy to chase down enemies?
+        {
+            selfKnockback = (-desiredChange + takeGround) * direction;
+            enemyKnockback = ( 0f +knockbackDistance + takeGround) * direction;
+        }
+
+        
     }
 
     public ReadOnlyDictionary<string, float> GetDamage()
     {
-        return weaponWarden.WeaponTotalDamage();
+        return equipedWeapon.WeaponTotalDamage();
     }
 }
 public enum KnockbackType { Light, Medium, Heavy, Ragdoll}

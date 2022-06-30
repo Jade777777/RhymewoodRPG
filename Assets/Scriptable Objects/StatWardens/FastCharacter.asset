@@ -35,7 +35,7 @@ MonoBehaviour:
     multiplyModifiers: []
     curveModifiers: []
   - name: Move Speed
-    flatModifier: 5
+    flatModifier: 3
     multiplyModifiers: []
     curveModifiers: []
   emergentStats:

@@ -24,6 +24,8 @@ public class PhysicalInput : MonoBehaviour
     public Vector3 lastAttemptedDirection = Vector3.forward;
     public Quaternion targetRotation;
     public Vector3 moveInput;
+
+ 
     private void Awake()
     {
         targetRotation = transform.rotation;
@@ -37,6 +39,8 @@ public class PhysicalInput : MonoBehaviour
     }
 
     private Vector3 lastPos;
+
+
     private void GatherVelocity()
     {
         if (internalVelocity != Vector3.zero) lastAttemptedDirection = internalVelocity;

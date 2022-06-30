@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseJump : BaseState
 {
-    Animator animator;
+    
     protected override void Awake()
     {
         base.Awake();

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CharacterNerveCenter : MonoBehaviour
 {
+    float InputTimeout=0.75f;
+
     Animator animator;
 
     StatWarden statWarden;
@@ -48,24 +50,29 @@ public class CharacterNerveCenter : MonoBehaviour
 
     public void Jump(bool isPressed)
     {
-        animator.SetBool("Jump", isPressed);
+        animator.SetBool("JumpBool", isPressed);
+        if (isPressed)
+        {
+            SetTrigger("JumpTrigger");
+        }
     }
 
 
     public void Attack()
     {
-        animator.SetTrigger("Attack");
+        SetTrigger("Attack");
+        
     }
 
 
     public void Kick()
     {
-        animator.SetTrigger("Kick");//mov cnc
+        SetTrigger("Kick");//mov cnc
     }
 
     public void Interact()
     {
-        animator.SetTrigger("Interact");
+        SetTrigger("Interact");
     }
 
 
@@ -85,18 +92,27 @@ public class CharacterNerveCenter : MonoBehaviour
     }
 
     //Environmental Interaction
-    public void SruckByHitBox(HitBox hitBox)
+    public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
         foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
         {
             float val = statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
         }
+        GetComponent<HitStop>().ActivateHitStop();//0.13 is the default
         
+        hitBox.GetKnockbackDistance(hurtBox, out Vector3 enemyKnockback , out _);
+        GetComponent<HitStop>().ActivateKnockBack(enemyKnockback);
     }
-    public void StrikeHurtBox(HurtBox hurtBox)
+    public void StrikeHurtBox(HitBox hitBox, HurtBox hurtBox)
     {
         if (IsPlayer)
-            Debug.Log(transform.name +" Struck hurtbox " + hurtBox.cnc.transform.name);
+        {
+            Debug.Log(transform.name + " Struck hurtbox " + hurtBox.cnc.transform.name);
+            GetComponent<HitStop>().ActivateHitStop();
+            
+            hitBox.GetKnockbackDistance(hurtBox, out Vector3 _,out Vector3 selfKnockback);
+            GetComponent<HitStop>().ActivateKnockBack(selfKnockback);
+        }
     }
     //stat Warden
     public float ImpactStat(string stat, float impact, List<string> quirks)
@@ -166,8 +182,30 @@ public class CharacterNerveCenter : MonoBehaviour
         return focus;
     }
 
-    
 
+    bool isRunning;
+    string previousName;
+    private void SetTrigger(string name)
+    {
+        if (isRunning && previousName != "") 
+        {
+            StopCoroutine(SetTriggerProcess(previousName));
+            animator.ResetTrigger(previousName);
+        }
+        StartCoroutine(SetTriggerProcess(name));
+        previousName = name;
+    }
+
+
+    IEnumerator SetTriggerProcess(string name)
+    {
+        isRunning = true;
+        animator.SetTrigger(name);
+        yield return new WaitForSeconds(InputTimeout);
+        animator.ResetTrigger(name);
+        isRunning = false;
+        previousName = "";
+    }
 
 
 }

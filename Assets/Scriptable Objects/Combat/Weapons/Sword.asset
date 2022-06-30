@@ -16,3 +16,11 @@ MonoBehaviour:
   attacks:
   - {fileID: 11400000, guid: b9285fd2fc189ed4894d23cf8796e63d, type: 2}
   - {fileID: 11400000, guid: 904eafbd817a8954f91ebe0c2866fb99, type: 2}
+  baseQuirk:
+  - quirkType: Physical
+    baseDamage: 100
+    primalScaling:
+    - primalStat: Strength
+      baseScaling: 0.2
+    - primalStat: Vigor
+      baseScaling: 0.2

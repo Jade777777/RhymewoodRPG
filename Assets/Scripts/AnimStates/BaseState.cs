@@ -32,9 +32,11 @@ public class BaseState : MonoBehaviour
     //----------------------------------------------
     #endregion
 
-    protected CharacterStats            characterStats;
+    protected CharacterStats        characterStats;
     protected CharacterController   characterController;
     protected PhysicalInput         physicalInput;
+    protected Animator              animator;
+    protected HitStop               hitStop;
     Transform                       mainCamera;
     Transform                       head;
     Transform                       cameraTarget;
@@ -46,6 +48,7 @@ public class BaseState : MonoBehaviour
     private Movement movement;
     protected virtual void Awake()
     {
+        animator            = GetComponent<Animator>();
         physicalInput       = GetComponent<PhysicalInput>();
         characterController = GetComponent<CharacterController>();
         cnc                 = GetComponent<CharacterNerveCenter>();
@@ -53,7 +56,8 @@ public class BaseState : MonoBehaviour
         head                = new List<GameObject>(GameObject.FindGameObjectsWithTag("PlayerHead")).Find(g => g.transform.IsChildOf(this.transform)).transform;
         cameraTarget        = new List<GameObject>(GameObject.FindGameObjectsWithTag("CameraTarget")).Find(g => g.transform.IsChildOf(this.transform)).transform;//GameObject.FindGameObjectsWithTag("CameraTarget")[0].transform;
         mainCamera          = Camera.main.transform;
-        characterStats = GetComponent<StatWarden>().characterStats;
+        characterStats      = GetComponent<StatWarden>().characterStats;
+        hitStop             = GetComponent<HitStop>();
 
     }
     private void Start()
@@ -102,6 +106,7 @@ public class BaseState : MonoBehaviour
     #endregion
 
     #region Movement types
+    Vector3 moveDistance;
     protected void MoveAllongGround()
     {
         Vector3 dir = (physicalInput.moveInput);//cameraTarget.TransformDirection
@@ -111,7 +116,7 @@ public class BaseState : MonoBehaviour
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
         
         float targetY = isGrounded ? contactY - transform.position.y : 0;
-        characterController.Move((inputDirOnGround+lastHitPointVelocity) * Time.deltaTime+(Vector3.up*targetY));
+        moveDistance = (inputDirOnGround+lastHitPointVelocity) * Time.deltaTime+(Vector3.up*targetY);
         physicalInput.internalVelocity = dir + lastHitPointVelocity;
     }
 
@@ -121,7 +126,7 @@ public class BaseState : MonoBehaviour
         dir.y = 0f;
         dir = dir.normalized * physicalInput.moveInput.magnitude;
         dir *= characterStats.PrimalStats()["Move Speed"];
-        characterController.Move((dir+lastHitPointVelocity) * Time.deltaTime);
+        moveDistance=(dir+lastHitPointVelocity) * Time.deltaTime;
         physicalInput.internalVelocity = dir + lastHitPointVelocity;
     }
 
@@ -147,7 +152,7 @@ public class BaseState : MonoBehaviour
         targetSlope.Normalize();
         Vector3 slideDir = Vector3.MoveTowards(vel, targetSlope * maxSpeed, acceleration * Time.deltaTime);
 
-        characterController.Move(slideDir*Time.deltaTime);
+        moveDistance=(slideDir*Time.deltaTime);
         physicalInput.internalVelocity = slideDir;
     }
     Vector3 prevVel;
@@ -166,7 +171,7 @@ public class BaseState : MonoBehaviour
 
         Vector3 airMove = Vector3.MoveTowards(vel, dir * speed, acceleration*Time.deltaTime);
         prevVel = airMove*Time.deltaTime;
-        characterController.Move(airMove * Time.deltaTime);
+        moveDistance=(airMove * Time.deltaTime);
         physicalInput.internalVelocity = airMove;
     }
     #endregion
@@ -245,6 +250,8 @@ public class BaseState : MonoBehaviour
         }
 
         movement();
+        characterController.Move((moveDistance+ (hitStop.knockBackVelocity*Time.deltaTime)) * animator.speed);
+
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {
             Vector3 camPos = head.position + cameraTarget.TransformDirection(cOffset);

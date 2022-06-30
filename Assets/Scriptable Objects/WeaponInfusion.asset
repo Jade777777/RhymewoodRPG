@@ -65,6 +65,32 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+  - quirkType: Physical
+    baseDamageAdjustment: -20
+    levelScaling:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 15
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   inPrimalScalingBonus:
   - primalStat: Vigor
     levelScaling:
@@ -72,9 +98,9 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
-        inSlope: 0.033333335
-        outSlope: 0.033333335
+        value: 1.2
+        inSlope: 0.019999998
+        outSlope: 0.019999998
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
@@ -82,8 +108,8 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 15
         value: 1.5
-        inSlope: 0.033333335
-        outSlope: 0.033333335
+        inSlope: 0.019999998
+        outSlope: 0.019999998
         tangentMode: 34
         weightedMode: 0
         inWeight: 0.33333334
