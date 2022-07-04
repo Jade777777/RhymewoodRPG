@@ -19,6 +19,7 @@ public class HitBox : MonoBehaviour
     private float knockbackDistance=0f;//the distance the enemy is thrown back after allignment calculations
     [SerializeField]
     private float takeGround = 0.2f;//the distance both characters move forward on a strike
+
     public KnockbackType knockbackType;
 
 
@@ -50,25 +51,30 @@ public class HitBox : MonoBehaviour
     {
         Vector3 currentOffset = hurtBox.cnc.transform.position - cnc.transform.position;
         Vector3 direction = currentOffset.normalized;
+        
         float currentDistance = currentOffset.magnitude-(hurtBox.characterRadius+characterRadius);
 
- 
+        Vector3 facing =  cnc.transform.forward;
+
         float desiredChange = engagementDistance - currentDistance;
 
 
         if (currentDistance < engagementDistance)
         {
-            selfKnockback = (-desiredChange * 0.5f + takeGround)* direction;
-            enemyKnockback = (desiredChange * 0.5f +knockbackDistance + takeGround) * direction;
+            selfKnockback = (-desiredChange * 0.5f)* direction + (takeGround)* facing;
+            enemyKnockback = (desiredChange * 0.5f)* direction + (knockbackDistance + takeGround) * facing;
             
         }
-        else // I'm not sure if i want this, it might make it too easy to chase down enemies?
+        //else // I'm not sure if i want this, it might make it too easy to chase down enemies?
+        //{
+        //    selfKnockback = (-desiredChange + takeGround) * direction;
+        //    enemyKnockback = ( 0f +knockbackDistance + takeGround) * direction;
+        //}
+        else
         {
-            selfKnockback = (-desiredChange + takeGround) * direction;
-            enemyKnockback = ( 0f +knockbackDistance + takeGround) * direction;
+            selfKnockback = (0f) * direction + (takeGround) * facing;
+            enemyKnockback = (0f) * direction + (knockbackDistance + takeGround) * facing;
         }
-
-        
     }
 
     public ReadOnlyDictionary<string, float> GetDamage()

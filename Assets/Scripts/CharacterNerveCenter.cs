@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterNerveCenter : MonoBehaviour
 {
@@ -107,11 +108,21 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         if (IsPlayer)
         {
+            statWarden.ImpactStat("Health", -20, new List<string>() { "TESTDAMAGE" });
             Debug.Log(transform.name + " Struck hurtbox " + hurtBox.cnc.transform.name);
             GetComponent<HitStop>().ActivateHitStop();
             
             hitBox.GetKnockbackDistance(hurtBox, out Vector3 _,out Vector3 selfKnockback);
             GetComponent<HitStop>().ActivateKnockBack(selfKnockback);
+            
+        }
+    }
+
+    public void Death()
+    {
+        if (IsPlayer)
+        {
+            SceneManager.LoadScene("GameOver");
         }
     }
     //stat Warden
@@ -183,6 +194,9 @@ public class CharacterNerveCenter : MonoBehaviour
     }
 
 
+
+
+    //TODO: Refine and move to utility
     bool isRunning;
     string previousName;
     private void SetTrigger(string name)

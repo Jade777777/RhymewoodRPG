@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: 
   weaponModel: {fileID: 6828611147035003804, guid: 981c101e40e9c7941a2dc6777e9a57d2, type: 3}
+  engagementDistance: 2
   attacks:
   - {fileID: 11400000, guid: b9285fd2fc189ed4894d23cf8796e63d, type: 2}
   - {fileID: 11400000, guid: 904eafbd817a8954f91ebe0c2866fb99, type: 2}

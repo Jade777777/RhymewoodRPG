@@ -37,7 +37,7 @@ public class BaseState : MonoBehaviour
     protected PhysicalInput         physicalInput;
     protected Animator              animator;
     protected HitStop               hitStop;
-    Transform                       mainCamera;
+    CameraController                cameraController;
     Transform                       head;
     Transform                       cameraTarget;
     CharacterNerveCenter            cnc;
@@ -55,7 +55,7 @@ public class BaseState : MonoBehaviour
         animatorScriptControl=GetComponent<AnimatorScriptControl>();
         head                = new List<GameObject>(GameObject.FindGameObjectsWithTag("PlayerHead")).Find(g => g.transform.IsChildOf(this.transform)).transform;
         cameraTarget        = new List<GameObject>(GameObject.FindGameObjectsWithTag("CameraTarget")).Find(g => g.transform.IsChildOf(this.transform)).transform;//GameObject.FindGameObjectsWithTag("CameraTarget")[0].transform;
-        mainCamera          = Camera.main.transform;
+        cameraController          = Camera.main.GetComponent<CameraController>();
         characterStats      = GetComponent<StatWarden>().characterStats;
         hitStop             = GetComponent<HitStop>();
 
@@ -142,7 +142,7 @@ public class BaseState : MonoBehaviour
 
         float acceleration = 9.8f;
         float maxSpeed = 100;
-        Vector3 vel = physicalInput.Velocity;// we use the actual velocity here because we are dealing with large amounts of acceleration.
+        Vector3 vel = physicalInput.internalVelocity;// physicalInput.Velocity;//
         
         vel.y = Mathf.Clamp(vel.y, float.NegativeInfinity, 0);
         vel = Vector3.ClampMagnitude(vel, maxSpeed); 
@@ -264,7 +264,7 @@ public class BaseState : MonoBehaviour
             weightedHeadRotation = Quaternion.Lerp(Quaternion.identity, weightedHeadRotation, animatorScriptControl.cameraAnimationWeight);
             Quaternion camRot = weightedHeadRotation * cameraTarget.rotation;
 
-            mainCamera.SetPositionAndRotation(camPos, camRot);
+            cameraController.SetPositionAndRotation(camPos, camRot);
         }
 
     }

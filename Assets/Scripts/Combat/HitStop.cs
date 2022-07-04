@@ -78,6 +78,7 @@ public class HitStop : MonoBehaviour
             yield return null;
         }
         Debug.Log("Hitstop event has completed");
+        
 
     }
 
