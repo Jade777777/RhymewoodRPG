@@ -55,6 +55,26 @@ public class StatWarden : MonoBehaviour
             return -1f;//-1 is returned if the stat does not exist;
         }
     }
+    public float ImpactStat(string stat, float impact)
+    {
+        if (characterStats.EmergentStats().ContainsKey(stat))
+        {
+            if (!livingStats.ContainsKey(stat))
+            {
+                livingStats.Add(stat, 0f);
+            }
+            float maxStat = characterStats.EmergentStats().TryGetValue(stat, out float value) ? value : 0f;
+            livingStats[stat] = Mathf.Clamp(livingStats[stat] + impact, -maxStat, 0f);
+
+            updateLivingStatEvent?.Invoke();//********
+            return maxStat + livingStats[stat];
+        }
+        else
+        {
+            Debug.LogError("Stat " + stat + " does not exist in " + GetType().Name);
+            return -1f;//-1 is returned if the stat does not exist;
+        }
+    }
 
     public void GetLivingStat(string stat, out float currentValue, out float maxValue)
     {

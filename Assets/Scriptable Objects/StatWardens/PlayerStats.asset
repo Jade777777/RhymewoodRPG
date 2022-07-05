@@ -49,6 +49,18 @@ MonoBehaviour:
     - referenceStat: Endurance
       multiplier: 0.5
     curveModifiers: []
+  - name: Poise
+    flatModifier: 10
+    multiplyModifiers:
+    - referenceStat: Vigor
+      multiplier: 0.1
+    curveModifiers: []
+  - name: PoiseReset
+    flatModifier: 5
+    multiplyModifiers:
+    - referenceStat: Vigor
+      multiplier: 0.1
+    curveModifiers: []
   quirkAugur:
   - name: Physical
     flatModifier: 0.8

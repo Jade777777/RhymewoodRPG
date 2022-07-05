@@ -20,7 +20,6 @@ public class HitStop : MonoBehaviour
     }
     public void ActivateHitStop()
     {
-        Debug.Log("Activating hit stop with default values");
         ActivateHitStop(0.13f);
     }
     public void ActivateHitStop(float impactTime)
@@ -77,7 +76,7 @@ public class HitStop : MonoBehaviour
             accelerateTimer += Time.deltaTime;
             yield return null;
         }
-        Debug.Log("Hitstop event has completed");
+
         
 
     }

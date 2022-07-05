@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class CharacterNerveCenter : MonoBehaviour
 {
     float InputTimeout=0.75f;
+    int poise = 5;
 
     Animator animator;
 
@@ -93,6 +94,7 @@ public class CharacterNerveCenter : MonoBehaviour
     }
 
     //Environmental Interaction
+    float resetPoiseTime = 0;
     public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
         foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
@@ -100,7 +102,24 @@ public class CharacterNerveCenter : MonoBehaviour
             float val = statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
         }
         GetComponent<HitStop>().ActivateHitStop();//0.13 is the default
-        
+
+
+        // poise stuff
+        if (resetPoiseTime <= Time.time)
+        {
+            Debug.Log(Time.time + "     "+resetPoiseTime);
+            Debug.Log("resetpoise");
+            statWarden.ImpactStat("Poise", 999f);
+        }
+        statWarden.ImpactStat("Poise", -hitBox.GetPoiseDamage());
+        statWarden.GetLivingStat("Poise", out float currentPoise, out _);
+        animator.SetInteger("Poise", (int) currentPoise);
+       
+        resetPoiseTime = Time.time + statWarden.characterStats.EmergentStats()["PoiseReset"];
+
+        Debug.Log(statWarden.characterStats.EmergentStats()["PoiseReset"]);
+        //done with poise stuff
+
         hitBox.GetKnockbackDistance(hurtBox, out Vector3 enemyKnockback , out _);
         GetComponent<HitStop>().ActivateKnockBack(enemyKnockback);
     }
@@ -108,7 +127,6 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         if (IsPlayer)
         {
-            statWarden.ImpactStat("Health", -20, new List<string>() { "TESTDAMAGE" });
             Debug.Log(transform.name + " Struck hurtbox " + hurtBox.cnc.transform.name);
             GetComponent<HitStop>().ActivateHitStop();
             
@@ -125,6 +143,14 @@ public class CharacterNerveCenter : MonoBehaviour
             SceneManager.LoadScene("GameOver");
         }
     }
+
+    public void ResetPoise()
+    {
+        statWarden.GetLivingStat("Poise", out _, out float maxPoise);
+        statWarden.ImpactStat("Poise", 999f);
+        animator.SetInteger("Poise", (int)maxPoise);
+    }
+
     //stat Warden
     public float ImpactStat(string stat, float impact, List<string> quirks)
     {
@@ -173,7 +199,6 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         statWarden.characterStats.RemoveStat(id);
     }
-
 
 
     //Character Mood

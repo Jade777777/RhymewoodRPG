@@ -19,7 +19,8 @@ public class HitBox : MonoBehaviour
     private float knockbackDistance=0f;//the distance the enemy is thrown back after allignment calculations
     [SerializeField]
     private float takeGround = 0.2f;//the distance both characters move forward on a strike
-
+    [SerializeField]
+    private int poiseDamage = 5;
     public KnockbackType knockbackType;
 
 
@@ -28,6 +29,7 @@ public class HitBox : MonoBehaviour
     public CharacterNerveCenter cnc { get; private set; }
     public float characterRadius { get; private set; }
     private float engagementDistance;
+
     private void Awake()
     {
         Debug.Assert(GetComponent<Collider>().isTrigger == true);
@@ -38,6 +40,7 @@ public class HitBox : MonoBehaviour
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
         engagementDistance = equipedWeapon.equipedWeapon.weapon.engagementDistance; 
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<HurtBox>(out HurtBox hurtBox) && hurtBox.cnc != cnc)
@@ -80,6 +83,10 @@ public class HitBox : MonoBehaviour
     public ReadOnlyDictionary<string, float> GetDamage()
     {
         return equipedWeapon.WeaponTotalDamage();
+    }
+    public int GetPoiseDamage()
+    {
+        return poiseDamage;
     }
 }
 public enum KnockbackType { Light, Medium, Heavy, Ragdoll}

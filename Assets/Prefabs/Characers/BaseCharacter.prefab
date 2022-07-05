@@ -3270,12 +3270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3f834c7c39b09946aa983dc6b706ba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPauseTime: 0.15
-  cleaveTime: 0.6
-  cleaveSpeed: 0.4
-  impactPauseTime: 0.25
-  hitBoostSpeed: 2
-  impactAccelerateTime: 0.1
+  knockBackVelocity: {x: 0, y: 0, z: 0}
 --- !u!143 &6706544252130823730
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3711,10 +3706,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementType: 0
-  moveInputWeight: 1
+  moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.5
-  turnSpeed: 360
+  turnSpeed: 90
   smoothMoveInput: 4
 --- !u!114 &3840317420850501816
 MonoBehaviour:
