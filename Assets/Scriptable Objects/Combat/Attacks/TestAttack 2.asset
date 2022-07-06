@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackAnimation:
     originalClip: {fileID: 7400000, guid: a2265738fa13d5d4896a21ae26edd860, type: 2}
-    overrideClip: {fileID: 7400000, guid: 43f19de34d6ed2c4fbf917c0bbfe7cd6, type: 2}
+    overrideClip: {fileID: 7400000, guid: a2265738fa13d5d4896a21ae26edd860, type: 2}
   attackModel: {fileID: 6828611147035003804, guid: 981c101e40e9c7941a2dc6777e9a57d2, type: 3}
