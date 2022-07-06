@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HitBox : MonoBehaviour
 {
-
+    private static int generateID;
 
     [SerializeField]
     bool allQuirks= true;
@@ -21,7 +21,8 @@ public class HitBox : MonoBehaviour
     private float takeGround = 0.2f;//the distance both characters move forward on a strike
     [SerializeField]
     private int poiseDamage = 5;
-    public KnockbackType knockbackType;
+    [SerializeField]
+    private KnockdownType knockdownType = KnockdownType.Stagger;
 
 
 
@@ -40,7 +41,12 @@ public class HitBox : MonoBehaviour
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
         engagementDistance = equipedWeapon.equipedWeapon.weapon.engagementDistance; 
     }
-
+    public int ID { get; private set; }
+    private void OnEnable()
+    {
+        generateID++;
+        ID = generateID;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<HurtBox>(out HurtBox hurtBox) && hurtBox.cnc != cnc)
@@ -88,5 +94,9 @@ public class HitBox : MonoBehaviour
     {
         return poiseDamage;
     }
+    public KnockdownType GetKnockdownType()
+    {
+        return knockdownType;
+    }
 }
-public enum KnockbackType { Light, Medium, Heavy, Ragdoll}
+public enum KnockdownType { Stagger, Crush, Launch}

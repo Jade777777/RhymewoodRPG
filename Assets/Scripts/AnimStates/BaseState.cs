@@ -250,7 +250,7 @@ public class BaseState : MonoBehaviour
         }
 
         movement();
-        characterController.Move((moveDistance+ (hitStop.knockBackVelocity*Time.deltaTime)) * animator.speed);
+        characterController.Move((moveDistance * animator.speed + (hitStop.knockBackVelocity*Time.deltaTime)) );
 
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {

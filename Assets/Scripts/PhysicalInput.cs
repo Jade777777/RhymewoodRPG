@@ -13,7 +13,7 @@ public class PhysicalInput : MonoBehaviour
     [SerializeField]
     int step = 10;
 
-    readonly int layerMask = (1 << 0);// ~(1<<3 + 1<<6 + 1<<7 + 1<<8);// ignores characters when checking for ground
+    readonly int layerMask = 1 << 0;//  ~(1<<3 + 1<<6 + 1<<7 + 1<<8);// ignores characters when checking for ground
 
     private GroundInfo groundInfo;
     public ref readonly GroundInfo GroundData => ref groundInfo;

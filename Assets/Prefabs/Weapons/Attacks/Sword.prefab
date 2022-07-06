@@ -207,6 +207,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3336225253846660761}
     m_Modifications:
+    - target: {fileID: -4930984443667661585, guid: bda59229e97d8b14382746e9fbb5b20d, type: 3}
+      propertyPath: knockdownType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1985628538156870559, guid: bda59229e97d8b14382746e9fbb5b20d, type: 3}
       propertyPath: m_Name
       value: Hit Box

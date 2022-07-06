@@ -95,8 +95,17 @@ public class CharacterNerveCenter : MonoBehaviour
 
     //Environmental Interaction
     float resetPoiseTime = 0;
+    private int lastHitboxID;
     public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
+        if (hitBox.ID == lastHitboxID)
+        {
+            return;
+        }
+        else
+        {
+            lastHitboxID = hitBox.ID;
+        }
         foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
         {
             float val = statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
@@ -104,7 +113,7 @@ public class CharacterNerveCenter : MonoBehaviour
         GetComponent<HitStop>().ActivateHitStop();//0.13 is the default
 
 
-        // poise stuff
+        // poise/knockback stuff
         if (resetPoiseTime <= Time.time)
         {
             Debug.Log(Time.time + "     "+resetPoiseTime);
@@ -114,7 +123,7 @@ public class CharacterNerveCenter : MonoBehaviour
         statWarden.ImpactStat("Poise", -hitBox.GetPoiseDamage());
         statWarden.GetLivingStat("Poise", out float currentPoise, out _);
         animator.SetInteger("Poise", (int) currentPoise);
-       
+        animator.SetInteger("KnockDownType", (int)hitBox.GetKnockdownType());
         resetPoiseTime = Time.time + statWarden.characterStats.EmergentStats()["PoiseReset"];
 
         Debug.Log(statWarden.characterStats.EmergentStats()["PoiseReset"]);
