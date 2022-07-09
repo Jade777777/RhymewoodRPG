@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterNerveCenter : MonoBehaviour
 {
-    float InputTimeout=2.0f;
+    float InputTimeout=0.75f;
     int poise = 5;
 
     Animator animator;
@@ -96,6 +96,14 @@ public class CharacterNerveCenter : MonoBehaviour
     //Environmental Interaction
     float resetPoiseTime = 0;
     private int lastHitboxID;
+    public void StartBlocking()
+    {
+
+    }
+    public void StopBlocking()
+    {
+
+    }
     public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
         if (hitBox.ID == lastHitboxID)
@@ -141,7 +149,6 @@ public class CharacterNerveCenter : MonoBehaviour
             
             hitBox.GetKnockbackDistance(hurtBox, out Vector3 _,out Vector3 selfKnockback);
             GetComponent<HitStop>().ActivateKnockBack(selfKnockback);
-            
         }
     }
 
@@ -233,14 +240,16 @@ public class CharacterNerveCenter : MonoBehaviour
     //TODO: Refine and move to utility
     bool isRunning;
     string previousName;
+    Coroutine coroutineRef;
     private void SetTrigger(string name)
     {
-        if (isRunning && previousName != "") 
+        if (isRunning &&coroutineRef!=null)
         {
-            StopCoroutine(SetTriggerProcess(previousName));
+            StopCoroutine(coroutineRef);
             animator.ResetTrigger(previousName);
+
         }
-        StartCoroutine(SetTriggerProcess(name));
+        coroutineRef = StartCoroutine( SetTriggerProcess(name));
         previousName = name;
     }
 
