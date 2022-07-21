@@ -3767,7 +3767,7 @@ MonoBehaviour:
   movementType: 3
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.034
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &720654894577310745
@@ -3785,7 +3785,7 @@ MonoBehaviour:
   movementType: 1
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.056
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &7160547076128874077
@@ -3803,7 +3803,7 @@ MonoBehaviour:
   movementType: 3
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.074
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &3362363078170255167
@@ -3821,7 +3821,7 @@ MonoBehaviour:
   movementType: 3
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.111
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &2954911968008760012
@@ -3839,7 +3839,7 @@ MonoBehaviour:
   movementType: 0
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.038
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &1253809833032108946
@@ -3857,7 +3857,7 @@ MonoBehaviour:
   movementType: 2
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.069
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &6288202251280633487

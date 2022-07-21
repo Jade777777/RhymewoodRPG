@@ -43,7 +43,7 @@ public class EquipedWeapon : MonoBehaviour
         defaultAnimationOverrides = new List<KeyValuePair<AnimationClip, AnimationClip>>(animatorOverrideController.overridesCount);
         animatorOverrideController.GetOverrides(defaultAnimationOverrides);
 
-        if(GetComponent<CharacterNerveCenter>().IsPlayer) EquipWeapon(equipedWeapon.weapon);
+        EquipWeapon(equipedWeapon.weapon);
 
     }
 
@@ -118,19 +118,19 @@ public class EquipedWeapon : MonoBehaviour
     private void RetrieveHitboxes()
     {
 
-        HitBoxes = modelInstance.GetComponentsInChildren<HitBox>(true);
+        HitBoxes = modelInstance.GetComponentsInChildren<WeaponHitBox>(true);
         Debug.Log("Got some hitboxes here");
     }
     public void EW_ActivateWeaponHitBox()
     {
-        foreach(HitBox hitBox in HitBoxes)
+        foreach(WeaponHitBox hitBox in HitBoxes)
         {
             hitBox.gameObject.SetActive(true);
         }
     }
     public void EW_DisableWeaponHitBox()
     {
-        foreach (HitBox hitBox in HitBoxes)
+        foreach (WeaponHitBox hitBox in HitBoxes)
         {
             hitBox.gameObject.SetActive(false);
         }

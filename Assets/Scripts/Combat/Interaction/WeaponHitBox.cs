@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -5,9 +6,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
-public class HitBox : MonoBehaviour
+public class WeaponHitBox : MonoBehaviour
 {
     private static int generateID;
+
 
     [SerializeField]
     bool allQuirks= true;
@@ -41,11 +43,11 @@ public class HitBox : MonoBehaviour
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
         engagementDistance = equipedWeapon.equipedWeapon.weapon.engagementDistance; 
     }
-    public int ID { get; private set; }
+    public int hitID { get; private set; }
     private void OnEnable()
     {
         generateID++;
-        ID = generateID;
+        hitID = generateID;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -88,7 +90,14 @@ public class HitBox : MonoBehaviour
 
     public ReadOnlyDictionary<string, float> GetDamage()
     {
-        return equipedWeapon.WeaponTotalDamage();
+        if (allQuirks == true)
+        {
+            return equipedWeapon.WeaponTotalDamage();
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
     }
     public int GetPoiseDamage()
     {

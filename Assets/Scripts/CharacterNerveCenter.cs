@@ -95,7 +95,7 @@ public class CharacterNerveCenter : MonoBehaviour
 
     //Environmental Interaction
     float resetPoiseTime = 0;
-    private int lastHitboxID;
+    private int lastHitID;
     public void StartBlocking()
     {
 
@@ -104,15 +104,15 @@ public class CharacterNerveCenter : MonoBehaviour
     {
 
     }
-    public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
+    public void SruckByHitBox(WeaponHitBox hitBox,HurtBox hurtBox)
     {
-        if (hitBox.ID == lastHitboxID)
+        if (hitBox.hitID == lastHitID)
         {
-            return;
+            return;//skip if the hitbox
         }
         else
         {
-            lastHitboxID = hitBox.ID;
+            lastHitID = hitBox.hitID;
         }
         foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
         {
@@ -126,7 +126,7 @@ public class CharacterNerveCenter : MonoBehaviour
         {
             Debug.Log(Time.time + "     "+resetPoiseTime);
             Debug.Log("resetpoise");
-            statWarden.ImpactStat("Poise", 999f);
+            statWarden.ImpactStat("Poise", 999999f);//resets poise back to max.
         }
         statWarden.ImpactStat("Poise", -hitBox.GetPoiseDamage());
         statWarden.GetLivingStat("Poise", out float currentPoise, out _);
@@ -140,7 +140,7 @@ public class CharacterNerveCenter : MonoBehaviour
         hitBox.GetKnockbackDistance(hurtBox, out Vector3 enemyKnockback , out _);
         GetComponent<HitStop>().ActivateKnockBack(enemyKnockback);
     }
-    public void StrikeHurtBox(HitBox hitBox, HurtBox hurtBox)
+    public void StrikeHurtBox(WeaponHitBox hitBox, HurtBox hurtBox)
     {
         if (IsPlayer)
         {

@@ -19,7 +19,7 @@ public class HurtBox : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out HitBox hitBox) && hitBox.cnc != cnc) 
+        if (other.TryGetComponent(out WeaponHitBox hitBox) && hitBox.cnc != cnc) 
         {
             cnc.SruckByHitBox(hitBox, this);
         }
