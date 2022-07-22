@@ -22,16 +22,25 @@ public class HitStop : MonoBehaviour
     {
         ActivateHitStop(0.13f);
     }
+    Coroutine cref;
     public void ActivateHitStop(float impactTime)
     {
+        if(impactTime == 0f)
+        {
+            return;
+        }
         Mathf.Clamp(impactTime,0.07f, 0.75f);
         if (impactTime >= this.impactTime)
         {
+
+            if (cref != null) 
+            { 
+                StopCoroutine(cref); 
+            }
             
-            StopCoroutine(HitStopProcess());
             this.impactTime = impactTime;
    
-            StartCoroutine(HitStopProcess());
+            cref = StartCoroutine(HitStopProcess());
         }
 
     }
@@ -59,7 +68,7 @@ public class HitStop : MonoBehaviour
         animator.speed = 0;
         yield return new WaitForSeconds(impactTime* impactPauseTime);
 
-
+        impactTime *= 0.5f;
         //Launch target
         float accelerateTimer = 0;
         float halfAccelerateTime = 0.5f * impactAccelerateTime;
@@ -77,7 +86,7 @@ public class HitStop : MonoBehaviour
             yield return null;
         }
 
-        
+        impactTime = 0f;
 
     }
 

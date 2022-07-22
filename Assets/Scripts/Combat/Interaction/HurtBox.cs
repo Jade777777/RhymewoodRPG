@@ -17,12 +17,16 @@ public class HurtBox : MonoBehaviour
         cnc = JadeUtility.GetComponentInParents<CharacterNerveCenter>(transform);
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
     }
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.TryGetComponent(out HitBox hitBox)) 
+    //    {
+    //        TakeDamage(hitBox);
+    //    }
+    //}
+    public void TakeDamage(HitBox hitBox)
     {
-        if (other.TryGetComponent(out WeaponHitBox hitBox) && hitBox.cnc != cnc) 
-        {
-            cnc.SruckByHitBox(hitBox, this);
-        }
+        cnc.SruckByHitBox(hitBox, this);
     }
 
 }

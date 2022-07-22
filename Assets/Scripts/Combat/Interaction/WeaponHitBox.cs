@@ -6,9 +6,8 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
-public class WeaponHitBox : MonoBehaviour
+public class WeaponHitBox : HitBox
 {
-    private static int generateID;
 
 
     [SerializeField]
@@ -43,32 +42,24 @@ public class WeaponHitBox : MonoBehaviour
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
         engagementDistance = equipedWeapon.equipedWeapon.weapon.engagementDistance; 
     }
-    public int hitID { get; private set; }
-    private void OnEnable()
+
+    protected override void OnStrikeHurtBox(HurtBox hurtBox)
     {
-        generateID++;
-        hitID = generateID;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<HurtBox>(out HurtBox hurtBox) && hurtBox.cnc != cnc)
+        if (hurtBox.cnc != cnc)
         {
-            
-            cnc.StrikeHurtBox(this ,hurtBox);
+            hurtBox.TakeDamage(this);
+            cnc.StrikeHurtBox(this, hurtBox);
         }
     }
 
-    public void GetKnockbackDistance(HurtBox hurtBox, out Vector3 enemyKnockback, out Vector3 selfKnockback)
+
+    public override void GetKnockbackDistance(HurtBox hurtBox, out Vector3 enemyKnockback, out Vector3 selfKnockback)
     {
         Vector3 currentOffset = hurtBox.cnc.transform.position - cnc.transform.position;
         Vector3 direction = currentOffset.normalized;
-        
+        Vector3 facing = cnc.transform.forward;
         float currentDistance = currentOffset.magnitude-(hurtBox.characterRadius+characterRadius);
-
-        Vector3 facing =  cnc.transform.forward;
-
         float desiredChange = engagementDistance - currentDistance;
-
 
         if (currentDistance < engagementDistance)
         {
@@ -76,11 +67,6 @@ public class WeaponHitBox : MonoBehaviour
             enemyKnockback = (desiredChange * 0.5f)* direction + (knockbackDistance + takeGround) * facing;
             
         }
-        //else // I'm not sure if i want this, it might make it too easy to chase down enemies?
-        //{
-        //    selfKnockback = (-desiredChange + takeGround) * direction;
-        //    enemyKnockback = ( 0f +knockbackDistance + takeGround) * direction;
-        //}
         else
         {
             selfKnockback = (0f) * direction + (takeGround) * facing;
@@ -88,7 +74,7 @@ public class WeaponHitBox : MonoBehaviour
         }
     }
 
-    public ReadOnlyDictionary<string, float> GetDamage()
+    public override ReadOnlyDictionary<string, float> GetDamage()
     {
         if (allQuirks == true)
         {
@@ -99,13 +85,13 @@ public class WeaponHitBox : MonoBehaviour
             throw new NotImplementedException();
         }
     }
-    public int GetPoiseDamage()
+    public override int GetPoiseDamage()
     {
         return poiseDamage;
     }
-    public KnockdownType GetKnockdownType()
+    public override KnockdownType GetKnockdownType()
     {
         return knockdownType;
     }
 }
-public enum KnockdownType { Stagger, Crush, Launch}
+

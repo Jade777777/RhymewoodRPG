@@ -104,9 +104,10 @@ public class CharacterNerveCenter : MonoBehaviour
     {
 
     }
-    public void SruckByHitBox(WeaponHitBox hitBox,HurtBox hurtBox)
+    public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
-        if (hitBox.hitID == lastHitID)
+        WeaponHitBox whb = hitBox as WeaponHitBox;
+        if (hitBox.hitID == lastHitID || (whb!=null&&whb.cnc ==this)) 
         {
             return;//skip if the hitbox
         }
@@ -118,7 +119,7 @@ public class CharacterNerveCenter : MonoBehaviour
         {
             float val = statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
         }
-        GetComponent<HitStop>().ActivateHitStop();//0.13 is the default
+        GetComponent<HitStop>().ActivateHitStop(hitBox.hitStop);//0.13 is the default
 
 
         // poise/knockback stuff
@@ -145,8 +146,8 @@ public class CharacterNerveCenter : MonoBehaviour
         if (IsPlayer)
         {
             Debug.Log(transform.name + " Struck hurtbox " + hurtBox.cnc.transform.name);
-            GetComponent<HitStop>().ActivateHitStop();
-            
+            GetComponent<HitStop>().ActivateHitStop(hitBox.hitStop);//0.13 is the default
+
             hitBox.GetKnockbackDistance(hurtBox, out Vector3 _,out Vector3 selfKnockback);
             GetComponent<HitStop>().ActivateKnockBack(selfKnockback);
         }
