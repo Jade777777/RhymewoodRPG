@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(Rigidbody))]
+
 public class WeaponHitBox : HitBox
 {
 
@@ -39,8 +38,13 @@ public class WeaponHitBox : HitBox
 
         equipedWeapon = JadeUtility.GetComponentInParents<EquipedWeapon>(transform);
         cnc = JadeUtility.GetComponentInParents<CharacterNerveCenter>(transform);
+        
+        
+    }
+    private void Start()
+    {
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
-        engagementDistance = equipedWeapon.equipedWeapon.weapon.engagementDistance; 
+        engagementDistance = equipedWeapon.weaponInstance.weapon.engagementDistance;
     }
 
     protected override void OnStrikeHurtBox(HurtBox hurtBox)
@@ -76,14 +80,27 @@ public class WeaponHitBox : HitBox
 
     public override ReadOnlyDictionary<string, float> GetDamage()
     {
+        Dictionary<string, float> damage = new();
+        ReadOnlyDictionary<string, float> totalDamage = equipedWeapon.WeaponTotalDamage();
         if (allQuirks == true)
         {
-            return equipedWeapon.WeaponTotalDamage();
+            foreach(KeyValuePair<string, float> kvp in totalDamage)
+            {
+                 damage.Add(kvp.Key, kvp.Value * multiplier);
+            }
         }
         else
         {
-            throw new NotImplementedException();
+            foreach(string quirkName in damageQuirks)
+            {
+                if (totalDamage.ContainsKey(quirkName))
+                {
+                    damage.Add(quirkName, totalDamage[quirkName]);
+                }
+            }
+
         }
+        return new ReadOnlyDictionary<string, float>(damage);
     }
     public override int GetPoiseDamage()
     {

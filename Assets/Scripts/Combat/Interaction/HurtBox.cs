@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+/// <summary>
+/// TODO: Make HurtBox an abstract class. 
+/// CNC and awake should be determined by
+/// the derived classes. The HurtBox will 
+/// need to be adjusted to deal with CNC
+/// not always being present.
+/// </summary>
+
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 public class HurtBox : MonoBehaviour
@@ -17,13 +25,7 @@ public class HurtBox : MonoBehaviour
         cnc = JadeUtility.GetComponentInParents<CharacterNerveCenter>(transform);
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
     }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.TryGetComponent(out HitBox hitBox)) 
-    //    {
-    //        TakeDamage(hitBox);
-    //    }
-    //}
+
     public void TakeDamage(HitBox hitBox)
     {
         cnc.SruckByHitBox(hitBox, this);

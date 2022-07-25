@@ -10,22 +10,25 @@ public class CharacterNerveCenter : MonoBehaviour
     int poise = 5;
 
     Animator animator;
-
+    CharacterController cc;
     StatWarden statWarden;
     PhysicalInput physicalInput;
     Behavior behavior;
     public bool IsPlayer = false;
     KnowledgeBase knowledgeBase;
-
+    EquipedWeapon equipedWeapon;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        cc = GetComponent<CharacterController>();
+
         statWarden = GetComponent<StatWarden>();
         statWarden.updateLivingStatEvent += UpdateLivingStats;
         physicalInput = GetComponent<PhysicalInput>();
         behavior = GetComponent<Behavior>();
         knowledgeBase = GetComponent<KnowledgeBase>();
+        equipedWeapon = GetComponent<EquipedWeapon>();
     }
 
 
@@ -33,6 +36,7 @@ public class CharacterNerveCenter : MonoBehaviour
     private void Update()
     {
         animator.SetFloat("Speed", physicalInput.moveInput.magnitude);//mov cnc
+        IsPushActive();
     }
     public void Move(Vector2 input)
     {
@@ -62,8 +66,14 @@ public class CharacterNerveCenter : MonoBehaviour
 
     public void Attack()
     {
-        SetTrigger("Attack");
-        
+        if (IsPushActive())
+        {
+            SetTrigger("Push");
+        }
+        else
+        {
+            SetTrigger("Attack");
+        }
     }
 
 
@@ -264,6 +274,29 @@ public class CharacterNerveCenter : MonoBehaviour
         isRunning = false;
         previousName = "";
     }
+    
 
+
+
+    //Attack Conditions
+
+    private bool IsPushActive()
+    {
+        Vector3 origin = transform.position + cc.center;
+        float width = cc.radius + cc.radius * equipedWeapon.weaponInstance.weapon.pushDistance;
+        Vector3 halfExtents = new(width, cc.height * 0.5f + cc.radius, 0.1f);
+        Vector3 direction = transform.forward;
+        float distance = equipedWeapon.weaponInstance.weapon.pushDistance+cc.radius;
+        
+        
+        
+        int layerMask = 1<<3 ;
+
+        if (Physics.BoxCast(origin, halfExtents, direction, transform.rotation, distance, layerMask))
+        {
+            return true;
+        }
+        return false;
+    }
 
 }

@@ -7,6 +7,7 @@ public class Weapon : ScriptableObject
 {
     public GameObject weaponModel;
     public float engagementDistance = 2;
+    public float pushDistance;// if the character is closer than this to an enemy they will push
     public List<Attack> attacks;
 
     //move weapon warden logic into equiped weapon
@@ -17,7 +18,20 @@ public class Weapon : ScriptableObject
 [System.Serializable]
 public class WeaponInstance // this class is wahat lets us get rid of the WeaponWarden.
 {
-
+    public Weapon weapon;
+    public int level;
+    public WeaponInfusion weaponInfusion;
+    public string name
+    {
+        get
+        {
+            return weapon.name;
+        }
+        private set
+        {
+            name = value;
+        }
+    }
     public WeaponInstance(Weapon weapon, int level, WeaponInfusion weaponInfusion)
     {
         this.weapon = weapon;
@@ -25,18 +39,5 @@ public class WeaponInstance // this class is wahat lets us get rid of the Weapon
         this.weaponInfusion = weaponInfusion;
         Debug.Log("Constructing a weapon instance!");
     }
-    public string name 
-    {
-        get 
-        { 
-            return weapon.name; 
-        } 
-        private set 
-        { 
-            name = value; 
-        } 
-    }
-    public Weapon weapon;
-    public int level;
-    public WeaponInfusion weaponInfusion;
+
 }

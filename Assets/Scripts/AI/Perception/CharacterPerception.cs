@@ -26,8 +26,6 @@ public class CharacterPerception : MonoBehaviour
         StartCoroutine(SightTick());
     }
 
-
-
     IEnumerator SightTick()
     {
         yield return new WaitForSeconds(0.5f+TimeStep*Random.value);
@@ -50,10 +48,6 @@ public class CharacterPerception : MonoBehaviour
                     {
                         Debug.DrawRay(origin, direction, Color.red, 0.5f);
                         knowledgeBase.SightCharacter(thing.gameObject);
-                    }
-                    else
-                    {
-                        //Debug.Log("It's in range but i can't see it!");
                     }
                 }
             }

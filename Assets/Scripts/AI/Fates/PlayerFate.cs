@@ -4,24 +4,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-public class PlayerFate : MonoBehaviour
+public class PlayerFate : BaseFate
 {
-    [SerializeField]
-    GameObject characterInstance;
-    Vector3 spawnPoint;
-    NavMeshAgent agent;
-
-
     string behavior = "Default";
 
 
-    CharacterNerveCenter cnc;
-    private void Awake()
+    protected override void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        spawnPoint = characterInstance.transform.position;
-        agent.radius = characterInstance.GetComponent<CharacterController>().radius;
-        cnc = characterInstance.GetComponent<CharacterNerveCenter>();
+        base.Awake();
         cnc.IsPlayer = true;
     }
 

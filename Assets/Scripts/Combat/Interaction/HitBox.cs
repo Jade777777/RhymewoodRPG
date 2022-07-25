@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
 public abstract class HitBox : MonoBehaviour
 {
     

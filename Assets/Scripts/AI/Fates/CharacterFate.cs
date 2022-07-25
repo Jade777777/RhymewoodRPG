@@ -1,19 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class CharacterFate : MonoBehaviour
+public class CharacterFate : BaseFate
 {
-
-    [SerializeField]
-    GameObject characterInstance;
-
     [SerializeField]
     List<Behavior> rawBehaviors;
 
-    NavMeshAgent agent;
-    CharacterNerveCenter cnc;
+
     KnowledgeBase knowledgeBase;
 
 
@@ -21,23 +17,23 @@ public class CharacterFate : MonoBehaviour
     Dictionary<string, PatrolPoint> currentPatrolPoints = new();
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        cnc = characterInstance.GetComponent<CharacterNerveCenter>();
+        base.Awake();
         knowledgeBase = characterInstance.GetComponent<KnowledgeBase>();
-        agent = GetComponent<NavMeshAgent>();
-        agent.radius = characterInstance.GetComponent<CharacterController>().radius *2f;
+
         agent.avoidancePriority = 3;
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.GoodQualityObstacleAvoidance;
-        foreach (var value in rawBehaviors)
-        {
-            currentPatrolPoints.Add(value.BehaviorName,value.patrolPoints[0]);
-            behaviors.Add(value.BehaviorName, value.patrolPoints);
-            StartCoroutine(PatrolPointUpdate(value.BehaviorName));
-        }
+
     }
     private void Start()
     {
+        foreach (var value in rawBehaviors)
+        {
+            currentPatrolPoints.Add(value.BehaviorName, value.patrolPoints[0]);
+            behaviors.Add(value.BehaviorName, value.patrolPoints);
+            StartCoroutine(PatrolPointUpdate(value.BehaviorName));
+        }
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.speed = cnc.PrimalStats()["Move Speed"];
@@ -51,6 +47,11 @@ public class CharacterFate : MonoBehaviour
             foreach (PatrolPoint patrolPoint in behaviors[behaviorName])
             {
                 currentPatrolPoints[behaviorName] = patrolPoint;
+
+                if (cnc.GetBehavior() == behaviorName)
+                {
+                    PressButton(patrolPoint);
+                }
                 yield return new WaitForSeconds(patrolPoint.WaitTime);
             }
         }
@@ -64,7 +65,30 @@ public class CharacterFate : MonoBehaviour
         agent.SetDestination(CalcPosition());// add flanking functionality and awareness of the combat situation. make sure target positions around the enemies are all unique.
         RotateCharacter();
         MoveCharacter();
+    }
+ 
+    private void PressButton(PatrolPoint patrolPoint)
+    {
         
+
+        switch (patrolPoint.buttonPress)
+        {
+            case ButtonPress.Attack:
+                cnc.Attack();
+                break;
+            case ButtonPress.Kick:
+                cnc.Kick();
+                break;
+            case ButtonPress.Jump:
+                Debug.Log(cnc.GetBehavior());
+                cnc.Jump(true);
+                break;
+            case ButtonPress.Interact:
+                cnc.Interact();
+                break;
+            default:
+                break;
+        }
     }
 
     private Vector3 CalcPosition()
@@ -156,9 +180,11 @@ public class CharacterFate : MonoBehaviour
     [System.Serializable]
     struct PatrolPoint
     {
+        
         public Target TargetPosition;
         public Target TargetLook;
         public PositioningType Type;
+        public ButtonPress buttonPress;
         public float Angle;
         public float MaxDistance;//
         public float MinDistance;// this will generaly not be set by mele characters unless they need to exhibit cowardly like behaviors.
@@ -174,7 +200,8 @@ public class CharacterFate : MonoBehaviour
     [System.Serializable]
     struct Target 
     {
-        public TargetType targetType; 
+        public TargetType targetType;
+        
         public Transform defaultPoint; // This is the default/fallback value. Used for designer to detrmine patrol point.
 
     }
@@ -226,6 +253,5 @@ public class CharacterFate : MonoBehaviour
         } 
 
     }
-    private enum TargetType { PatrolPoint, ClosestHostile, ClosestNuetral, ClosestFriendly, ClosestCharacter, HighestAgro, CurrentEnemy, FriendlysHighestAgro };
 
 }

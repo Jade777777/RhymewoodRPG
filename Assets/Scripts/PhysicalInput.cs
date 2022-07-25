@@ -20,9 +20,13 @@ public class PhysicalInput : MonoBehaviour
 
     private Vector3 velocity = new();
     public ref readonly Vector3 Velocity => ref velocity;
+    [NonSerialized]
     public Vector3 internalVelocity = Vector3.zero;
+    [NonSerialized]
     public Vector3 lastAttemptedDirection = Vector3.forward;
+    [NonSerialized]
     public Quaternion targetRotation;
+    [NonSerialized]
     public Vector3 moveInput;
 
  

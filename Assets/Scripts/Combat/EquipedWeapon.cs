@@ -8,13 +8,13 @@ public class EquipedWeapon : MonoBehaviour
 {
     AnimatorOverrideController animatorOverrideController;
     [SerializeField]
-    Weapon weaponIn;
+    Weapon weapon;
     [SerializeField]
-    int levelIn;
+    int level;
     [SerializeField]
-    WeaponInfusion infusionIn;
+    WeaponInfusion infusion;
+    public WeaponInstance weaponInstance { get; private set; }
 
-    public WeaponInstance equipedWeapon { get; private set; }//this will replace equipedWeapon
     [SerializeField]
     private Transform weaponJoint;
 
@@ -32,7 +32,7 @@ public class EquipedWeapon : MonoBehaviour
         ID = countID;
         countID++;
         characterStats = GetComponent<StatWarden>().characterStats;
-        equipedWeapon = new(weaponIn, levelIn, infusionIn);
+        weaponInstance = new(weapon, level, infusion);
     }
     void Start()
     {
@@ -43,7 +43,7 @@ public class EquipedWeapon : MonoBehaviour
         defaultAnimationOverrides = new List<KeyValuePair<AnimationClip, AnimationClip>>(animatorOverrideController.overridesCount);
         animatorOverrideController.GetOverrides(defaultAnimationOverrides);
 
-        EquipWeapon(equipedWeapon.weapon);
+        EquipWeapon(weaponInstance.weapon);
 
     }
 
@@ -64,13 +64,13 @@ public class EquipedWeapon : MonoBehaviour
         //TODO:
         //save weapon infusion.
 
-        equipedWeapon.weapon = weapon;//save the value of the new weapon
+        weaponInstance.weapon = weapon;//save the value of the new weapon
         //instantiate the new weapon model
-        modelInstance = Instantiate(equipedWeapon.weapon.weaponModel, weaponJoint);
-        modelInstance.name = equipedWeapon.name + " " + ID;
+        modelInstance = Instantiate(weaponInstance.weapon.weaponModel, weaponJoint);
+        modelInstance.name = weaponInstance.name + " " + ID;
         //instantiate the new attack models used by the new animations;
 
-        foreach (Attack attack in equipedWeapon.weapon.attacks)
+        foreach (Attack attack in weaponInstance.weapon.attacks)
         {
             bool SkipSpawn= false;
             foreach(GameObject instance in attackModelInstance)
@@ -169,17 +169,17 @@ public class EquipedWeapon : MonoBehaviour
         weaponTotalDamage = new();
         //----------------------------------------Base Damage---------------------------------------
         weaponBaseDamage.AddReferenceOnlyStat(baseFlatDamage);
-        foreach (BaseQuirk bq in equipedWeapon.weapon.baseQuirk)
+        foreach (BaseQuirk bq in weaponInstance.weapon.baseQuirk)
         {
             baseFlatDamage.Add(new FlatStatLeaf(bq.quirkType, bq.baseDamage));
         }
-        foreach (KeyValuePair<string, float> bqa in equipedWeapon.weaponInfusion.BaseQuirkAdjust())
+        foreach (KeyValuePair<string, float> bqa in weaponInstance.weaponInfusion.BaseQuirkAdjust())
         {
             baseFlatDamage.Add(new FlatStatLeaf(bqa.Key, bqa.Value));
         }
-        foreach (KeyValuePair<string, AnimationCurve> wbls in equipedWeapon.weaponInfusion.BaseQuirkLevelScaling())
+        foreach (KeyValuePair<string, AnimationCurve> wbls in weaponInstance.weaponInfusion.BaseQuirkLevelScaling())
         {
-            weaponBaseDamage.Add(new MultStatLeaf(wbls.Key, wbls.Key, wbls.Value.Evaluate(equipedWeapon.level)));
+            weaponBaseDamage.Add(new MultStatLeaf(wbls.Key, wbls.Key, wbls.Value.Evaluate(weaponInstance.level)));
         }
         foreach (KeyValuePair<string, float> kvp in weaponBaseDamage.Stats())
         {
@@ -193,9 +193,9 @@ public class EquipedWeapon : MonoBehaviour
         {
             weaponPrimalAdjustedValue.AddReferenceOnlyStat(new FlatStatLeaf(stat.Key, stat.Value));
         }
-        foreach (KeyValuePair<string, AnimationCurve> psb in equipedWeapon.weaponInfusion.PrimalScalingBonus())
+        foreach (KeyValuePair<string, AnimationCurve> psb in weaponInstance.weaponInfusion.PrimalScalingBonus())
         {
-            weaponPrimalAdjustedValue.Add(new MultStatLeaf(psb.Key, psb.Key, psb.Value.Evaluate(equipedWeapon.level)));
+            weaponPrimalAdjustedValue.Add(new MultStatLeaf(psb.Key, psb.Key, psb.Value.Evaluate(weaponInstance.level)));
         }
 
         foreach (KeyValuePair<string, float> kvp in weaponPrimalAdjustedValue.Stats())
@@ -205,7 +205,7 @@ public class EquipedWeapon : MonoBehaviour
 
         weaponBonusDamage.AddReferenceOnlyStat(new BatchStatLeaf(weaponPrimalAdjustedValue));
 
-        foreach (BaseQuirk bq in equipedWeapon.weapon.baseQuirk)
+        foreach (BaseQuirk bq in weaponInstance.weapon.baseQuirk)
         {
             foreach (BasePrimalScaling bps in bq.primalScaling)
             {
