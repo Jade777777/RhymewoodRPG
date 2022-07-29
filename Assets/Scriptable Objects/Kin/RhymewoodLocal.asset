@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: RhymewoodLocal
   m_EditorClassIdentifier: 
   friendly:
+  - {fileID: 11400000, guid: 22a0a2da37164d44588b14446c9bc229, type: 2}
+  - {fileID: 11400000}
   - {fileID: 11400000, guid: 81eaf0b876c534044b3d265f735f80f5, type: 2}
   hostile: []

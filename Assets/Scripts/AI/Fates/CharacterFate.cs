@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class CharacterFate : BaseFate
 {
@@ -15,13 +17,13 @@ public class CharacterFate : BaseFate
 
     Dictionary<string, List<PatrolPoint>> behaviors = new();
     Dictionary<string, PatrolPoint> currentPatrolPoints = new();
-
-
+    
+    private static Dictionary<Transform, SortedList<int, GameObject>> targetGroups = new();
     protected override void Awake()
     {
         base.Awake();
         knowledgeBase = characterInstance.GetComponent<KnowledgeBase>();
-
+        
         agent.avoidancePriority = 3;
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.GoodQualityObstacleAvoidance;
 
@@ -43,7 +45,8 @@ public class CharacterFate : BaseFate
     IEnumerator PatrolPointUpdate(string behaviorName)
     {
         while (behaviors.Count>0)
-        {
+        { 
+
             foreach (PatrolPoint patrolPoint in behaviors[behaviorName])
             {
                 currentPatrolPoints[behaviorName] = patrolPoint;
@@ -52,7 +55,12 @@ public class CharacterFate : BaseFate
                 {
                     PressButton(patrolPoint);
                 }
-                yield return new WaitForSeconds(patrolPoint.WaitTime);
+               
+                yield return new WaitForSeconds(patrolPoint.BaseWaitTime+Random.Range(0,patrolPoint.WaitTimeRandomize));
+                while (characterInstance.activeSelf == false)
+                {
+                    yield return new WaitForSeconds(1);
+                }
             }
         }
     }
@@ -61,10 +69,12 @@ public class CharacterFate : BaseFate
 
     private void LateUpdate()
     {
-        
-        agent.SetDestination(CalcPosition());// add flanking functionality and awareness of the combat situation. make sure target positions around the enemies are all unique.
-        RotateCharacter();
-        MoveCharacter();
+        if (characterInstance.activeSelf == true)
+        {
+            agent.SetDestination(CalcPosition());// add flanking functionality and awareness of the combat situation. make sure target positions around the enemies are all unique.
+            RotateCharacter();
+            MoveCharacter();
+        }
     }
  
     private void PressButton(PatrolPoint patrolPoint)
@@ -91,43 +101,92 @@ public class CharacterFate : BaseFate
         }
     }
 
+
+
+
+    Transform oldTarget = null;
     private Vector3 CalcPosition()
     {
-        
         agent.nextPosition = characterInstance.transform.position;
         PatrolPoint currentPatrolPoint = currentPatrolPoints[cnc.GetBehavior()];
         //******
         Transform target = ProccessTarget(currentPatrolPoint.TargetPosition);//calc apropriate target;
-        //******
-
+                                                                             //******
 
         
+
+
+        //Check if there are any other characters with the saem target and make room for eachother;
+        
+        if (oldTarget != target)
+        {
+            if (oldTarget != null && targetGroups.ContainsKey(oldTarget))
+            {
+                targetGroups[oldTarget].Remove(characterInstance.GetInstanceID());
+            }
+            if (target != null)
+            {
+                if (!targetGroups.ContainsKey(target))
+                {
+                    targetGroups[target] = new SortedList<int, GameObject>();
+                }
+                targetGroups[target].Add(characterInstance.GetInstanceID(), characterInstance);
+            }
+            oldTarget = target;
+        }
+
         if (target == null)
         {
             return characterInstance.transform.position;
         }
-        
+
+        int index = targetGroups[target].IndexOfKey(characterInstance.GetInstanceID());
+        int count = targetGroups[target].Count;
+
         Vector3 currentOffset = agent.nextPosition - target.position;
 
         currentOffset.y = 0f;
         float currentDistance = currentOffset.magnitude;
-        Vector3 targetOffset= Vector3.zero;
+        Vector3 targetOffset = Vector3.zero;
 
-        switch (currentPatrolPoint.Type)
+
+
+        if (count == 1)
         {
-            case PositioningType.Unlocked://retreating/ranged enemies may use this
-                targetOffset = currentOffset.normalized;
-                break;
-            case PositioningType.Velocity:// Enemies may try to impede the movement of the player
-                targetOffset = target.GetComponent<PhysicalInput>().lastAttemptedDirection.normalized;
-                break;
-            case PositioningType.Front: // get in the players face, make it a little easier.
-                targetOffset = target.forward;
-                break;
-            case PositioningType.Behind:// This is good for positional dodging as well sneaking
-                targetOffset = -target.forward;
-                break;
+
+            switch (currentPatrolPoint.Type)
+            {
+                case PositioningType.Unlocked://retreating/ranged enemies may use this
+                    targetOffset = currentOffset.normalized;
+                    break;
+                case PositioningType.Velocity:// Enemies may try to impede the movement of the player
+                    targetOffset = target.GetComponent<PhysicalInput>().lastAttemptedDirection.normalized;
+                    break;
+                case PositioningType.Front: // get in the players face, make it a little easier.
+                    targetOffset = target.forward;
+                    break;
+                case PositioningType.Behind:// This is good for positional dodging as well sneaking
+                    targetOffset = -target.forward;
+                    break;
+            }
         }
+        else if (count >= 2)
+        {
+            
+            Transform leftChar = targetGroups[target].ElementAt((index+count - 1) % (count)).Value.transform;
+            Transform rightChar = targetGroups[target].ElementAt((index+count + 1) % (count)).Value.transform;
+            Vector3 dirLeft = (leftChar.position - target.position).normalized;
+            Vector3 dirRight = (rightChar.position - target.position).normalized;
+            Quaternion left = Quaternion.LookRotation(dirLeft);
+            Quaternion right = Quaternion.LookRotation(dirRight);
+            Quaternion middle = Quaternion.Euler(0, left.eulerAngles.y+((right.eulerAngles.y-left.eulerAngles.y+359.9f)%360)/2, 0);
+            Vector3 dirCenter = middle * Vector3.forward;
+            targetOffset = dirCenter;
+            
+        }
+
+
+
         
         Debug.Assert(targetOffset != Vector3.zero);
         if(Vector3.Angle(targetOffset, currentOffset)<=currentPatrolPoint.Angle/2)
@@ -188,7 +247,9 @@ public class CharacterFate : BaseFate
         public float Angle;
         public float MaxDistance;//
         public float MinDistance;// this will generaly not be set by mele characters unless they need to exhibit cowardly like behaviors.
-        public float WaitTime;
+      
+        public float BaseWaitTime;
+        public float WaitTimeRandomize;
     }
 
     [System.Serializable]
@@ -206,6 +267,7 @@ public class CharacterFate : BaseFate
 
     }
 
+    
     private Transform ProccessTarget(Target target)
     {
         GameObject t;
@@ -248,7 +310,6 @@ public class CharacterFate : BaseFate
         }
         else 
         {
-           
             return t.transform;
         } 
 

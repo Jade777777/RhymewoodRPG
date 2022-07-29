@@ -14,7 +14,7 @@ public abstract class BaseFate : MonoBehaviour
     {
         cnc = characterInstance.GetComponent<CharacterNerveCenter>();
         agent = GetComponent<NavMeshAgent>();
-        agent.radius = characterInstance.GetComponent<CharacterController>().radius * 2f;
+        agent.radius = characterInstance.GetComponent<CharacterController>().radius * +0.1f;
     }
 
 

@@ -28,7 +28,7 @@ public class CharacterPerception : MonoBehaviour
 
     IEnumerator SightTick()
     {
-        yield return new WaitForSeconds(0.5f+TimeStep*Random.value);
+        yield return new WaitForSeconds(0.25f+TimeStep*Random.value);
         while (true)
         {
             if (UpdateSight)
@@ -40,15 +40,17 @@ public class CharacterPerception : MonoBehaviour
 
                 foreach (Collider thing in sighted)
                 {
-                    float offset = cc.radius;
-                    Vector3 origin = transform.position + (transform.forward * offset)+cc.center;
-                    Vector3 direction = thing.transform.position - transform.position;
 
-                    if (Physics.Raycast(origin, direction,out RaycastHit hitInfo, direction.magnitude,layerMask)&&hitInfo.collider==thing)
-                    {
-                        Debug.DrawRay(origin, direction, Color.red, 0.5f);
-                        knowledgeBase.SightCharacter(thing.gameObject);
-                    }
+                        float offset = cc.radius;
+                        Vector3 origin = transform.position + (transform.forward * offset) + cc.center;
+                        Vector3 direction = thing.transform.position - transform.position;
+
+                        if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, direction.magnitude, layerMask) && hitInfo.collider == thing)
+                        {
+                            Debug.DrawRay(origin, direction, Color.red, 0.5f);
+                            knowledgeBase.SightCharacter(thing.gameObject);
+                        }
+                    
                 }
             }
             yield return new WaitForSeconds(TimeStep);

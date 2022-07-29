@@ -9,17 +9,20 @@ public class CharacterNerveCenter : MonoBehaviour
     float InputTimeout=0.75f;
     int poise = 5;
 
+
+
     Animator animator;
     CharacterController cc;
     StatWarden statWarden;
     PhysicalInput physicalInput;
     Behavior behavior;
     public bool IsPlayer = false;
-    KnowledgeBase knowledgeBase;
+    public KnowledgeBase knowledgeBase;
     EquipedWeapon equipedWeapon;
 
     private void Awake()
     {
+        
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
 
@@ -125,10 +128,23 @@ public class CharacterNerveCenter : MonoBehaviour
         {
             lastHitID = hitBox.hitID;
         }
+        float totalDamage=0f;
         foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
         {
-            float val = statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
+            totalDamage += damage.Value;
+            statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
+
         }
+        //agro
+        if (whb != null)
+        {
+            statWarden.GetLivingStat("Health", out _, out float maxValue);
+            hurtBox.cnc.ImpactAgro(whb.cnc.gameObject, totalDamage / maxValue);
+            Debug.Log("agro set " + totalDamage / maxValue);
+        }
+   
+
+
         GetComponent<HitStop>().ActivateHitStop(hitBox.hitStop);//0.13 is the default
 
 
@@ -144,7 +160,7 @@ public class CharacterNerveCenter : MonoBehaviour
         animator.SetInteger("Poise", (int) currentPoise);
         animator.SetInteger("KnockDownType", (int)hitBox.GetKnockdownType());
         resetPoiseTime = Time.time + statWarden.characterStats.EmergentStats()["PoiseReset"];
-
+        
         Debug.Log(statWarden.characterStats.EmergentStats()["PoiseReset"]);
         //done with poise stuff
 
@@ -153,18 +169,20 @@ public class CharacterNerveCenter : MonoBehaviour
     }
     public void StrikeHurtBox(WeaponHitBox hitBox, HurtBox hurtBox)
     {
-        if (IsPlayer)
-        {
+
             Debug.Log(transform.name + " Struck hurtbox " + hurtBox.cnc.transform.name);
             GetComponent<HitStop>().ActivateHitStop(hitBox.hitStop);//0.13 is the default
 
             hitBox.GetKnockbackDistance(hurtBox, out Vector3 _,out Vector3 selfKnockback);
             GetComponent<HitStop>().ActivateKnockBack(selfKnockback);
-        }
+            
+            
+
     }
 
     public void Death()
     {
+        gameObject.SetActive(false);
         if (IsPlayer)
         {
             SceneManager.LoadScene("GameOver");
@@ -188,11 +206,14 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         statWarden.GetLivingStat(stat, out currentValue, out maxValue);
     }
+
     public void UpdateLivingStats()
     {
         statWarden.GetLivingStat("Health", out float currentValue, out float maxValue);
         if (currentValue <= 0)
         {
+           
+            
             animator.SetTrigger("Die");
         }
         Debug.Log("Health is now  "+ currentValue );
@@ -254,14 +275,16 @@ public class CharacterNerveCenter : MonoBehaviour
     Coroutine coroutineRef;
     private void SetTrigger(string name)
     {
-        if (isRunning &&coroutineRef!=null)
-        {
-            StopCoroutine(coroutineRef);
-            animator.ResetTrigger(previousName);
 
-        }
-        coroutineRef = StartCoroutine( SetTriggerProcess(name));
-        previousName = name;
+            if (isRunning && coroutineRef != null)
+            {
+                StopCoroutine(coroutineRef);
+                animator.ResetTrigger(previousName);
+
+            }
+            coroutineRef = StartCoroutine(SetTriggerProcess(name));
+            previousName = name;
+  
     }
 
 

@@ -8,6 +8,8 @@ public class KnowledgeBase : MonoBehaviour
     [HideInInspector]
     public GameObject ClosestSightedHostile { get; private set; }
     [HideInInspector]
+    public GameObject ClosestFriendlysEnemy{ get; private set; }
+    [HideInInspector]
     public GameObject ClosestSightedNuetral { get; private set; }
     [HideInInspector]
     public GameObject ClosestSightedFriendly { get; private set; }
@@ -24,9 +26,11 @@ public class KnowledgeBase : MonoBehaviour
 
 
     private CharacterNerveCenter cnv;
+    private EquipedWeapon equipedWeapon;
     private void Awake()
     {
         cnv = GetComponent<CharacterNerveCenter>();
+        equipedWeapon = GetComponent<EquipedWeapon>();
     }
 
     // Start is called before the first frame update
@@ -44,10 +48,10 @@ public class KnowledgeBase : MonoBehaviour
             case UtilityAxis.Agro://0 means no enemies have agro, 1 means an enemy has an agro of 20 or more
                 axisValue = AxisAgro();
                 break;
-            case UtilityAxis.ClosestEnemy:// 0 means they are 20 meters or more away, 1 means they are close
-                axisValue = AxisEnemyDistance();
+            case UtilityAxis.AgroEnemyDistance:// 0 means they are 20 meters or more away, 1 means they are within the weapons engagement distance
+                axisValue = AxisAgroEnemyDistance();
                 break;
-            case UtilityAxis.ClosestFriendly://same^
+            case UtilityAxis.ClosestFriendly://0 means they are 20 meters away, 1 means they are in the same position
                 axisValue = AxisFriendlyDistance();
                 break;
             case UtilityAxis.ClosestCharacter://same^
@@ -68,35 +72,39 @@ public class KnowledgeBase : MonoBehaviour
     private float forgetTime=8f;
     private HashSet<GameObject> hostilesSighted = new();
     private HashSet<GameObject> nuetralsSighted = new();
-    private HashSet<GameObject> friendlysSighted = new();
+    public HashSet<GameObject> friendlysSighted = new();
+    private HashSet<GameObject> friendlysCurrentEnemies = new();
     private Dictionary<GameObject,float> characterAgro = new();//When damage is taken the threat is increased
-
+    
     public void SightCharacter(GameObject character)
     {
-        if (charactersSighted.ContainsKey(character))
-        {
-            charactersSighted[character] = Time.time+forgetTime;
-        }
-        else
-        {
-            charactersSighted.Add(character, Time.time+forgetTime);
             KnowledgeBase ckb = character.GetComponent<KnowledgeBase>();
+            
             if (KinType.Hostile.Contains(ckb.KinType))
             {
+                charactersSighted[character] = Time.time + forgetTime;
                 hostilesSighted.Add(character);
             }
             else if (KinType.Friendly.Contains(ckb.KinType))
             {
+                charactersSighted[character] = Time.time + forgetTime*4;//increase the forget time for friendly creatures because it aids in team work
                 friendlysSighted.Add(character);
+                 
+            
+                if (ckb.HighestAgroSighted != null 
+                    && !KinType.Friendly.Contains(ckb.HighestAgroSighted.GetComponent<KnowledgeBase>().KinType) 
+                    && !ckb.HighestAgroSighted.Equals(gameObject))
+                {
+                Debug.Log("I See a friendly with an enemy");
+                friendlysCurrentEnemies.Add(ckb.HighestAgroSighted);
+                charactersSighted[ckb.HighestAgroSighted] = Time.time + forgetTime;
+                }
             }
             else
             {
+                charactersSighted[character] = Time.time + forgetTime;
                 nuetralsSighted.Add(character);
             }
-        }
-        
-        
-
     }
 
 
@@ -106,19 +114,23 @@ public class KnowledgeBase : MonoBehaviour
         {
             if(Time.time>c.Value)
             {
-                
                 charactersSighted.Remove(c.Key);
                 hostilesSighted.Remove(c.Key);
                 nuetralsSighted.Remove(c.Key);
                 friendlysSighted.Remove(c.Key);
-              //  if (GetComponent<CharacterNerveCenter>().IsPlayer == true) Debug.Log("I can no longer see" + c.Key.name+"  time: "+Time.time+" vs " +c.Value);
+                friendlysCurrentEnemies.Remove(c.Key);
             }
+        }
+        foreach(GameObject c in friendlysSighted)
+        {
+
         }
         UpdateAgro();
         FindClosestCharacter();
         FindClosestFriendly();
         FindClosestNuetral();
         FindClosestSightedHostile();
+        FindClosestFriendlysEnemy();
         FindCurrentEnemy();
         FindHighestAgro();
     }
@@ -128,7 +140,7 @@ public class KnowledgeBase : MonoBehaviour
         {
             if (c.Value <= Time.time)
             {
-                Debug.Log(c.Key.name);
+                Debug.Log("REMOVING :" + c.Key.name + "FROM AGRO LIST");
                 characterAgro.Remove(c.Key);
             }
         }
@@ -137,14 +149,23 @@ public class KnowledgeBase : MonoBehaviour
     {
         Debug.Log(character.name+",,,,,"+transform.name);
 
-        float RecoverTime = impact;
+        float RecoverTime = impact*80+1;// if a character llooses a quarter of there helath they develop agro for 20 seconds.
+        if (kin.Hostile.Contains(character.GetComponent<KnowledgeBase>().kin))
+        {
+            RecoverTime *= 1.36f;
+        }
+        else if (kin.Friendly.Contains(character.GetComponent<KnowledgeBase>().kin))
+        {
+            RecoverTime = 5.87f;
+        }
+
         if (characterAgro.ContainsKey(character))
         {
-            characterAgro[character] = RecoverTime + Mathf.Max(impact + characterAgro[character], impact + Time.time);
+            characterAgro[character] = Mathf.Max(characterAgro[character]+RecoverTime, Time.time+RecoverTime);
         }
         else
         {
-            characterAgro.Add(character, RecoverTime + Time.time);
+            characterAgro.Add(character, Time.time+RecoverTime);
         }
         SightCharacter(character);
     }
@@ -165,18 +186,22 @@ public class KnowledgeBase : MonoBehaviour
         //threat is determined by how many enemies&nueterals vs allies are present
         return threat;
     }
-    private float AxisEnemyDistance()
+    
+    private float AxisAgroEnemyDistance()
     {
 
         if(CurrentEnemy != null)
         {
-            return 1-Mathf.Clamp01((CurrentEnemy.transform.position - transform.position).magnitude / 20);
+            float weaponRange = equipedWeapon.weaponInstance.weapon.engagementDistance;
+            return 1-Mathf.Clamp01(((CurrentEnemy.transform.position - transform.position).magnitude-weaponRange) / 20);
         }
         else
         {
             return 0;
         }
     }
+ 
+    
     private float AxisFriendlyDistance()
     {
         if (ClosestSightedFriendly != null)
@@ -225,6 +250,10 @@ public class KnowledgeBase : MonoBehaviour
     {
         ClosestSightedHostile = hostilesSighted.OrderBy(character => (character.transform.position - transform.position).sqrMagnitude).FirstOrDefault<GameObject>();
     }
+    private void FindClosestFriendlysEnemy()
+    {
+        ClosestFriendlysEnemy = friendlysCurrentEnemies.OrderBy(character => (character.transform.position - transform.position).sqrMagnitude).FirstOrDefault<GameObject>();
+    }
     private void FindClosestNuetral()
     {
         ClosestSightedNuetral=nuetralsSighted.OrderBy(character => (character.transform.position - transform.position).sqrMagnitude).FirstOrDefault<GameObject>();
@@ -243,13 +272,19 @@ public class KnowledgeBase : MonoBehaviour
         if (HighestAgroSighted!= null&& !charactersSighted.ContainsKey(HighestAgroSighted))
         {
             HighestAgroSighted = null;
-        } 
+        }
+
     }
     private void FindCurrentEnemy()
     {
         if (HighestAgroSighted != null)
         {
             CurrentEnemy = HighestAgroSighted;
+               
+        }
+        else if (ClosestFriendlysEnemy != null)
+        {
+            CurrentEnemy = ClosestFriendlysEnemy;
         }
         else if (ClosestSightedHostile != null)
         {
@@ -259,10 +294,11 @@ public class KnowledgeBase : MonoBehaviour
         {
             CurrentEnemy = null;
         }
+
     }
 
 
 
 
-    public enum UtilityAxis { Health, Threat, Agro, ClosestEnemy, ClosestFriendly, ClosestCharacter}
+    public enum UtilityAxis { Health, Threat, Agro, AgroEnemyDistance, ClosestFriendly, ClosestCharacter}
 }

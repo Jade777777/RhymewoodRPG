@@ -14,5 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly:
   - {fileID: 11400000}
-  hostile:
-  - {fileID: 11400000, guid: 81eaf0b876c534044b3d265f735f80f5, type: 2}
+  hostile: []

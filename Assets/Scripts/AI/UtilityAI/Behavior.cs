@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class Behavior : MonoBehaviour
 {
  
-    public KnowledgeBase.UtilityAxis thing;
     public float TimeStep = 1f;
     public List<Action> actions;
     private string currentBehavior;
