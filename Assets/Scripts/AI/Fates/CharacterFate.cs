@@ -39,6 +39,7 @@ public class CharacterFate : BaseFate
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.speed = cnc.PrimalStats()["Move Speed"];
+        agent.stoppingDistance = .04f;
     }
 
 
@@ -107,7 +108,17 @@ public class CharacterFate : BaseFate
     Transform oldTarget = null;
     private Vector3 CalcPosition()
     {
-        agent.nextPosition = characterInstance.transform.position;
+        if (Vector3.Distance(characterInstance.transform.position, agent.nextPosition) >= 1f)
+        {
+            agent.Warp(characterInstance.transform.position);
+        }
+        else
+        {
+            if(NavMesh.SamplePosition(characterInstance.transform.position + Vector3.up, out NavMeshHit hit, 2, 1 << NavMesh.GetAreaFromName("Walkable")))
+            {
+                agent.nextPosition = hit.position;
+            }
+        }
         PatrolPoint currentPatrolPoint = currentPatrolPoints[cnc.GetBehavior()];
         //******
         Transform target = ProccessTarget(currentPatrolPoint.TargetPosition);//calc apropriate target;

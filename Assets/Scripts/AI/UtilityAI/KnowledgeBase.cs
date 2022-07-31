@@ -95,7 +95,6 @@ public class KnowledgeBase : MonoBehaviour
                     && !KinType.Friendly.Contains(ckb.HighestAgroSighted.GetComponent<KnowledgeBase>().KinType) 
                     && !ckb.HighestAgroSighted.Equals(gameObject))
                 {
-                Debug.Log("I See a friendly with an enemy");
                 friendlysCurrentEnemies.Add(ckb.HighestAgroSighted);
                 charactersSighted[ckb.HighestAgroSighted] = Time.time + forgetTime;
                 }
@@ -140,15 +139,12 @@ public class KnowledgeBase : MonoBehaviour
         {
             if (c.Value <= Time.time)
             {
-                Debug.Log("REMOVING :" + c.Key.name + "FROM AGRO LIST");
                 characterAgro.Remove(c.Key);
             }
         }
     }
     public void HostileImpact(GameObject character, float impact)//impact is a percent of the health that was removed
     {
-        Debug.Log(character.name+",,,,,"+transform.name);
-
         float RecoverTime = impact*80+1;// if a character llooses a quarter of there helath they develop agro for 20 seconds.
         if (kin.Hostile.Contains(character.GetComponent<KnowledgeBase>().kin))
         {

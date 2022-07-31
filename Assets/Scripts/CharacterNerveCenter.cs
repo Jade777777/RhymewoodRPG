@@ -140,7 +140,7 @@ public class CharacterNerveCenter : MonoBehaviour
         {
             statWarden.GetLivingStat("Health", out _, out float maxValue);
             hurtBox.cnc.ImpactAgro(whb.cnc.gameObject, totalDamage / maxValue);
-            Debug.Log("agro set " + totalDamage / maxValue);
+
         }
    
 
@@ -151,8 +151,6 @@ public class CharacterNerveCenter : MonoBehaviour
         // poise/knockback stuff
         if (resetPoiseTime <= Time.time)
         {
-            Debug.Log(Time.time + "     "+resetPoiseTime);
-            Debug.Log("resetpoise");
             statWarden.ImpactStat("Poise", 999999f);//resets poise back to max.
         }
         statWarden.ImpactStat("Poise", -hitBox.GetPoiseDamage());
@@ -216,7 +214,6 @@ public class CharacterNerveCenter : MonoBehaviour
             
             animator.SetTrigger("Die");
         }
-        Debug.Log("Health is now  "+ currentValue );
     }
    
     //KnowledgeBase

@@ -3563,6 +3563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPlayer: 0
+  knowledgeBase: {fileID: 0}
   focus: {fileID: 0}
 --- !u!114 &5940548488857908987
 MonoBehaviour:
@@ -3808,7 +3809,7 @@ MonoBehaviour:
   cameraInputWeight: 1
   cameraAnimationWeight: 0
   turnSpeed: 360
-  smoothMoveInput: 4
+  smoothMoveInput: 5
 --- !u!114 &5244582613714873118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4145,7 +4146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b03986cf6b2136429f909448c5746e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thing: 2
   TimeStep: 1
   actions: []
 --- !u!114 &5126984437493816003
