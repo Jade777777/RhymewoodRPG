@@ -43,34 +43,34 @@ public class EquipedWeapon : MonoBehaviour
         defaultAnimationOverrides = new List<KeyValuePair<AnimationClip, AnimationClip>>(animatorOverrideController.overridesCount);
         animatorOverrideController.GetOverrides(defaultAnimationOverrides);
 
-        EquipWeapon(weaponInstance.weapon);
+        EquipWeapon(weaponInstance);
 
     }
 
 
     
-    public void EquipWeapon(Weapon weapon)
+    public void EquipWeapon(WeaponInstance weaponInstance)
     {
-        Debug.Assert(weapon != null);
+        Debug.Assert(weaponInstance != null);
 
         //cleanup previous weapon models
         CleanUpWeapon();
         //Equip the weapon
-        SetWeapon(weapon);
+        SetWeapon(weaponInstance);
     }
 
-    private void SetWeapon(Weapon weapon)
+    private void SetWeapon(WeaponInstance weaponInstance)
     {
         //TODO:
         //save weapon infusion.
 
-        weaponInstance.weapon = weapon;//save the value of the new weapon
+        this.weaponInstance = weaponInstance;//save the value of the new weapon
         //instantiate the new weapon model
-        modelInstance = Instantiate(weaponInstance.weapon.weaponModel, weaponJoint);
-        modelInstance.name = weaponInstance.name + " " + ID;
+        modelInstance = Instantiate(this.weaponInstance.weapon.weaponModel, weaponJoint);
+        modelInstance.name = this.weaponInstance.name + " " + ID;
         //instantiate the new attack models used by the new animations;
 
-        foreach (Attack attack in weaponInstance.weapon.attacks)
+        foreach (Attack attack in this.weaponInstance.weapon.attacks)
         {
             bool SkipSpawn= false;
             foreach(GameObject instance in attackModelInstance)

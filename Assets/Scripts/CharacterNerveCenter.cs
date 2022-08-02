@@ -318,5 +318,43 @@ public class CharacterNerveCenter : MonoBehaviour
         }
         return false;
     }
+    
+
+    //Swap Weapons
+
+    private void SwapWeapon(Weapon weapon)
+    {
+        //equipedWeapon.EquipWeapon(weapon);
+    }
+    [SerializeField]
+    Weapon weapon1;
+    [SerializeField]
+    int level1;
+    [SerializeField]
+    WeaponInfusion infusion1;
+    public void SwapToWeapon1()
+    {
+        equipedWeapon.EquipWeapon(new WeaponInstance(weapon1, level1, infusion1));
+    }
+    [SerializeField]
+    Weapon weapon2;
+    [SerializeField]
+    int level2;
+    [SerializeField]
+    WeaponInfusion infusion2;
+    public void SwapToWeapon2()
+    {
+        equipedWeapon.EquipWeapon(new WeaponInstance(weapon2, level2, infusion2));
+    }
+    [SerializeField]
+    Weapon weapon3;
+    [SerializeField]
+    int level3;
+    [SerializeField]
+    WeaponInfusion infusion3;
+    public void SwapToWeapon3()
+    {
+        equipedWeapon.EquipWeapon(new WeaponInstance(weapon3, level3, infusion3));
+    }
 
 }

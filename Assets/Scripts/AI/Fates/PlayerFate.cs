@@ -99,5 +99,18 @@ public class PlayerFate : BaseFate
             cnc.Interact();
         }
     }
+
+    public void OnSwapToWeapon1(InputValue input)
+    {
+        cnc.SwapToWeapon1();
+    }
+    public void OnSwapToWeapon2(InputValue input)
+    {
+        cnc.SwapToWeapon2();
+    }
+    public void OnSwapToWeapon3(InputValue input)
+    {
+        cnc.SwapToWeapon3();
+    }
     #endregion
 }

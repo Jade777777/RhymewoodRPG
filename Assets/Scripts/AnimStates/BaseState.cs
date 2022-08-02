@@ -109,13 +109,13 @@ public class BaseState : MonoBehaviour
     Vector3 moveDistance;
     protected void MoveAllongGround()
     {
-        Vector3 dir = (physicalInput.moveInput);//cameraTarget.TransformDirection
+        Vector3 dir = (physicalInput.moveInput);
         dir.y = 0f;
         Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, groundNormal).normalized * physicalInput.moveInput.magnitude;
         inputDirOnGround.y = 0f;
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
         
-        float targetY = isGrounded ? contactY - transform.position.y : 0;
+        float targetY = isGrounded ? contactY - transform.position.y : (physicalInput.internalVelocity.y - (9.8f*Time.deltaTime))*Time.deltaTime;
         moveDistance = (inputDirOnGround+lastHitPointVelocity) * Time.deltaTime+(Vector3.up*targetY);
         physicalInput.internalVelocity = dir + lastHitPointVelocity;
     }

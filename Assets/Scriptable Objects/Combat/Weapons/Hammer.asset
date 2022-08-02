@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905241d365fe44546a204265a10327a3, type: 3}
+  m_Name: Hammer
+  m_EditorClassIdentifier: 
+  weaponModel: {fileID: 6828611147035003804, guid: 714e49374c1b1fd40a23ab87ca38bbc3, type: 3}
+  engagementDistance: 2.2
+  pushDistance: 1.4
+  attacks:
+  - {fileID: 11400000, guid: 04c9ddad11e614d48898efff1b42ab3b, type: 2}
+  - {fileID: 11400000, guid: e05c20925e0d9814b99b9b3f07b1ba15, type: 2}
+  baseQuirk:
+  - quirkType: Physical
+    baseDamage: 100
+    primalScaling:
+    - primalStat: Strength
+      baseScaling: 0.2
+    - primalStat: Vigor
+      baseScaling: 0.2

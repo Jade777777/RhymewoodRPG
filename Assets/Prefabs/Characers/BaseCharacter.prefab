@@ -4110,7 +4110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18d80d19b103604397bf073264e10f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 3
+  movementType: 0
   moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.2
@@ -4128,7 +4128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb80ce45edd9bf43a6e18cdd5cd7386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 3
+  movementType: 0
   moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.2
