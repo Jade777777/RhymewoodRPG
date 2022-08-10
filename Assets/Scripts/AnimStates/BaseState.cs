@@ -43,7 +43,7 @@ public class BaseState : MonoBehaviour
     CharacterNerveCenter            cnc;
     AnimatorScriptControl           animatorScriptControl;
     
-    public enum MovementType { Ground, Horizontal, Slide, Airborn };
+    public enum MovementType { Ground, Horizontal, Slide, Airborn, Animated };
 
     private Movement movement;
     protected virtual void Awake()
@@ -76,26 +76,9 @@ public class BaseState : MonoBehaviour
     }
 
     #region Movement Input
-    Vector3 groundNormal = Vector3.up;
-    Vector3 inputDirection = Vector3.zero;
-    bool isGrounded;
-    float contactY;
-    Vector3 slopeDir;
-    Vector3 lastHitPointVelocity;
 
-    public void IsGrounded(GroundInfo info)
-    {
-        if (this.enabled)
-        {
-            slopeDir = info.slopeDir;
-            groundNormal = info.normal;
-            isGrounded = info.detectGround;
-            contactY = info.point.y;
-            lastHitPointVelocity = info.lastHitPointVelocity;
-            lastHitPointVelocity.y = 0f;
-        }
-    }
-    public void MoveInput(Vector2 input)
+    Vector3 inputDirection = Vector3.zero;
+    public virtual void MoveInput(Vector2 input)
     {
 
         Vector2 weightedMoveInput = input;// * animatorScriptControl.moveInputWeight;
@@ -111,13 +94,16 @@ public class BaseState : MonoBehaviour
     {
         Vector3 dir = (physicalInput.moveInput);
         dir.y = 0f;
-        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, groundNormal).normalized * physicalInput.moveInput.magnitude;
+        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
         inputDirOnGround.y = 0f;
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
+
+        float targetY;
+        targetY = physicalInput.GroundData.detectGround&&physicalInput.GroundData.angle<80 ? physicalInput.GroundData.point.y - transform.position.y : (physicalInput.internalVelocity.y - (9.8f*Time.deltaTime))*Time.deltaTime;
+        Vector3 moveSpeed = inputDirOnGround + physicalInput.GroundData.lastHitPointVelocity;
+        moveDistance = (moveSpeed) * Time.deltaTime+(Vector3.up*targetY);
         
-        float targetY = isGrounded ? contactY - transform.position.y : (physicalInput.internalVelocity.y - (9.8f*Time.deltaTime))*Time.deltaTime;
-        moveDistance = (inputDirOnGround+lastHitPointVelocity) * Time.deltaTime+(Vector3.up*targetY);
-        physicalInput.internalVelocity = dir + lastHitPointVelocity;
+        physicalInput.internalVelocity = moveSpeed;
     }
 
     protected void MoveHorizontaly()
@@ -126,8 +112,9 @@ public class BaseState : MonoBehaviour
         dir.y = 0f;
         dir = dir.normalized * physicalInput.moveInput.magnitude;
         dir *= characterStats.PrimalStats()["Move Speed"];
-        moveDistance=(dir+lastHitPointVelocity) * Time.deltaTime;
-        physicalInput.internalVelocity = dir + lastHitPointVelocity;
+        Vector3 moveSpeed = dir + physicalInput.GroundData.lastHitPointVelocity;
+        moveDistance =(moveSpeed) * Time.deltaTime;
+        physicalInput.internalVelocity = moveSpeed;
     }
 
 
@@ -135,33 +122,35 @@ public class BaseState : MonoBehaviour
     {
         Vector3 dir = physicalInput.moveInput;
         dir.y = 0f;
-        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, groundNormal).normalized * physicalInput.moveInput.magnitude;
-        inputDirOnGround.y = Mathf.Clamp(inputDirOnGround.y, float.NegativeInfinity, 0f);
+        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+
         float slideControl = 0.15f;
 
 
         float acceleration = 9.8f;
         float maxSpeed = 100;
         Vector3 vel = physicalInput.internalVelocity;// physicalInput.Velocity;//
-        
+        if (physicalInput.GroundData.slopeDir != Vector3.zero)
+        {
+            vel = Vector3.ProjectOnPlane(vel, physicalInput.GroundData.normal);
+        }
         vel.y = Mathf.Clamp(vel.y, float.NegativeInfinity, 0);
         vel = Vector3.ClampMagnitude(vel, maxSpeed); 
         
-        Vector3 targetSlope = slopeDir != Vector3.zero ? slopeDir : Vector3.down;
+        Vector3 targetSlope =physicalInput.GroundData.slopeDir != Vector3.zero ? physicalInput.GroundData.slopeDir : Vector3.down;
         targetSlope = (targetSlope*(1-slideControl)) + (inputDirOnGround*slideControl);//adjsuts
         targetSlope.Normalize();
-        Vector3 slideDir = Vector3.MoveTowards(vel, targetSlope * maxSpeed, acceleration * Time.deltaTime);
+        Vector3 moveSpeed = Vector3.MoveTowards(vel, targetSlope * maxSpeed, acceleration * Time.deltaTime);
 
-        moveDistance=(slideDir*Time.deltaTime);
-        physicalInput.internalVelocity = slideDir;
+        moveDistance=(moveSpeed*Time.deltaTime);
+        physicalInput.internalVelocity = moveSpeed;
     }
-    Vector3 prevVel;
     private void Airborn()
     {
         Vector3 vel = physicalInput.internalVelocity;
 
         vel.y = 0; //only horizontal velocity
-        float acceleration = characterStats.PrimalStats()["Move Speed"];
+        float acceleration = characterStats.PrimalStats()["Move Speed"];//it takes 2 seconds to fully change directions. It takes 1 second to stop
         float speed= characterStats.PrimalStats()["Move Speed"];
 
         Vector3 dir = physicalInput.moveInput;
@@ -169,10 +158,16 @@ public class BaseState : MonoBehaviour
         dir = dir.normalized * physicalInput.moveInput.magnitude; //only horizontal input relative to camera
         
 
-        Vector3 airMove = Vector3.MoveTowards(vel, dir * speed, acceleration*Time.deltaTime);
-        prevVel = airMove*Time.deltaTime;
-        moveDistance=(airMove * Time.deltaTime);
-        physicalInput.internalVelocity = airMove;
+        Vector3 moveSpeed = Vector3.MoveTowards(vel, dir * speed, acceleration*Time.deltaTime);
+        moveDistance=(moveSpeed+ Vector3.up*physicalInput.GroundData.lastHitPointVelocity.y) * Time.deltaTime;
+        physicalInput.internalVelocity = moveSpeed+ Vector3.up*physicalInput.Velocity.y;
+    }
+    float animatedOverride;
+    private void Animated()
+    {
+        animatedOverride = 0;
+        moveDistance = Vector3.zero;
+        physicalInput.internalVelocity = physicalInput.Velocity;
     }
     #endregion
 
@@ -212,7 +207,7 @@ public class BaseState : MonoBehaviour
 
     Vector3 cOffset = new(0, 0.3f, -0.3f);
 
-    void Update()
+    protected virtual void Update()
     {
        
         physicalInput.moveInput = ( Vector3.MoveTowards((physicalInput.moveInput),transform.TransformDirection(inputDirection * animatorScriptControl.moveInputWeight), animatorScriptControl.smoothMoveInput * Time.deltaTime));
@@ -244,13 +239,17 @@ public class BaseState : MonoBehaviour
             case MovementType.Airborn:
                 movement = () => Airborn();
                 break;
+            case MovementType.Animated:
+                movement = () => Animated();
+                break;
             default:
                 Debug.LogError("Movement Type has not been called");
                 break;
         }
 
         movement();
-        characterController.Move((moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)) * animator.speed);
+        characterController.Move((moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)) * animator.speed*animatedOverride);
+        animatedOverride = 1;
 
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {

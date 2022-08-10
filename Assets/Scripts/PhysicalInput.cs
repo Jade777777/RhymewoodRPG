@@ -7,7 +7,7 @@ public class PhysicalInput : MonoBehaviour
 {
     CharacterNerveCenter characterNerveCenter;
     [SerializeField]
-    float groundDistance = 0.3f;
+    public float groundDistance = 0.3f;
     [SerializeField]
     float radius = 0.5f;
     [SerializeField]
@@ -49,7 +49,8 @@ public class PhysicalInput : MonoBehaviour
     {
         if (internalVelocity != Vector3.zero) lastAttemptedDirection = internalVelocity;
         Vector3 currentPos = transform.position;
-        velocity = (currentPos - lastPos) / Time.deltaTime;
+        velocity = Vector3.ClampMagnitude((currentPos - lastPos) / Time.deltaTime,50);
+        
         lastPos = currentPos;
     }
 

@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e05c20925e0d9814b99b9b3f07b1ba15, type: 2}
   baseQuirk:
   - quirkType: Physical
-    baseDamage: 100
+    baseDamage: 200
     primalScaling:
     - primalStat: Strength
       baseScaling: 0.2

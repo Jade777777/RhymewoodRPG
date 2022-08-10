@@ -45,6 +45,7 @@ public class WeaponHitBox : HitBox
     {
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
         engagementDistance = equipedWeapon.weaponInstance.weapon.engagementDistance;
+       
     }
 
     protected override void OnStrikeHurtBox(HurtBox hurtBox)

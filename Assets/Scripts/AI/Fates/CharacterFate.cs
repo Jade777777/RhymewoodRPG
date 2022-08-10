@@ -70,12 +70,17 @@ public class CharacterFate : BaseFate
 
     private void LateUpdate()
     {
-        if (characterInstance.activeSelf == true)
+        if (characterInstance.activeInHierarchy == true)
         {
             agent.SetDestination(CalcPosition());// add flanking functionality and awareness of the combat situation. make sure target positions around the enemies are all unique.
             RotateCharacter();
             MoveCharacter();
         }
+        else if (oldTarget != null && targetGroups.ContainsKey(oldTarget))
+        {
+            targetGroups[oldTarget].Remove(characterInstance.GetInstanceID());
+        }
+        
     }
  
     private void PressButton(PatrolPoint patrolPoint)
@@ -137,6 +142,7 @@ public class CharacterFate : BaseFate
             }
             if (target != null)
             {
+
                 if (!targetGroups.ContainsKey(target))
                 {
                     targetGroups[target] = new SortedList<int, GameObject>();
@@ -315,7 +321,7 @@ public class CharacterFate : BaseFate
                 break;
         }
         
-        if (t == null)
+        if (t == null||!t.gameObject.activeInHierarchy)
         {
             return target.defaultPoint;
         }

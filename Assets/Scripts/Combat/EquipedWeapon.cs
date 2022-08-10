@@ -119,6 +119,10 @@ public class EquipedWeapon : MonoBehaviour
     {
 
         HitBoxes = modelInstance.GetComponentsInChildren<WeaponHitBox>(true);
+        foreach(WeaponHitBox hitBox in HitBoxes)
+        {
+            hitBox.gameObject.SetActive(false);
+        }
         Debug.Log("Got some hitboxes here");
     }
     public void EW_ActivateWeaponHitBox()

@@ -19,7 +19,7 @@ public class CharacterNerveCenter : MonoBehaviour
     public bool IsPlayer = false;
     public KnowledgeBase knowledgeBase;
     EquipedWeapon equipedWeapon;
-
+    CharacterInteraction characterInteraction;
     private void Awake()
     {
         
@@ -32,6 +32,7 @@ public class CharacterNerveCenter : MonoBehaviour
         behavior = GetComponent<Behavior>();
         knowledgeBase = GetComponent<KnowledgeBase>();
         equipedWeapon = GetComponent<EquipedWeapon>();
+        characterInteraction = GetComponent<CharacterInteraction>();
     }
 
 
@@ -85,6 +86,7 @@ public class CharacterNerveCenter : MonoBehaviour
         SetTrigger("Kick");//mov cnc
     }
 
+    bool interacting=false;
     public void Interact()
     {
         SetTrigger("Interact");
@@ -321,11 +323,8 @@ public class CharacterNerveCenter : MonoBehaviour
     
 
     //Swap Weapons
+    // These weapons will be moved into the inventory and referenced from there once an inventory has been created.
 
-    private void SwapWeapon(Weapon weapon)
-    {
-        //equipedWeapon.EquipWeapon(weapon);
-    }
     [SerializeField]
     Weapon weapon1;
     [SerializeField]

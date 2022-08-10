@@ -994,12 +994,6 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Interact
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: Grounded
     m_Type: 4
     m_DefaultFloat: 0
@@ -1040,6 +1034,12 @@ AnimatorController:
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: -1
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Interact
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
@@ -1247,6 +1247,12 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 7053055418011794886}
     m_Position: {x: 400, y: -200, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 8723769456789310307}
+    m_Position: {x: -702.4939, y: -394.3103, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 4034293509640753783}
+    m_Position: {x: -692.5504, y: -284.9314, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 6456048171892392572}
@@ -1363,6 +1369,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: df107e7a2c03ccd419753d8a181af588, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &4034293509640753783
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AttackDagger2
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 889afac7a281a774aa603580e6c3f350, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1548,7 +1580,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e194fbb82a70ede4589250b870d2932a, type: 2}
+  m_Motion: {fileID: 7400000, guid: d87121f9b6709d149b4bb7c1dc7325d0, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1866,7 +1898,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 0.9254967
   m_HasExitTime: 0
@@ -1927,6 +1959,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &8723769456789310307
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AttackDagger1
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 9c82731e7f882884088c767927e12049, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &8960478446756736867
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
