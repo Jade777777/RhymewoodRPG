@@ -76,8 +76,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441cb42e6f4d76544b0e6c41b70f033a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponWarden: {fileID: 0}
+  hitStop: 0.13
   allQuirks: 1
   damageQuirks: []
   multiplier: 1
-  cnc: {fileID: 0}
+  knockbackDistance: 0
+  takeGround: 0.2
+  poiseDamage: 5
+  knockdownType: 0

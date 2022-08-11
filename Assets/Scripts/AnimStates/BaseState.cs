@@ -37,11 +37,11 @@ public class BaseState : MonoBehaviour
     protected PhysicalInput         physicalInput;
     protected Animator              animator;
     protected HitStop               hitStop;
-    CameraController                cameraController;
-    Transform                       head;
-    Transform                       cameraTarget;
-    CharacterNerveCenter            cnc;
-    AnimatorScriptControl           animatorScriptControl;
+    protected CameraController                cameraController;
+    protected Transform                       head;
+    protected Transform                       cameraTarget;
+    protected CharacterNerveCenter            cnc;
+    protected AnimatorScriptControl           animatorScriptControl;
     
     public enum MovementType { Ground, Horizontal, Slide, Airborn, Animated };
 
@@ -99,7 +99,14 @@ public class BaseState : MonoBehaviour
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
 
         float targetY;
-        targetY = physicalInput.GroundData.detectGround&&physicalInput.GroundData.angle<80 ? physicalInput.GroundData.point.y - transform.position.y : (physicalInput.internalVelocity.y - (9.8f*Time.deltaTime))*Time.deltaTime;
+
+        float distToGround = physicalInput.GroundData.point.y - transform.position.y;
+        float fallDist = (physicalInput.internalVelocity.y - (9.8f * Time.deltaTime)) * Time.deltaTime;
+
+        if(physicalInput.GroundData.detectGround) fallDist = Mathf.Clamp(fallDist, distToGround, Mathf.Infinity);
+        targetY = physicalInput.GroundData.detectGround&&hitStop.knockBackVelocity==Vector3.zero ? distToGround : fallDist;
+
+
         Vector3 moveSpeed = inputDirOnGround + physicalInput.GroundData.lastHitPointVelocity;
         moveDistance = (moveSpeed) * Time.deltaTime+(Vector3.up*targetY);
         
@@ -115,6 +122,7 @@ public class BaseState : MonoBehaviour
         Vector3 moveSpeed = dir + physicalInput.GroundData.lastHitPointVelocity;
         moveDistance =(moveSpeed) * Time.deltaTime;
         physicalInput.internalVelocity = moveSpeed;
+
     }
 
 
@@ -125,11 +133,10 @@ public class BaseState : MonoBehaviour
         Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
 
         float slideControl = 0.15f;
-
-
         float acceleration = 9.8f;
         float maxSpeed = 100;
-        Vector3 vel = physicalInput.internalVelocity;// physicalInput.Velocity;//
+
+        Vector3 vel = physicalInput.internalVelocity;
         if (physicalInput.GroundData.slopeDir != Vector3.zero)
         {
             vel = Vector3.ProjectOnPlane(vel, physicalInput.GroundData.normal);
@@ -142,7 +149,15 @@ public class BaseState : MonoBehaviour
         targetSlope.Normalize();
         Vector3 moveSpeed = Vector3.MoveTowards(vel, targetSlope * maxSpeed, acceleration * Time.deltaTime);
 
-        moveDistance=(moveSpeed*Time.deltaTime);
+        
+
+        moveDistance =(moveSpeed*Time.deltaTime);
+        if (physicalInput.GroundData.detectGround )
+        {
+            float distToGround = physicalInput.GroundData.point.y - transform.position.y;
+            moveDistance.y = distToGround;
+        }
+
         physicalInput.internalVelocity = moveSpeed;
     }
     private void Airborn()
@@ -205,7 +220,7 @@ public class BaseState : MonoBehaviour
     #endregion
 
 
-    Vector3 cOffset = new(0, 0.3f, -0.3f);
+    protected Vector3 cOffset = new(0, 0.3f, -0.3f);
 
     protected virtual void Update()
     {
@@ -223,7 +238,7 @@ public class BaseState : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, physicalInput.targetRotation, Time.deltaTime * animatorScriptControl .turnSpeed* animatorScriptControl.cameraInputWeight);
        
     }
-    private void LateUpdate()
+    protected void LateUpdate()
     {
         switch (animatorScriptControl.movementType)
         {
@@ -248,7 +263,7 @@ public class BaseState : MonoBehaviour
         }
 
         movement();
-        characterController.Move((moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)) * animator.speed*animatedOverride);
+        characterController.Move(animatedOverride * animator.speed * (moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)));
         animatedOverride = 1;
 
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake

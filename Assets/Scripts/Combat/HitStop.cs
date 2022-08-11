@@ -95,12 +95,13 @@ public class HitStop : MonoBehaviour
 
     float acceleration=20;
     public Vector3 knockBackVelocity = Vector3.zero;
+    Coroutine knockBackProcess = null;
     public void ActivateKnockBack(Vector3 distance)
     {
         Vector3 knockBackVelocity = Mathf.Sqrt(2 * acceleration * distance.magnitude) * distance.normalized;
-        StopCoroutine(KnockBackProcess());
-        this.knockBackVelocity += knockBackVelocity;
-        StartCoroutine(KnockBackProcess());
+        if(knockBackProcess!=null) StopCoroutine(KnockBackProcess());
+        this.knockBackVelocity = knockBackVelocity;
+        knockBackProcess=StartCoroutine(KnockBackProcess());
     }
 
     IEnumerator KnockBackProcess()

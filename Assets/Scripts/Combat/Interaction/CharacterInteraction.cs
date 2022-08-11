@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CharacterInteraction : MonoBehaviour
 {
-    KnowledgeBase knowledgeBase;
     private Camera mainCamera;
     public float interactionDistance;
     public float interactionAngle;
@@ -15,7 +14,6 @@ public class CharacterInteraction : MonoBehaviour
     {
         cnc = GetComponent<CharacterNerveCenter>();
         mainCamera = Camera.main;
-        knowledgeBase = GetComponentInParent<KnowledgeBase>();
         animator = GetComponent<Animator>();
     }
 
@@ -37,7 +35,6 @@ public class CharacterInteraction : MonoBehaviour
                     smallestAngle = angle;
                     target = col.gameObject;
                 }
-
             }
         }
         else

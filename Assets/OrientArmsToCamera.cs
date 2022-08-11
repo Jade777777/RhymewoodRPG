@@ -9,6 +9,8 @@ public class OrientArmsToCamera : MonoBehaviour
     public Rig runtimePlayerRig;
     public OverrideTransform overrideTransform;
     public Transform cameraTarget;
+    [Range(0,1)]
+    public float OrientPlayerArms = 0;
 
     private void Awake()
     {
@@ -28,9 +30,14 @@ public class OrientArmsToCamera : MonoBehaviour
             runtimePlayerRig.weight = 1;
         }
     }
+    
     private void Update()
     {
-        overrideTransform.data.rotation = cameraTarget.localRotation.eulerAngles;
+        if (cnc.IsPlayer == true)
+        {
+            runtimePlayerRig.weight = OrientPlayerArms;
+            overrideTransform.data.rotation = cameraTarget.localRotation.eulerAngles;
+            
+        }
     }
-
 }

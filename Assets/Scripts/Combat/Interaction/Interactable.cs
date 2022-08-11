@@ -76,8 +76,8 @@ public class Interactable : MonoBehaviour
         playableDirector.Play();
         Debug.Log(gameObject.name + " HAS BEEN ACTIVATED!");
 
-        animator.speed = 0;
 
+        animator.speed = 0;
         playableDirector.stopped += x => animator.speed = 1;
             
         
