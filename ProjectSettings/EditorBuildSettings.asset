@@ -9,13 +9,16 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 1497e1f60df8f1f48854bdd61e6245a4
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
-  - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: be47ea4295e90504eb37ec9abff26624
   - enabled: 1
+    path: Assets/Scenes/FirstPlayableLevels/FP_Level_1.unity
+    guid: f4505b09b1a1b974dba4650fefbbcbe9
+  - enabled: 1
+    path: Assets/Scenes/PlayTest.unity
+    guid: d1c3109bdb54ad54c8a2b2838528e640
+  - enabled: 1
     path: Assets/Scenes/GameComplete.unity
-    guid: 22cf603dbf0df8643a5c72d53fd77ab1
+    guid: 9ca570c3b297d644caf6d625a8902ab6
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 4c85dd2797c1d8f419cb33a8f9e7c0d2, type: 2}

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterNerveCenter : MonoBehaviour
 {
-    float InputTimeout=0.75f;
+    float InputTimeout=0.33f;
     int poise = 5;
 
 

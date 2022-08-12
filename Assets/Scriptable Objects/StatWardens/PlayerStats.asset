@@ -38,6 +38,10 @@ MonoBehaviour:
     flatModifier: 4
     multiplyModifiers: []
     curveModifiers: []
+  - name: Air Control
+    flatModifier: 10
+    multiplyModifiers: []
+    curveModifiers: []
   emergentStats:
   - name: Health
     flatModifier: 300

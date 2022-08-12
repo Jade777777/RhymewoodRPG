@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BaseInteract : BaseState
 {
-    protected virtual void Update()
+    protected override void Update()
     {
     }
-    private void LateUpdate()
+    protected override void LateUpdate()
     {
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {

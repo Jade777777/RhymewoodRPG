@@ -12,7 +12,8 @@ public class PhysicalInput : MonoBehaviour
     float radius = 0.5f;
     [SerializeField]
     int step = 10;
-
+    [SerializeField]
+    float slideSlope=40;//This value must be the same value used in the slope checks of the animator
     readonly int layerMask = 1 << 0;//  ~(1<<3 + 1<<6 + 1<<7 + 1<<8);// ignores characters when checking for ground
 
     private GroundInfo groundInfo;
@@ -56,26 +57,32 @@ public class PhysicalInput : MonoBehaviour
 
     private void GatherGroundInfo()
     {
+        float groundDistance = this.groundDistance+ Mathf.Clamp(velocity.y*Time.deltaTime, float.NegativeInfinity, 0);//keeps landing from feeling squishy due to a partial move.
         Vector3 origin = transform.position + (Vector3.up * 1f);
         float minYPoint = transform.position.y - groundDistance;
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, groundDistance + 1f, layerMask,QueryTriggerInteraction.Ignore))
+
+        groundInfo.detectGround = false;
+        groundInfo.normal = Vector3.up;
+        float stepRadius = radius / step;
+
+        bool grounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hit, groundDistance + 1f, layerMask, QueryTriggerInteraction.Ignore);
+        bool isSlideSlope = false;
+        if (grounded)
         {
+                Debug.DrawRay(origin, Vector3.down * (hit.distance), Color.red, 0);
+                groundInfo.detectGround = true;
+                groundInfo.normal = hit.normal;
+                groundInfo.point = hit.point;
 
-            Debug.DrawRay(origin, Vector3.down * (hit.distance), Color.red, 0);
-            groundInfo.detectGround = true;
-            groundInfo.normal = hit.normal;
-            groundInfo.point = hit.point;
+                Rigidbody target = hit.rigidbody;
+                groundInfo.lastHitPointVelocity = target != null ? target.GetPointVelocity(hit.point) : Vector3.zero;
 
-            Rigidbody target = hit.rigidbody;
-            groundInfo.lastHitPointVelocity = target!=null ?target.GetPointVelocity(hit.point):Vector3.zero;
-       
+            if (Vector3.Angle(hit.normal, Vector3.up) >= slideSlope) isSlideSlope = true;
+
+
         }
-        else
+        if (grounded == false||isSlideSlope)
         {
-            groundInfo.detectGround = false;
-            groundInfo.normal = Vector3.up;
-            
-            float stepRadius= radius/ step;
 
             for (int i = 1; i < step; i++)//start at 1 because we already did one check with the raycast above
             {
@@ -92,8 +99,15 @@ public class PhysicalInput : MonoBehaviour
                 {
                     if (hit.point.y >= minYPoint)
                     {
-                        if (Physics.Raycast(hit.point + (Vector3.up * 0.1f), Vector3.down, out hit, 0.2f, layerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
+                        Vector3 hitspot = hit.point;
+                        hitspot.y = 0;
+                        Vector3 hitorigin = origin;
+                        hitorigin.y = 0;
+                        Vector3 offset = hitspot - hitorigin;
+                        offset = offset.normalized * 0.01f;
+                        if (Physics.Raycast(hit.point + (Vector3.up * 0.1f)+offset, Vector3.down, out hit, 0.2f, layerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
                         {
+                            
                             //We are grounded! lets get outa here!
                             Debug.DrawRay(groundInfo.point + (Vector3.up * 0.1f), Vector3.down * 0.1f, Color.green, 0f);
                             groundInfo.detectGround = true;
@@ -103,6 +117,8 @@ public class PhysicalInput : MonoBehaviour
                             Rigidbody target = hit.rigidbody;
                             groundInfo.lastHitPointVelocity = target != null ? target.GetPointVelocity(hit.point) : Vector3.zero;
 
+                            if (Vector3.Angle(hit.normal, Vector3.up) >= slideSlope) isSlideSlope = true;
+                            if (!isSlideSlope)
                             break;
 
                         }
@@ -111,6 +127,7 @@ public class PhysicalInput : MonoBehaviour
             }
         }
         groundInfo.angle = Vector3.Angle(groundInfo.normal, Vector3.up);
+
         groundInfo.slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundInfo.normal).normalized;
 
         SendMessage("IsGrounded", groundInfo);

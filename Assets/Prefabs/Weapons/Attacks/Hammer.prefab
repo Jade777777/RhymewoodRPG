@@ -554,7 +554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4930984443667661585, guid: bda59229e97d8b14382746e9fbb5b20d, type: 3}
       propertyPath: takeGround
-      value: -0.2
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -4930984443667661585, guid: bda59229e97d8b14382746e9fbb5b20d, type: 3}
       propertyPath: poiseDamage
@@ -566,7 +566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4930984443667661585, guid: bda59229e97d8b14382746e9fbb5b20d, type: 3}
       propertyPath: knockbackDistance
-      value: 1.25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1985628538156870559, guid: bda59229e97d8b14382746e9fbb5b20d, type: 3}
       propertyPath: m_Name

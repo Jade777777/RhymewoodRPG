@@ -72,9 +72,12 @@ public class CharacterFate : BaseFate
     {
         if (characterInstance.activeInHierarchy == true)
         {
-            agent.SetDestination(CalcPosition());// add flanking functionality and awareness of the combat situation. make sure target positions around the enemies are all unique.
-            RotateCharacter();
-            MoveCharacter();
+            Vector3 destination = CalcPosition();
+            if (isValidMove) {
+                agent.SetDestination(destination);// add flanking functionality and awareness of the combat situation. make sure target positions around the enemies are all unique.
+                RotateCharacter();
+                MoveCharacter();
+            } 
         }
         else if (oldTarget != null && targetGroups.ContainsKey(oldTarget))
         {
@@ -111,17 +114,35 @@ public class CharacterFate : BaseFate
 
 
     Transform oldTarget = null;
+    bool isValidMove;
     private Vector3 CalcPosition()
     {
         if (Vector3.Distance(characterInstance.transform.position, agent.nextPosition) >= 1f)
         {
-            agent.Warp(characterInstance.transform.position);
+            if (agent.Warp(characterInstance.transform.position))
+            {
+                if (NavMesh.SamplePosition(characterInstance.transform.position + Vector3.up, out NavMeshHit hit, 2, 1 << NavMesh.GetAreaFromName("Walkable")))
+                {
+                    agent.nextPosition = hit.position;
+                    isValidMove = true;
+                }
+                else
+                {
+                    //TODO: If it is not a valid move tranisition to aerial path finding
+                    isValidMove = false;
+                }
+            }
         }
         else
         {
             if(NavMesh.SamplePosition(characterInstance.transform.position + Vector3.up, out NavMeshHit hit, 2, 1 << NavMesh.GetAreaFromName("Walkable")))
             {
                 agent.nextPosition = hit.position;
+                isValidMove = true;
+            }
+            else
+            {
+                isValidMove = false;
             }
         }
         PatrolPoint currentPatrolPoint = currentPatrolPoints[cnc.GetBehavior()];

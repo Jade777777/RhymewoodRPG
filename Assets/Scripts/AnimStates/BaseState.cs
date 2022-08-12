@@ -128,33 +128,62 @@ public class BaseState : MonoBehaviour
 
     protected void Slide()// sliding also handles free falling
     {
-        Vector3 dir = physicalInput.moveInput;
-        dir.y = 0f;
-        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
 
-        float slideControl = 0.15f;
         float acceleration = 9.8f;
         float maxSpeed = 100;
 
         Vector3 vel = physicalInput.internalVelocity;
-        if (physicalInput.GroundData.slopeDir != Vector3.zero)
+        float inclineMultiplier = 1;
+
+        if (physicalInput.GroundData.detectGround)
         {
             vel = Vector3.ProjectOnPlane(vel, physicalInput.GroundData.normal);
+            inclineMultiplier = physicalInput.GroundData.angle / 90;// slide less the shallower the angle.
+            inclineMultiplier *= inclineMultiplier;
         }
         vel.y = Mathf.Clamp(vel.y, float.NegativeInfinity, 0);
         vel = Vector3.ClampMagnitude(vel, maxSpeed); 
         
         Vector3 targetSlope =physicalInput.GroundData.slopeDir != Vector3.zero ? physicalInput.GroundData.slopeDir : Vector3.down;
-        targetSlope = (targetSlope*(1-slideControl)) + (inputDirOnGround*slideControl);//adjsuts
+        //targetSlope = (targetSlope * (1 - slideControl));
         targetSlope.Normalize();
-        Vector3 moveSpeed = Vector3.MoveTowards(vel, targetSlope * maxSpeed, acceleration * Time.deltaTime);
+        Vector3 moveSpeed = Vector3.MoveTowards(vel, targetSlope * maxSpeed, (acceleration * Time.deltaTime) * inclineMultiplier);
+        //Remove down vector from moveSpeed;
+        Vector3 down = Vector3.Project(moveSpeed, targetSlope);
+        moveSpeed -= down;
 
-        
+
+
+        Vector3 dir = physicalInput.moveInput;
+        dir.y = 0f;
+        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized;
+        float inputDirDown = Vector3.Dot(inputDirOnGround, targetSlope);
+        inputDirOnGround -= targetSlope*inputDirDown;
+
+        float slideControl = physicalInput.moveInput.magnitude;
+        float AirControl = characterStats.PrimalStats()["Air Control"];
+        float speed = characterStats.PrimalStats()["Move Speed"];
+
+        if (inputDirDown >= 0)
+        {
+            float inputAcceleration = 0.1f;
+            down += (targetSlope *inputAcceleration* AirControl * inputDirDown * Time.deltaTime);
+            
+        }
+        else
+        {
+            float minSpeed= 3;
+            down = Vector3.MoveTowards(down, targetSlope*minSpeed, -inputDirDown * AirControl * slideControl * Time.deltaTime);
+        }
+
+
+        moveSpeed = Vector3.MoveTowards(moveSpeed, inputDirOnGround* speed, AirControl * slideControl * Time.deltaTime);
+        moveSpeed += down;
 
         moveDistance =(moveSpeed*Time.deltaTime);
-        if (physicalInput.GroundData.detectGround )
+        if (physicalInput.GroundData.detectGround && physicalInput.GroundData.angle<90)
         {
-            float distToGround = physicalInput.GroundData.point.y - transform.position.y;
+            float distToGround =physicalInput.GroundData.point.y - transform.position.y;
             moveDistance.y = distToGround;
         }
 
@@ -165,7 +194,7 @@ public class BaseState : MonoBehaviour
         Vector3 vel = physicalInput.internalVelocity;
 
         vel.y = 0; //only horizontal velocity
-        float acceleration = characterStats.PrimalStats()["Move Speed"];//it takes 2 seconds to fully change directions. It takes 1 second to stop
+        float AirControl = characterStats.PrimalStats()["Air Control"];//it takes 2 seconds to fully change directions. It takes 1 second to stop
         float speed= characterStats.PrimalStats()["Move Speed"];
 
         Vector3 dir = physicalInput.moveInput;
@@ -173,7 +202,7 @@ public class BaseState : MonoBehaviour
         dir = dir.normalized * physicalInput.moveInput.magnitude; //only horizontal input relative to camera
         
 
-        Vector3 moveSpeed = Vector3.MoveTowards(vel, dir * speed, acceleration*Time.deltaTime);
+        Vector3 moveSpeed = Vector3.MoveTowards(vel, dir * speed, AirControl*Time.deltaTime);
         moveDistance=(moveSpeed+ Vector3.up*physicalInput.GroundData.lastHitPointVelocity.y) * Time.deltaTime;
         physicalInput.internalVelocity = moveSpeed+ Vector3.up*physicalInput.Velocity.y;
     }
@@ -238,7 +267,7 @@ public class BaseState : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, physicalInput.targetRotation, Time.deltaTime * animatorScriptControl .turnSpeed* animatorScriptControl.cameraInputWeight);
        
     }
-    protected void LateUpdate()
+    protected virtual void LateUpdate()
     {
         switch (animatorScriptControl.movementType)
         {

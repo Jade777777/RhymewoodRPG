@@ -1922,7 +1922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_Root: {fileID: 1443613459128477227}
     m_Mid: {fileID: 4320263718159905693}
@@ -2391,7 +2391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_Root: {fileID: 6423668221065654974}
     m_Mid: {fileID: 7159751623108989565}
@@ -2798,7 +2798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_Root: {fileID: 6699477490810097323}
     m_Mid: {fileID: 2307399225197123235}
@@ -3566,15 +3566,15 @@ MonoBehaviour:
   IsPlayer: 0
   knowledgeBase: {fileID: 0}
   focus: {fileID: 0}
-  weapon1: {fileID: 0}
-  level1: 0
-  infusion1: {fileID: 0}
-  weapon2: {fileID: 0}
-  level2: 0
-  infusion2: {fileID: 0}
-  weapon3: {fileID: 0}
-  level3: 0
-  infusion3: {fileID: 0}
+  weapon1: {fileID: 11400000, guid: 0b240867d8a82a241974a54f883530a9, type: 2}
+  level1: 1
+  infusion1: {fileID: 11400000, guid: b5f2c66c7e349f445a8c656b73342baa, type: 2}
+  weapon2: {fileID: 11400000, guid: bf390e20ca486184c9f246ca8027232e, type: 2}
+  level2: 1
+  infusion2: {fileID: 11400000, guid: b5f2c66c7e349f445a8c656b73342baa, type: 2}
+  weapon3: {fileID: 11400000, guid: 572977be689848c42aa7f0c4d03e9577, type: 2}
+  level3: 1
+  infusion3: {fileID: 11400000, guid: b5f2c66c7e349f445a8c656b73342baa, type: 2}
 --- !u!114 &5940548488857908987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3587,7 +3587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1e10170aa067d44912e4efc2fb4648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kin: {fileID: 0}
+  kin: {fileID: 11400000, guid: 81eaf0b876c534044b3d265f735f80f5, type: 2}
 --- !u!114 &563160036216793745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3755,6 +3755,7 @@ MonoBehaviour:
   runtimePlayerRig: {fileID: 7230008799513817640}
   overrideTransform: {fileID: 4773382212068118907}
   cameraTarget: {fileID: 3616543099987148614}
+  OrientPlayerArms: 0
 --- !u!114 &7738876308265748753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3783,6 +3784,7 @@ MonoBehaviour:
   groundDistance: 0.2
   radius: 0.3
   step: 10
+  slideSlope: 40
 --- !u!114 &3773849262516254003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3832,11 +3834,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ddcb6931d561f47b8db0b776ed873a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 1
-  moveInputWeight: 1
-  cameraInputWeight: 1
-  cameraAnimationWeight: 0.075
-  turnSpeed: 360
+  movementType: 0
+  moveInputWeight: 0.46
+  cameraInputWeight: 0.571
+  cameraAnimationWeight: 0
+  turnSpeed: 180
   smoothMoveInput: 4
 --- !u!114 &5508316675291129959
 MonoBehaviour:
@@ -3850,11 +3852,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e61a3531b7265c34e857c0477b9f0efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 1
-  moveInputWeight: 1
-  cameraInputWeight: 1
-  cameraAnimationWeight: 0.096
-  turnSpeed: 360
+  movementType: 0
+  moveInputWeight: 0.449
+  cameraInputWeight: 0.573
+  cameraAnimationWeight: 0
+  turnSpeed: 180
   smoothMoveInput: 4
 --- !u!114 &8489208158058491768
 MonoBehaviour:
@@ -3960,8 +3962,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementType: 3
   moveInputWeight: 1
-  cameraInputWeight: 1
-  cameraAnimationWeight: 0.034
+  cameraInputWeight: 0.277
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &720654894577310745
@@ -3979,7 +3981,7 @@ MonoBehaviour:
   movementType: 1
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.056
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &7160547076128874077
@@ -3996,8 +3998,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementType: 3
   moveInputWeight: 1
-  cameraInputWeight: 1
-  cameraAnimationWeight: 0.074
+  cameraInputWeight: 0.312
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &3362363078170255167
@@ -4014,8 +4016,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementType: 3
   moveInputWeight: 1
-  cameraInputWeight: 1
-  cameraAnimationWeight: 0.111
+  cameraInputWeight: 0.241
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &2954911968008760012
@@ -4031,9 +4033,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementType: 0
-  moveInputWeight: 1
-  cameraInputWeight: 1
-  cameraAnimationWeight: 0.038
+  moveInputWeight: 0.833
+  cameraInputWeight: 0.904
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &1253809833032108946
@@ -4051,7 +4053,7 @@ MonoBehaviour:
   movementType: 2
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.069
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &3840317420850501816
@@ -4068,7 +4070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementType: 0
   moveInputWeight: 0
-  cameraInputWeight: 0.322
+  cameraInputWeight: 0.065
   cameraAnimationWeight: 1
   turnSpeed: 360
   smoothMoveInput: 4
@@ -4087,7 +4089,7 @@ MonoBehaviour:
   movementType: 2
   moveInputWeight: 1
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &6288202251280633487
@@ -4105,7 +4107,7 @@ MonoBehaviour:
   movementType: 3
   moveInputWeight: 0
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.5
+  cameraAnimationWeight: 0.559
   turnSpeed: 90
   smoothMoveInput: 4
 --- !u!114 &536630215583321151
@@ -4123,7 +4125,7 @@ MonoBehaviour:
   movementType: 3
   moveInputWeight: 0
   cameraInputWeight: 1
-  cameraAnimationWeight: 0.2
+  cameraAnimationWeight: 0.762
   turnSpeed: 360
   smoothMoveInput: 4
 --- !u!114 &60033788253653224
@@ -4157,7 +4159,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeStep: 1
-  actions: []
+  actions:
+  - ActionName: Default
+    ActionWeight:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    axis: []
 --- !u!114 &5126984437493816003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4170,7 +4198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78727e0e410c9be4aa547a210a050f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewDistance: 15
+  viewDistance: 10
   TimeStep: 0.4
   UpdateSight: 1
 --- !u!114 &7438201799784866605
@@ -4185,8 +4213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b64a0adbf7606418da0b04df5e90da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 0b240867d8a82a241974a54f883530a9, type: 2}
-  level: 1
+  weapon: {fileID: 11400000, guid: 572977be689848c42aa7f0c4d03e9577, type: 2}
+  level: 3
   infusion: {fileID: 11400000, guid: b5f2c66c7e349f445a8c656b73342baa, type: 2}
   weaponJoint: {fileID: 3944669843628652589}
 --- !u!114 &7454130599867714753
@@ -4311,7 +4339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_Root: {fileID: 1438351403699036848}
     m_Mid: {fileID: 1331996873360108292}

@@ -9,9 +9,9 @@ public class MainMenu : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
     }
-    public void LoadNextLevel()
+    public void LoadFirstLevel()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 }
