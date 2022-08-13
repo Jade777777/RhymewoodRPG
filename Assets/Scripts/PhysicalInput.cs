@@ -14,7 +14,7 @@ public class PhysicalInput : MonoBehaviour
     int step = 10;
     [SerializeField]
     float slideSlope=40;//This value must be the same value used in the slope checks of the animator
-    readonly int layerMask = 1 << 0;//  ~(1<<3 + 1<<6 + 1<<7 + 1<<8);// ignores characters when checking for ground
+    public readonly int groundLayerMask = 1 << 0;//  ~(1<<3 + 1<<6 + 1<<7 + 1<<8);// ignores characters when checking for ground
 
     private GroundInfo groundInfo;
     public ref readonly GroundInfo GroundData => ref groundInfo;
@@ -30,9 +30,13 @@ public class PhysicalInput : MonoBehaviour
     [NonSerialized]
     public Vector3 moveInput;
 
- 
+
     private void Awake()
     {
+        for (int i = 0; i < 5; i++)
+        {
+            velRoll.Enqueue(Vector3.zero);
+        }
         targetRotation = transform.rotation;
         characterNerveCenter = GetComponent<CharacterNerveCenter>();
     }
@@ -44,14 +48,21 @@ public class PhysicalInput : MonoBehaviour
     }
 
     private Vector3 lastPos;
-
-
+    Queue<Vector3> velRoll = new();
     private void GatherVelocity()
     {
         if (internalVelocity != Vector3.zero) lastAttemptedDirection = internalVelocity;
+        //calculate rolling velocity
         Vector3 currentPos = transform.position;
-        velocity = Vector3.ClampMagnitude((currentPos - lastPos) / Time.deltaTime,50);
-        
+        velRoll.Dequeue();
+        velRoll.Enqueue(Vector3.ClampMagnitude((currentPos - lastPos) / Time.deltaTime, 50));
+        velocity = Vector3.zero;
+        foreach(Vector3 vel in velRoll)
+        {
+            velocity += vel;
+        }
+        velocity /= velRoll.Count;
+
         lastPos = currentPos;
     }
 
@@ -65,7 +76,7 @@ public class PhysicalInput : MonoBehaviour
         groundInfo.normal = Vector3.up;
         float stepRadius = radius / step;
 
-        bool grounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hit, groundDistance + 1f, layerMask, QueryTriggerInteraction.Ignore);
+        bool grounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hit, groundDistance + 1f, groundLayerMask, QueryTriggerInteraction.Ignore);
         bool isSlideSlope = false;
         if (grounded)
         {
@@ -88,26 +99,28 @@ public class PhysicalInput : MonoBehaviour
             {
                 float currentRadius = stepRadius * i;
 
-                //Visualize
-                Debug.DrawRay(origin + Vector3.back * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
-                Debug.DrawRay(origin + Vector3.forward * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
-                Debug.DrawRay(origin+Vector3.right*currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
-                Debug.DrawRay(origin + Vector3.left * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
-                //--------------
 
-                if (Physics.SphereCast(origin,currentRadius,Vector3.down,out hit, groundDistance + 1f, layerMask, QueryTriggerInteraction.Ignore))
+
+                if (Physics.SphereCast(origin,currentRadius,Vector3.down,out hit, groundDistance + 1f, groundLayerMask, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.point.y >= minYPoint)
                     {
                         Vector3 hitspot = hit.point;
+                        
                         hitspot.y = 0;
                         Vector3 hitorigin = origin;
                         hitorigin.y = 0;
                         Vector3 offset = hitspot - hitorigin;
-                        offset = offset.normalized * 0.01f;
-                        if (Physics.Raycast(hit.point + (Vector3.up * 0.1f)+offset, Vector3.down, out hit, 0.2f, layerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
+                        offset = offset.normalized * 0.01f + (Vector3.up * 0.15f);// make sure raycast doesn't miss the edge.
+                        if (Physics.Raycast(hit.point+offset, Vector3.down, out hit, 0.2f, groundLayerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
                         {
-                            
+                            //Visualize
+                            Debug.DrawRay(origin + Vector3.back * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
+                            Debug.DrawRay(origin + Vector3.forward * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
+                            Debug.DrawRay(origin + Vector3.right * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
+                            Debug.DrawRay(origin + Vector3.left * currentRadius, Vector3.down * (groundDistance + 1f), Color.red, 0);
+                            //--------------
+
                             //We are grounded! lets get outa here!
                             Debug.DrawRay(groundInfo.point + (Vector3.up * 0.1f), Vector3.down * 0.1f, Color.green, 0f);
                             groundInfo.detectGround = true;
@@ -126,6 +139,7 @@ public class PhysicalInput : MonoBehaviour
                 }
             }
         }
+
         groundInfo.angle = Vector3.Angle(groundInfo.normal, Vector3.up);
 
         groundInfo.slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundInfo.normal).normalized;

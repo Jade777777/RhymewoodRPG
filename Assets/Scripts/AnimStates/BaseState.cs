@@ -43,7 +43,7 @@ public class BaseState : MonoBehaviour
     protected CharacterNerveCenter            cnc;
     protected AnimatorScriptControl           animatorScriptControl;
     
-    public enum MovementType { Ground, Horizontal, Slide, Airborn, Animated };
+    public enum MovementType { Ground, GroundSnap, Horizontal, Slide, Airborn, Animated };
 
     private Movement movement;
     protected virtual void Awake()
@@ -105,12 +105,42 @@ public class BaseState : MonoBehaviour
 
         if(physicalInput.GroundData.detectGround) fallDist = Mathf.Clamp(fallDist, distToGround, Mathf.Infinity);
         targetY = physicalInput.GroundData.detectGround&&hitStop.knockBackVelocity==Vector3.zero ? distToGround : fallDist;
-
+        
+        targetY = Mathf.Sign(targetY) * Mathf.Pow(targetY,2f) * 50 * Time.deltaTime;
 
         Vector3 moveSpeed = inputDirOnGround + physicalInput.GroundData.lastHitPointVelocity;
         moveDistance = (moveSpeed) * Time.deltaTime+(Vector3.up*targetY);
         
         physicalInput.internalVelocity = moveSpeed;
+    }
+    protected void SnapToGround()
+    {
+
+        float snapSpeed=Mathf.Max(Mathf.Abs(physicalInput.internalVelocity.y)*1.5f,0)  * Time.deltaTime;//snap to ground 1.5 times as fast as the fall speed
+        Vector3 dir = (physicalInput.moveInput);
+        dir.y = 0f;
+        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+        inputDirOnGround.y = 0f;
+        inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
+
+        float targetY;
+
+        float distToGround = physicalInput.GroundData.point.y - transform.position.y;
+        float fallDist = (physicalInput.internalVelocity.y - (9.8f * Time.deltaTime)) * Time.deltaTime;
+
+        if (physicalInput.GroundData.detectGround) fallDist = Mathf.Clamp(fallDist, distToGround, Mathf.Infinity);
+        targetY = physicalInput.GroundData.detectGround && hitStop.knockBackVelocity == Vector3.zero ? distToGround : fallDist;
+        if(Mathf.Abs(targetY) > snapSpeed*2)
+        {
+            Debug.Log(physicalInput.internalVelocity.y*2);
+            Debug.Log(snapSpeed/Time.deltaTime);
+            targetY = snapSpeed*Mathf.Sign(targetY);
+        }
+
+        Vector3 moveSpeed = inputDirOnGround + physicalInput.GroundData.lastHitPointVelocity;
+        moveDistance = (moveSpeed) * Time.deltaTime + (Vector3.up * targetY);
+
+        physicalInput.internalVelocity = moveSpeed+ Vector3.up*(physicalInput.internalVelocity.y-9.8f*2*Time.deltaTime);
     }
 
     protected void MoveHorizontaly()
@@ -181,10 +211,11 @@ public class BaseState : MonoBehaviour
         moveSpeed += down;
 
         moveDistance =(moveSpeed*Time.deltaTime);
-        if (physicalInput.GroundData.detectGround && physicalInput.GroundData.angle<90)
+        if (physicalInput.GroundData.detectGround && physicalInput.GroundData.angle<70)
         {
-            float distToGround =physicalInput.GroundData.point.y - transform.position.y;
-            moveDistance.y = distToGround;
+            float targetY =physicalInput.GroundData.point.y - transform.position.y;
+            targetY = Mathf.Sign(targetY) * Mathf.Pow(targetY, 2f) * 50 * Time.deltaTime;
+            moveDistance.y = targetY;
         }
 
         physicalInput.internalVelocity = moveSpeed;
@@ -204,8 +235,22 @@ public class BaseState : MonoBehaviour
 
         Vector3 moveSpeed = Vector3.MoveTowards(vel, dir * speed, AirControl*Time.deltaTime);
         moveDistance=(moveSpeed+ Vector3.up*physicalInput.GroundData.lastHitPointVelocity.y) * Time.deltaTime;
+
+
+        float offset= (characterController.skinWidth + 0.1f);
+        Vector3 origin = characterController.center + transform.position - moveDistance.normalized * offset;
+        Vector3 bottom = origin + Vector3.down*characterController.height*0.5f;
+        Vector3 top = origin + Vector3.up * characterController.height*0.5f;
+        
+        if(Physics.CapsuleCast(bottom,top,characterController.radius,moveDistance, out RaycastHit hit, moveDistance.magnitude+offset, physicalInput.groundLayerMask))
+        {
+            Debug.Log("Running into wall");
+            moveDistance = Vector3.Project(moveDistance, Vector3.Cross(hit.normal, Vector3.up));
+            
+        }
         physicalInput.internalVelocity = moveSpeed+ Vector3.up*physicalInput.Velocity.y;
     }
+
     float animatedOverride;
     private void Animated()
     {
@@ -274,6 +319,9 @@ public class BaseState : MonoBehaviour
             case MovementType.Ground:
                 movement = () => MoveAllongGround();
                 break;
+            case MovementType.GroundSnap:
+                movement = () => SnapToGround();
+                break;
             case MovementType.Horizontal:
                 movement = () => MoveHorizontaly();
                 break;
@@ -292,6 +340,7 @@ public class BaseState : MonoBehaviour
         }
 
         movement();
+        
         characterController.Move(animatedOverride * animator.speed * (moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)));
         animatedOverride = 1;
 

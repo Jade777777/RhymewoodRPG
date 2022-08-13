@@ -5,7 +5,6 @@ using UnityEngine.Animations.Rigging;
 public class OrientArmsToCamera : MonoBehaviour
 {
     CharacterNerveCenter cnc;
-    Animator animator;
     public Rig runtimePlayerRig;
     public OverrideTransform overrideTransform;
     public Transform cameraTarget;
@@ -15,7 +14,6 @@ public class OrientArmsToCamera : MonoBehaviour
     private void Awake()
     {
         cnc = GetComponent<CharacterNerveCenter>();
-        animator = GetComponent<Animator>();
         cameraTarget = new List<GameObject>(GameObject.FindGameObjectsWithTag("CameraTarget")).Find(g => g.transform.IsChildOf(this.transform)).transform;
     }
     private void Start()

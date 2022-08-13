@@ -7,9 +7,6 @@ using UnityEngine.SceneManagement;
 public class CharacterNerveCenter : MonoBehaviour
 {
     float InputTimeout=0.33f;
-    int poise = 5;
-
-
 
     Animator animator;
     CharacterController cc;
@@ -19,10 +16,9 @@ public class CharacterNerveCenter : MonoBehaviour
     public bool IsPlayer = false;
     public KnowledgeBase knowledgeBase;
     EquipedWeapon equipedWeapon;
-    CharacterInteraction characterInteraction;
+
     private void Awake()
     {
-        
         animator = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
 
@@ -32,7 +28,7 @@ public class CharacterNerveCenter : MonoBehaviour
         behavior = GetComponent<Behavior>();
         knowledgeBase = GetComponent<KnowledgeBase>();
         equipedWeapon = GetComponent<EquipedWeapon>();
-        characterInteraction = GetComponent<CharacterInteraction>();
+
     }
 
 
@@ -85,8 +81,6 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         SetTrigger("Kick");//mov cnc
     }
-
-    bool interacting=false;
     public void Interact()
     {
         SetTrigger("Interact");
@@ -254,16 +248,7 @@ public class CharacterNerveCenter : MonoBehaviour
     {
         return behavior.CurrentBehavior;
     }
-    [SerializeField]
-    private Transform focus;
-    public void SetFocus(Transform focus)
-    {
-        this.focus = focus;
-    }
-    public Transform GetFocus()
-    {
-        return focus;
-    }
+
 
 
 
