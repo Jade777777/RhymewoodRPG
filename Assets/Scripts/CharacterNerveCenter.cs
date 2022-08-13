@@ -208,7 +208,7 @@ public class CharacterNerveCenter : MonoBehaviour
         {
            
             
-            animator.SetTrigger("Die");
+            animator.SetBool("Die",true);
         }
     }
    

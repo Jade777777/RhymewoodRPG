@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2044576e638cf014fa9e3166ea5ee223, type: 3}
-  m_Name: FastCharacter
+  m_Name: DefaultCharacter
   m_EditorClassIdentifier: 
   characterBaseStatUpdated: {fileID: 0}
   primalStats:
@@ -35,7 +35,7 @@ MonoBehaviour:
     multiplyModifiers: []
     curveModifiers: []
   - name: Move Speed
-    flatModifier: 3
+    flatModifier: 4.1
     multiplyModifiers: []
     curveModifiers: []
   - name: Air Control

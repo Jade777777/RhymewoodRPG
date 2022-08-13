@@ -15,15 +15,15 @@ public class StatWarden : MonoBehaviour
 
     private void Start()
     {
-        foreach(var val in characterStats.EmergentStats())
-        {
-            Debug.Log(ImpactStat(val.Key, -1f, new List<string>{ "Wysical" }));
-        }
-        foreach(var val in livingStats)
-        {
-            GetLivingStat(val.Key, out float currentValue, out float maxValue);
-            Debug.Log(val.Key + "   ~ ~ ~   " + currentValue +"  out of  " +maxValue);
-        }
+        //foreach(var val in characterStats.EmergentStats())
+        //{
+        //    Debug.Log(ImpactStat(val.Key, -1f, new List<string>{ "Wysical" }));
+        //}
+        //foreach(var val in livingStats)
+        //{
+        //    GetLivingStat(val.Key, out float currentValue, out float maxValue);
+        //    Debug.Log(val.Key + "   ~ ~ ~   " + currentValue +"  out of  " +maxValue);
+        //}
     }
 
 

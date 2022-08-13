@@ -1068,7 +1068,7 @@ MonoBehaviour:
   allQuirks: 0
   damageQuirks: []
   multiplier: 0
-  knockbackDistance: 3
+  knockbackDistance: 2
   takeGround: -0.3
   poiseDamage: 10
   knockdownType: 1
@@ -3907,7 +3907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementType: 0
   moveInputWeight: 0.8
-  cameraInputWeight: 1
+  cameraInputWeight: 0.505
   cameraAnimationWeight: 0.143
   turnSpeed: 360
   smoothMoveInput: 4
@@ -4067,7 +4067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842907ea4e4a94d4ab7cf6777a6320a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 0
+  movementType: 1
   moveInputWeight: 0
   cameraInputWeight: 0.065
   cameraAnimationWeight: 1
@@ -4103,7 +4103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed336e1798e056147b3d713e088c7f44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 0
+  movementType: 1
   moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.559
@@ -4121,7 +4121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18d80d19b103604397bf073264e10f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 0
+  movementType: 1
   moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.762
@@ -4139,7 +4139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb80ce45edd9bf43a6e18cdd5cd7386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementType: 0
+  movementType: 1
   moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.2
@@ -4160,30 +4160,7 @@ MonoBehaviour:
   TimeStep: 1
   actions:
   - ActionName: Default
-    ActionWeight:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0.5
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1
-        value: 0.5
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
+    ActionWeight: 1
     axis: []
 --- !u!114 &5126984437493816003
 MonoBehaviour:

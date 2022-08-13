@@ -32,6 +32,7 @@ public class SimpleHitBox : HitBox
         if (other.TryGetComponent(out HurtBox hurtBox))
         {
             activeTick.Add(hurtBox);
+            OnStrikeHurtBox(hurtBox);
         }
         if (cref == null)
         {
@@ -57,13 +58,14 @@ public class SimpleHitBox : HitBox
         Debug.Log("Damage start!");
         while (activeTick.Count!=0)
         {
+            yield return new WaitForSeconds(tick);
             Debug.Log("Tick");
             generateNewID();
             foreach (HurtBox hurtBox in activeTick)
             {
                 OnStrikeHurtBox(hurtBox);
             }
-            yield return new WaitForSeconds(tick);
+            
         }
     }
 

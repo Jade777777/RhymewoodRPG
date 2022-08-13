@@ -25,11 +25,11 @@ public class KnowledgeBase : MonoBehaviour
     }
 
 
-    private CharacterNerveCenter cnv;
+    private CharacterNerveCenter cnc;
     private EquipedWeapon equipedWeapon;
     private void Awake()
     {
-        cnv = GetComponent<CharacterNerveCenter>();
+        cnc = GetComponent<CharacterNerveCenter>();
         equipedWeapon = GetComponent<EquipedWeapon>();
     }
 
@@ -152,7 +152,7 @@ public class KnowledgeBase : MonoBehaviour
         }
         else if (kin.Friendly.Contains(character.GetComponent<KnowledgeBase>().kin))
         {
-            RecoverTime = 5.87f;
+            RecoverTime = Mathf.Min(impact, 5.87f);
         }
 
         if (characterAgro.ContainsKey(character))
@@ -171,7 +171,8 @@ public class KnowledgeBase : MonoBehaviour
 
     private float AxisHealth()
     {
-        return 0.3f;
+        cnc.GetLivingStat("Health", out float currentValue, out float maxValue);
+        return currentValue/maxValue;
     }
     private float AxisThreat()
     {

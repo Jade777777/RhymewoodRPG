@@ -26,7 +26,10 @@ public class Behavior : MonoBehaviour
         while (true)
         {
             currentBehavior = DecideAction();
-            //Debug.Log(currentBehavior);
+            if (GetComponent<CharacterNerveCenter>().IsPlayer == false)
+            {
+                Debug.Log(currentBehavior);
+            }
             yield return new WaitForSeconds(TimeStep);
         }
     }
@@ -47,11 +50,13 @@ public class Behavior : MonoBehaviour
                 actionValue *= axisValue;
                 Debug.Assert(axisValue <= 1f && axisValue >= 0f);
             }
+            actionValue = actionValue * action.ActionWeight;
             if (actionValue > choice.Item2)
             {
                 choice.Item1 = action.ActionName;
                 choice.Item2 = actionValue;
             }
+
         }
         if (choice.Item2 == 0f)
         {
@@ -66,7 +71,7 @@ public class Behavior : MonoBehaviour
     public struct Action
     {
         public string ActionName;
-        public AnimationCurve ActionWeight;
+        public float ActionWeight;
         public List<Axis> axis;
     }
     [System.Serializable]

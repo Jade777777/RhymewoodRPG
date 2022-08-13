@@ -210,14 +210,16 @@ public class CharacterFate : BaseFate
         }
         else if (count >= 2)
         {
-            
-            Transform leftChar = targetGroups[target].ElementAt((index+count - 1) % (count)).Value.transform;
-            Transform rightChar = targetGroups[target].ElementAt((index+count + 1) % (count)).Value.transform;
-            Vector3 dirLeft = (leftChar.position - target.position).normalized;
-            Vector3 dirRight = (rightChar.position - target.position).normalized;
-            Quaternion left = Quaternion.LookRotation(dirLeft);
-            Quaternion right = Quaternion.LookRotation(dirRight);
-            Quaternion middle = Quaternion.Euler(0, left.eulerAngles.y+((right.eulerAngles.y-left.eulerAngles.y+359.9f)%360)/2, 0);
+
+            //Transform leftChar = targetGroups[target].ElementAt((index+count - 1) % (count)).Value.transform;
+            //Transform rightChar = targetGroups[target].ElementAt((index+count + 1) % (count)).Value.transform;
+            //Vector3 dirLeft = (leftChar.position - target.position).normalized;
+            //Vector3 dirRight = (rightChar.position - target.position).normalized;
+            //Quaternion left = Quaternion.LookRotation(dirLeft);
+            //Quaternion right = Quaternion.LookRotation(dirRight);
+            //Quaternion middle = Quaternion.Euler(0, left.eulerAngles.y+((right.eulerAngles.y-left.eulerAngles.y+359.9f)%360)/2, 0);
+
+            Quaternion middle = Quaternion.Euler(0, (360  * (index) / (count)), 0);
             Vector3 dirCenter = middle * Vector3.forward;
             targetOffset = dirCenter;
             
@@ -245,7 +247,7 @@ public class CharacterFate : BaseFate
             Vector3 localDesiredInput = characterInstance.transform.InverseTransformDirection(agent.desiredVelocity);
             Vector2 velocity = new Vector2(localDesiredInput.x, localDesiredInput.z) / agent.speed;
             Debug.Assert(velocity.magnitude<=1.1f);//for some reason it seems as if NAN is returned sometimes, 
-            if (velocity != Vector2.zero) cnc.Move(velocity);
+            if (velocity != Vector2.zero) cnc.Move(velocity*currentPatrolPoints[cnc.GetBehavior()].Speed);
         }
         else
         {
@@ -282,6 +284,7 @@ public class CharacterFate : BaseFate
         public Target TargetLook;
         public PositioningType Type;
         public ButtonPress buttonPress;
+        public float Speed;
         public float Angle;
         public float MaxDistance;//
         public float MinDistance;// this will generaly not be set by mele characters unless they need to exhibit cowardly like behaviors.
