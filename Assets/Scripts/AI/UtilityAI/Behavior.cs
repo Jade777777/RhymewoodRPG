@@ -28,7 +28,7 @@ public class Behavior : MonoBehaviour
             currentBehavior = DecideAction();
             if (GetComponent<CharacterNerveCenter>().IsPlayer == false)
             {
-                Debug.Log(currentBehavior);
+               // Debug.Log(currentBehavior);
             }
             yield return new WaitForSeconds(TimeStep);
         }

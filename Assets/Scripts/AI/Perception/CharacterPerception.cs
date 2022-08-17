@@ -13,7 +13,8 @@ public class CharacterPerception : MonoBehaviour
     [SerializeField]
     public bool UpdateSight = true;
 
-    private int layerMask = 1 << 3;
+    private int characterLayerMask = 1 << 3;
+    private int environmentLayerMask = 1 << 0;
     private void Awake()
     {
         TimeStep = ((Random.value+2) * TimeStep)/3;
@@ -35,7 +36,7 @@ public class CharacterPerception : MonoBehaviour
             {
                 float viewRadius = viewDistance / 2;
                 Vector3 viewCenter = transform.position + (transform.forward * (viewRadius))+(cc.center);//+cc.radius add this to view radius if we dont want the colliders to overlp
-                Collider[] sighted = Physics.OverlapSphere(viewCenter, viewRadius, layerMask, QueryTriggerInteraction.Ignore);
+                Collider[] sighted = Physics.OverlapSphere(viewCenter, viewRadius, characterLayerMask, QueryTriggerInteraction.Ignore);
 
 
                 foreach (Collider thing in sighted)
@@ -45,7 +46,7 @@ public class CharacterPerception : MonoBehaviour
                         Vector3 origin = transform.position + (transform.forward * offset) + cc.center;
                         Vector3 direction = thing.transform.position - transform.position;
 
-                        if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, direction.magnitude, layerMask) && hitInfo.collider == thing)
+                        if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, direction.magnitude, characterLayerMask+environmentLayerMask) && hitInfo.collider == thing)
                         {
                             Debug.DrawRay(origin, direction, Color.red, 0.5f);
                             knowledgeBase.SightCharacter(thing.gameObject);

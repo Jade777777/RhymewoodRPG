@@ -5,6 +5,7 @@ using UnityEngine;
 public class ConstrainPosAndRot : MonoBehaviour
 {
     public Transform target;
+    
     void Start()
     {
         

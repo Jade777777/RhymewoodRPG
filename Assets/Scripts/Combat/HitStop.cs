@@ -85,7 +85,7 @@ public class HitStop : MonoBehaviour
             accelerateTimer += Time.deltaTime;
             yield return null;
         }
-
+        animator.speed = 1f;
         impactTime = 0f;
 
     }

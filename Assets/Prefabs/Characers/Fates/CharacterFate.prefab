@@ -67,6 +67,247 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b0665346c8e6ce42af2aeb900b3833e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPrefab: {fileID: 0}
-  spawnPoint: {fileID: 0}
-  behaviors: []
+  characterInstance: {fileID: 0}
+  rawBehaviors:
+  - BehaviorName: Default
+    ResetOnEnter: 0
+    patrolPoints:
+    - TargetPosition:
+        targetType: 0
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 0
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 0
+      Speed: 0.5
+      Angle: 0
+      MaxDistance: 0
+      MinDistance: 0
+      BaseWaitTime: 1
+      WaitTimeRandomize: 5
+  - BehaviorName: Pursue
+    ResetOnEnter: 0
+    patrolPoints:
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 0
+      Speed: 0.5
+      Angle: 0
+      MaxDistance: 0
+      MinDistance: 0
+      BaseWaitTime: 1
+      WaitTimeRandomize: 5
+  - BehaviorName: Attack
+    ResetOnEnter: 1
+    patrolPoints:
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 0
+      Speed: 1
+      Angle: 0
+      MaxDistance: 1
+      MinDistance: 0.5
+      BaseWaitTime: 0.5
+      WaitTimeRandomize: 3
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 1
+      buttonPress: 1
+      Speed: 1
+      Angle: 110
+      MaxDistance: 0.2
+      MinDistance: 0
+      BaseWaitTime: 2
+      WaitTimeRandomize: 0.6
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 1
+      buttonPress: 1
+      Speed: 1
+      Angle: 180
+      MaxDistance: 0.2
+      MinDistance: 0
+      BaseWaitTime: 0.65
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 1
+      Speed: 0.5
+      Angle: 0
+      MaxDistance: 0.2
+      MinDistance: 0
+      BaseWaitTime: 0.6
+      WaitTimeRandomize: 0
+  - BehaviorName: AttackAggressive
+    ResetOnEnter: 1
+    patrolPoints:
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 0
+      buttonPress: 0
+      Speed: 1
+      Angle: 0
+      MaxDistance: 0.35
+      MinDistance: 0.3
+      BaseWaitTime: 1
+      WaitTimeRandomize: 2
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 0
+      buttonPress: 2
+      Speed: 1
+      Angle: 110
+      MaxDistance: 0.2
+      MinDistance: 0
+      BaseWaitTime: 1.4
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 0
+      buttonPress: 1
+      Speed: 1
+      Angle: 0
+      MaxDistance: 0.2
+      MinDistance: 0
+      BaseWaitTime: 0.65
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 1
+      Speed: 1
+      Angle: 0
+      MaxDistance: 0.2
+      MinDistance: 0
+      BaseWaitTime: 0.6
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 1
+      Speed: 0.5
+      Angle: 0
+      MaxDistance: 0.9
+      MinDistance: 0.5
+      BaseWaitTime: 0.8
+      WaitTimeRandomize: 4
+  - BehaviorName: AttackScared
+    ResetOnEnter: 1
+    patrolPoints:
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 1
+      buttonPress: 0
+      Speed: 0.5
+      Angle: 180
+      MaxDistance: 0.7
+      MinDistance: 0.2
+      BaseWaitTime: 0.65
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 2
+      Speed: 1
+      Angle: 0
+      MaxDistance: 0
+      MinDistance: 0
+      BaseWaitTime: 0.6
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 0
+      Speed: 1
+      Angle: 0
+      MaxDistance: 100
+      MinDistance: 5
+      BaseWaitTime: 1
+      WaitTimeRandomize: 5
+  - BehaviorName: Retreat
+    ResetOnEnter: 0
+    patrolPoints:
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 1
+      buttonPress: 0
+      Speed: 0.6
+      Angle: 60
+      MaxDistance: 20
+      MinDistance: 20
+      BaseWaitTime: 0.7
+      WaitTimeRandomize: 5
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 0
+      Speed: 1
+      Angle: 0
+      MaxDistance: 20
+      MinDistance: 20
+      BaseWaitTime: 2
+      WaitTimeRandomize: 5

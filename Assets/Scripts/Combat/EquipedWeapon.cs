@@ -16,9 +16,13 @@ public class EquipedWeapon : MonoBehaviour
     public WeaponInstance weaponInstance { get; private set; }
 
     [SerializeField]
-    private Transform weaponJoint;
+    private Transform primaryWeaponJoint;
+    [SerializeField]
+    private Transform secondaryWeaponJoint;
 
-    private GameObject modelInstance;
+    private GameObject primaryModelInstance;
+    private GameObject secondaryModelInstance;
+
     private List<GameObject> attackModelInstance = new();
     private CharacterStats characterStats;
 
@@ -62,12 +66,14 @@ public class EquipedWeapon : MonoBehaviour
     private void SetWeapon(WeaponInstance weaponInstance)
     {
         //TODO:
-        //save weapon infusion.
+        //save weapon infusion.?
 
         this.weaponInstance = weaponInstance;//save the value of the new weapon
         //instantiate the new weapon model
-        modelInstance = Instantiate(this.weaponInstance.weapon.weaponModel, weaponJoint);
-        modelInstance.name = this.weaponInstance.name + " " + ID;
+        primaryModelInstance = Instantiate(this.weaponInstance.weapon.primaryWeaponModel, primaryWeaponJoint);
+        primaryModelInstance.name = this.weaponInstance.name + " " + ID;
+        secondaryModelInstance = Instantiate(this.weaponInstance.weapon.secondaryWeaponModel, secondaryWeaponJoint);
+        secondaryModelInstance.name = this.weaponInstance.name + " " + ID;
         //instantiate the new attack models used by the new animations;
 
         foreach (Attack attack in this.weaponInstance.weapon.attacks)
@@ -91,15 +97,20 @@ public class EquipedWeapon : MonoBehaviour
 
         animatorOverrideController.ApplyOverrides(animationOverrides);
         //Get the weapons hitboxes
-        RetrieveHitboxes();
+        RetrievePrimaryHitboxes();
+        RetrieveSecondaryHitboxes();
         //set the stats for the current weapon
         UpdateWeaponStats();
     }
     private void CleanUpWeapon()
     {
-        if (modelInstance != null)
+        if (primaryModelInstance != null)
         {
-            Destroy(modelInstance);
+            Destroy(primaryModelInstance);
+        }
+        if (secondaryModelInstance != null)
+        {
+            Destroy(secondaryModelInstance);
         }
         foreach (GameObject attackModel in attackModelInstance)//it's destroyed at the end of the frame so we don't need to loop backwards
         {
@@ -114,29 +125,60 @@ public class EquipedWeapon : MonoBehaviour
 
 
     #region Weapon Hitbox
-    private Component[] HitBoxes;
-    private void RetrieveHitboxes()
+    private Component[] PrimaryHitBoxes;
+    private Component[] SecondaryHitBoxes;
+    private void RetrievePrimaryHitboxes()
     {
 
-        HitBoxes = modelInstance.GetComponentsInChildren<WeaponHitBox>(true);
-        foreach(WeaponHitBox hitBox in HitBoxes)
+        PrimaryHitBoxes = primaryModelInstance.GetComponentsInChildren<WeaponHitBox>(true);
+        foreach(WeaponHitBox hitBox in PrimaryHitBoxes)
         {
             hitBox.gameObject.SetActive(false);
         }
         Debug.Log("Got some hitboxes here");
     }
-    public void EW_ActivateWeaponHitBox()
+    private void RetrieveSecondaryHitboxes()
     {
-        foreach(WeaponHitBox hitBox in HitBoxes)
-        {
-            hitBox.gameObject.SetActive(true);
-        }
-    }
-    public void EW_DisableWeaponHitBox()
-    {
-        foreach (WeaponHitBox hitBox in HitBoxes)
+
+        SecondaryHitBoxes = secondaryModelInstance.GetComponentsInChildren<WeaponHitBox>(true);
+        foreach (WeaponHitBox hitBox in SecondaryHitBoxes)
         {
             hitBox.gameObject.SetActive(false);
+        }
+        Debug.Log("Got some hitboxes here");
+    }
+    public void EW_ActivateWeaponHitBox(int i)
+    {
+        if (i == 0)
+        {
+            foreach (WeaponHitBox hitBox in PrimaryHitBoxes)
+            {
+                hitBox.gameObject.SetActive(true);
+            }
+        }
+        else if (i == 1)
+        {
+            foreach (WeaponHitBox hitBox in SecondaryHitBoxes)
+            {
+                hitBox.gameObject.SetActive(true);
+            }
+        }
+    }
+    public void EW_DisableWeaponHitBox(int i)
+    {
+        if (i == 0) 
+        {
+            foreach (WeaponHitBox hitBox in PrimaryHitBoxes)
+            {
+                hitBox.gameObject.SetActive(false);
+            } 
+        }
+        else if(i == 1)
+        {
+            foreach (WeaponHitBox hitBox in SecondaryHitBoxes)
+            {
+                hitBox.gameObject.SetActive(false);
+            }
         }
     }
     #endregion

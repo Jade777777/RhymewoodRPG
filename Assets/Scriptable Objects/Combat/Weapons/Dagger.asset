@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 905241d365fe44546a204265a10327a3, type: 3}
   m_Name: Dagger
   m_EditorClassIdentifier: 
-  weaponModel: {fileID: 6828611147035003804, guid: 383698283aa1cf84aac2ee546fe9ebeb, type: 3}
+  primaryWeaponModel: {fileID: 6828611147035003804, guid: 383698283aa1cf84aac2ee546fe9ebeb, type: 3}
+  secondaryWeaponModel: {fileID: 3786420489521222576, guid: f610ab8833aef8743bd8ddab319f312e, type: 3}
   engagementDistance: 1.25
   pushDistance: 0.25
   attacks:

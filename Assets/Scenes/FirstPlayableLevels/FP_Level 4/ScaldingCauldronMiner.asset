@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2044576e638cf014fa9e3166ea5ee223, type: 3}
+  m_Name: ScaldingCauldronMiner
+  m_EditorClassIdentifier: 
+  characterBaseStatUpdated: {fileID: 11400000, guid: 5568723ebd58ece40ae610298e96ab3c, type: 2}
+  primalStats:
+  - name: Move Speed
+    flatModifier: 4
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Air Control
+    flatModifier: 10
+    multiplyModifiers: []
+    curveModifiers: []
+  emergentStats:
+  - name: Health
+    flatModifier: 50
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: Stamina
+    flatModifier: 85
+    multiplyModifiers:
+    - referenceStat: Endurance
+      multiplier: 0.5
+    curveModifiers: []
+  - name: Poise
+    flatModifier: 10
+    multiplyModifiers: []
+    curveModifiers: []
+  - name: PoiseReset
+    flatModifier: 5
+    multiplyModifiers: []
+    curveModifiers: []
+  quirkAugur:
+  - name: Physical
+    flatModifier: 0.8
+    multiplyModifiers:
+    - referenceStat: Conviction
+      multiplier: 0
+    curveModifiers: []
+  - name: typeA
+    flatModifier: 0
+    multiplyModifiers:
+    - referenceStat: Conviction
+      multiplier: 0
+    curveModifiers: []

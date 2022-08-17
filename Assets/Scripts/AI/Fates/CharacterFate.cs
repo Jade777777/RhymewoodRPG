@@ -15,8 +15,9 @@ public class CharacterFate : BaseFate
     KnowledgeBase knowledgeBase;
 
 
-    Dictionary<string, List<PatrolPoint>> behaviors = new();
+    Dictionary<string, Behavior> behaviors = new();
     Dictionary<string, PatrolPoint> currentPatrolPoints = new();
+    PatrolPoint currentPatrolPoint;
     
     private static Dictionary<Transform, SortedList<int, GameObject>> targetGroups = new();
     protected override void Awake()
@@ -33,7 +34,7 @@ public class CharacterFate : BaseFate
         foreach (var value in rawBehaviors)
         {
             currentPatrolPoints.Add(value.BehaviorName, value.patrolPoints[0]);
-            behaviors.Add(value.BehaviorName, value.patrolPoints);
+            behaviors.Add(value.BehaviorName, value);
             StartCoroutine(PatrolPointUpdate(value.BehaviorName));
         }
         agent.updatePosition = false;
@@ -48,16 +49,25 @@ public class CharacterFate : BaseFate
         while (behaviors.Count>0)
         { 
 
-            foreach (PatrolPoint patrolPoint in behaviors[behaviorName])
+            foreach (PatrolPoint patrolPoint in behaviors[behaviorName].patrolPoints)
             {
+
                 currentPatrolPoints[behaviorName] = patrolPoint;
+
 
                 if (cnc.GetBehavior() == behaviorName)
                 {
                     PressButton(patrolPoint);
                 }
-               
-                yield return new WaitForSeconds(patrolPoint.BaseWaitTime+Random.Range(0,patrolPoint.WaitTimeRandomize));
+                else if (behaviors[behaviorName].ResetOnEnter)
+                {
+                    yield return null;
+                    break;
+                }
+
+
+                yield return new WaitForSeconds(patrolPoint.BaseWaitTime + Random.Range(0, patrolPoint.WaitTimeRandomize));
+                
                 while (characterInstance.activeSelf == false)
                 {
                     yield return new WaitForSeconds(1);
@@ -99,7 +109,6 @@ public class CharacterFate : BaseFate
                 cnc.Kick();
                 break;
             case ButtonPress.Jump:
-                Debug.Log(cnc.GetBehavior());
                 cnc.Jump(true);
                 break;
             case ButtonPress.Interact:
@@ -297,6 +306,7 @@ public class CharacterFate : BaseFate
     struct Behavior
     {
         public string BehaviorName;
+        public bool ResetOnEnter;
         public List<PatrolPoint> patrolPoints;
     }
     [System.Serializable]
@@ -345,7 +355,7 @@ public class CharacterFate : BaseFate
                 break;
         }
         
-        if (t == null||!t.gameObject.activeInHierarchy)
+        if (t == null||!t.activeInHierarchy)
         {
             return target.defaultPoint;
         }

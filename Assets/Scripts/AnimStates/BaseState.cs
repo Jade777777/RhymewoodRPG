@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class BaseState : MonoBehaviour
 {
     #region Inspector
+    
     //---------------------------------------------// save these values on awake and reset to default OnEnable.
     [SerializeField]
     public MovementType movementType = MovementType.Ground;
@@ -94,7 +95,15 @@ public class BaseState : MonoBehaviour
     {
         Vector3 dir = (physicalInput.moveInput);
         dir.y = 0f;
-        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+        Vector3 inputDirOnGround;
+        if (physicalInput.GroundData.angle < physicalInput.maxSlope)
+        {
+            inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+        }
+        else
+        {
+            inputDirOnGround = physicalInput.moveInput;
+        }
         inputDirOnGround.y = 0f;
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
 
@@ -119,7 +128,15 @@ public class BaseState : MonoBehaviour
         float snapSpeed=Mathf.Max(Mathf.Abs(physicalInput.internalVelocity.y)*1.5f,0)  * Time.deltaTime;//snap to ground 1.5 times as fast as the fall speed
         Vector3 dir = (physicalInput.moveInput);
         dir.y = 0f;
-        Vector3 inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+        Vector3 inputDirOnGround;
+        if (physicalInput.GroundData.angle < physicalInput.maxSlope)
+        {
+            inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+        }
+        else
+        {
+            inputDirOnGround = physicalInput.moveInput;
+        }
         inputDirOnGround.y = 0f;
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
 
@@ -132,8 +149,6 @@ public class BaseState : MonoBehaviour
         targetY = physicalInput.GroundData.detectGround && hitStop.knockBackVelocity == Vector3.zero ? distToGround : fallDist;
         if(Mathf.Abs(targetY) > snapSpeed*2)
         {
-            Debug.Log(physicalInput.internalVelocity.y*2);
-            Debug.Log(snapSpeed/Time.deltaTime);
             targetY = snapSpeed*Mathf.Sign(targetY);
         }
 
@@ -343,7 +358,7 @@ public class BaseState : MonoBehaviour
         
         characterController.Move(animatedOverride * animator.speed * (moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)));
         animatedOverride = 1;
-
+        
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {
             Vector3 camPos = head.position + cameraTarget.TransformDirection(cOffset);

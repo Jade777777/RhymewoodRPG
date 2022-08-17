@@ -55,9 +55,7 @@ MonoBehaviour:
     curveModifiers: []
   - name: Poise
     flatModifier: 10
-    multiplyModifiers:
-    - referenceStat: Vigor
-      multiplier: 0.1
+    multiplyModifiers: []
     curveModifiers: []
   - name: PoiseReset
     flatModifier: 5

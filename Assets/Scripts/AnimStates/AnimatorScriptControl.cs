@@ -32,7 +32,6 @@ public class AnimatorScriptControl : MonoBehaviour
 
 
 
-
     private void Start()
     {
         BaseState[] s = GetComponents<BaseState>();
@@ -77,11 +76,12 @@ public class AnimatorScriptControl : MonoBehaviour
 
     private string CheckState()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(currentState))
-            return currentState;
 
-        foreach (var st in state)
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName(st)) return st;
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName(currentState))
+                return currentState;
+
+            foreach (var st in state)
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName(st)) return st;
 
         Debug.LogError("Animator not in a recognized state!");
         return "";

@@ -15,4 +15,4 @@ MonoBehaviour:
   attackAnimation:
     originalClip: {fileID: 7400000, guid: a2265738fa13d5d4896a21ae26edd860, type: 2}
     overrideClip: {fileID: 7400000, guid: a2265738fa13d5d4896a21ae26edd860, type: 2}
-  attackModel: {fileID: 6828611147035003804, guid: 6bd13b84eb861834587be3afe2610cb1, type: 3}
+  attackModel: {fileID: 3786420489521222576, guid: f610ab8833aef8743bd8ddab319f312e, type: 3}

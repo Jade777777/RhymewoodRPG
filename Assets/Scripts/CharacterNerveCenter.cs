@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class CharacterNerveCenter : MonoBehaviour
@@ -35,6 +36,7 @@ public class CharacterNerveCenter : MonoBehaviour
 
     private void Update()
     {
+        SetAnimTime();
         animator.SetFloat("Speed", physicalInput.moveInput.magnitude);//mov cnc
         IsPushActive();
     }
@@ -115,6 +117,8 @@ public class CharacterNerveCenter : MonoBehaviour
     }
     public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
+        //if (gameObject.activeSelf == false) return;
+
         WeaponHitBox whb = hitBox as WeaponHitBox;
         if (hitBox.hitID == lastHitID || (whb!=null&&whb.cnc ==this)) 
         {
@@ -131,14 +135,7 @@ public class CharacterNerveCenter : MonoBehaviour
             statWarden.ImpactStat("Health", -damage.Value, new List<string>() { damage.Key });
 
         }
-        //agro
-        if (whb != null)
-        {
-            statWarden.GetLivingStat("Health", out _, out float maxValue);
-            hurtBox.cnc.ImpactAgro(whb.cnc.gameObject, totalDamage / maxValue);
 
-        }
-   
 
 
         GetComponent<HitStop>().ActivateHitStop(hitBox.hitStop);//0.13 is the default
@@ -160,6 +157,16 @@ public class CharacterNerveCenter : MonoBehaviour
 
         hitBox.GetKnockbackDistance(hurtBox, out Vector3 enemyKnockback , out _);
         GetComponent<HitStop>().ActivateKnockBack(enemyKnockback);
+
+        //agro
+        if (whb != null)
+        {
+            statWarden.GetLivingStat("Health", out _, out float maxValue);
+            hurtBox.cnc.ImpactAgro(whb.cnc.gameObject, (totalDamage / maxValue) + (enemyKnockback.magnitude/60));
+
+        }
+
+
     }
     public void StrikeHurtBox(WeaponHitBox hitBox, HurtBox hurtBox)
     {
@@ -173,14 +180,21 @@ public class CharacterNerveCenter : MonoBehaviour
             
 
     }
-
+    public UnityEvent CharacterDeath;
     public void Death()
     {
-        gameObject.SetActive(false);
         if (IsPlayer)
         {
-            SceneManager.LoadScene("GameOver");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            //SceneManager.LoadScene("GameOver");
+            return;
         }
+        CharacterDeath.Invoke();
+
+        gameObject.SetActive(false);
+       
+
     }
 
     public void ResetPoise()
@@ -282,6 +296,12 @@ public class CharacterNerveCenter : MonoBehaviour
         previousName = "";
     }
     
+    private void SetAnimTime()
+    {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float time = stateInfo.normalizedTime;
+        animator.SetFloat("AnimTime", time);
+    }
 
 
 

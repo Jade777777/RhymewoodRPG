@@ -61,11 +61,20 @@ public class SimpleHitBox : HitBox
             yield return new WaitForSeconds(tick);
             Debug.Log("Tick");
             generateNewID();
+            HashSet<HurtBox> trash = new();
             foreach (HurtBox hurtBox in activeTick)
             {
-                OnStrikeHurtBox(hurtBox);
+          
+                if (hurtBox.isActiveAndEnabled == true)
+                {
+                    OnStrikeHurtBox(hurtBox);
+                }
+                else
+                {
+                    trash.Add(hurtBox);
+                }
             }
-            
+            activeTick.ExceptWith(trash);
         }
     }
 

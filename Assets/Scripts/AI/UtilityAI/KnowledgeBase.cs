@@ -51,6 +51,9 @@ public class KnowledgeBase : MonoBehaviour
             case UtilityAxis.AgroEnemyDistance:// 0 means they are 20 meters or more away, 1 means they are within the weapons engagement distance
                 axisValue = AxisAgroEnemyDistance();
                 break;
+            case UtilityAxis.EnemyCount:// 0 means they are 20 meters or more away, 1 means they are within the weapons engagement distance
+                axisValue = AxisEnemyCount();
+                break;
             case UtilityAxis.ClosestFriendly://0 means they are 20 meters away, 1 means they are in the same position
                 axisValue = AxisFriendlyDistance();
                 break;
@@ -179,11 +182,17 @@ public class KnowledgeBase : MonoBehaviour
  
         float dangers = nuetralsSighted.Count + hostilesSighted.Count;
         float support = friendlysSighted.Count;
-        float threat = Mathf.Clamp01((dangers - support)/8);// 8 is the max amount of danger to take into acount, clamp the final value between 0 and 1 as it should be.
+        float threat = Mathf.Clamp01((dangers - support)/10);// 10 is the max amount of danger to take into acount, clamp the final value between 0 and 1 as it should be.
         //threat is determined by how many enemies&nueterals vs allies are present
         return threat;
     }
     
+    private float AxisEnemyCount()
+    {
+        float count = hostilesSighted.Count+(ClosestFriendlysEnemy==null?0:1);
+        count = Mathf.Clamp01(count / 10);
+        return count;
+    }
     private float AxisAgroEnemyDistance()
     {
 
@@ -297,5 +306,5 @@ public class KnowledgeBase : MonoBehaviour
 
 
 
-    public enum UtilityAxis { Health, Threat, Agro, AgroEnemyDistance, ClosestFriendly, ClosestCharacter}
+    public enum UtilityAxis { Health, Threat, Agro, AgroEnemyDistance, EnemyCount, ClosestFriendly, ClosestCharacter}
 }

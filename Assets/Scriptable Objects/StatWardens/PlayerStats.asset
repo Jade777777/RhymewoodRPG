@@ -39,7 +39,7 @@ MonoBehaviour:
     multiplyModifiers: []
     curveModifiers: []
   - name: Air Control
-    flatModifier: 10
+    flatModifier: 6
     multiplyModifiers: []
     curveModifiers: []
   emergentStats:
@@ -54,10 +54,8 @@ MonoBehaviour:
       multiplier: 0.5
     curveModifiers: []
   - name: Poise
-    flatModifier: 10
-    multiplyModifiers:
-    - referenceStat: Vigor
-      multiplier: 0.1
+    flatModifier: 5
+    multiplyModifiers: []
     curveModifiers: []
   - name: PoiseReset
     flatModifier: 5

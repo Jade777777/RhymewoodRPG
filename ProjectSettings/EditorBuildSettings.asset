@@ -21,8 +21,11 @@ EditorBuildSettings:
     path: Assets/Scenes/FirstPlayableLevels/FP_Level 3.unity
     guid: 06d33e75f89af0244b8e6f0375c3647d
   - enabled: 1
-    path: Assets/Scenes/PlayTest.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
+    path: Assets/Scenes/FirstPlayableLevels/FP_Level 4.unity
+    guid: 09d708fc273702c48a0c701820f6ba59
+  - enabled: 1
+    path: Assets/Scenes/FirstPlayableLevels/FP_Level 5.unity
+    guid: 42f39a6a09426b74690c6ac717e64270
   - enabled: 1
     path: Assets/Scenes/GameComplete.unity
     guid: 9ca570c3b297d644caf6d625a8902ab6

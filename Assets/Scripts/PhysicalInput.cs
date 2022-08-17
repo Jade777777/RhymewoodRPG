@@ -13,7 +13,7 @@ public class PhysicalInput : MonoBehaviour
     [SerializeField]
     int step = 10;
     [SerializeField]
-    float slideSlope=40;//This value must be the same value used in the slope checks of the animator
+    public float maxSlope=40;//This value must be the same value used in the slope checks of the animator
     public readonly int groundLayerMask = 1 << 0;//  ~(1<<3 + 1<<6 + 1<<7 + 1<<8);// ignores characters when checking for ground
 
     private GroundInfo groundInfo;
@@ -88,7 +88,7 @@ public class PhysicalInput : MonoBehaviour
                 Rigidbody target = hit.rigidbody;
                 groundInfo.lastHitPointVelocity = target != null ? target.GetPointVelocity(hit.point) : Vector3.zero;
 
-            if (Vector3.Angle(hit.normal, Vector3.up) >= slideSlope) isSlideSlope = true;
+            if (Vector3.Angle(hit.normal, Vector3.up) >= maxSlope) isSlideSlope = true;
 
 
         }
@@ -111,7 +111,7 @@ public class PhysicalInput : MonoBehaviour
                         Vector3 hitorigin = origin;
                         hitorigin.y = 0;
                         Vector3 offset = hitspot - hitorigin;
-                        offset = offset.normalized * 0.01f + (Vector3.up * 0.15f);// make sure raycast doesn't miss the edge.
+                        offset = offset.normalized * 0.01f*Vector3.Dot(hit.normal,Vector3.up) + (Vector3.up * 0.1f);// make sure raycast doesn't miss the edge.
                         if (Physics.Raycast(hit.point+offset, Vector3.down, out hit, 0.2f, groundLayerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
                         {
                             //Visualize
@@ -130,7 +130,7 @@ public class PhysicalInput : MonoBehaviour
                             Rigidbody target = hit.rigidbody;
                             groundInfo.lastHitPointVelocity = target != null ? target.GetPointVelocity(hit.point) : Vector3.zero;
 
-                            if (Vector3.Angle(hit.normal, Vector3.up) >= slideSlope) isSlideSlope = true;
+                            if (Vector3.Angle(hit.normal, Vector3.up) >= maxSlope) isSlideSlope = true;
                             if (!isSlideSlope)
                             break;
 

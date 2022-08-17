@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Weapon", order = 1)]
 public class Weapon : ScriptableObject
 {
-    public GameObject weaponModel;
+    public GameObject primaryWeaponModel;
+    public GameObject secondaryWeaponModel;
     public float engagementDistance = 2;
     public float pushDistance;// if the character is closer than this to an enemy they will push
     public List<Attack> attacks;

@@ -41,7 +41,6 @@ public static class JadeUtility
             }
             else
             {
-                Debug.Log("It has worked");
                 return GetComponentInParents<T>(parent);
             }
         }

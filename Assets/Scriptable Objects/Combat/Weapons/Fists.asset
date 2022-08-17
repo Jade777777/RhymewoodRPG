@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905241d365fe44546a204265a10327a3, type: 3}
+  m_Name: Fists
+  m_EditorClassIdentifier: 
+  primaryWeaponModel: {fileID: 6828611147035003804, guid: 6bd13b84eb861834587be3afe2610cb1, type: 3}
+  secondaryWeaponModel: {fileID: 6828611147035003804, guid: 6bd13b84eb861834587be3afe2610cb1, type: 3}
+  engagementDistance: 0.95
+  pushDistance: 0.3
+  attacks:
+  - {fileID: 11400000, guid: 0696704e72c8e3042af042bc48ba63c2, type: 2}
+  - {fileID: 11400000, guid: 73029265609c7174eb7ace84c47e12fb, type: 2}
+  baseQuirk:
+  - quirkType: Physical
+    baseDamage: 40
+    primalScaling: []

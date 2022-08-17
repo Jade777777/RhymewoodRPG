@@ -7,6 +7,7 @@ public class OrientArmsToCamera : MonoBehaviour
     CharacterNerveCenter cnc;
     public Rig runtimePlayerRig;
     public OverrideTransform overrideTransform;
+   
     public Transform cameraTarget;
     [Range(0,1)]
     public float OrientPlayerArms = 0;
@@ -34,7 +35,11 @@ public class OrientArmsToCamera : MonoBehaviour
         if (cnc.IsPlayer == true)
         {
             runtimePlayerRig.weight = OrientPlayerArms;
-            overrideTransform.data.rotation = cameraTarget.localRotation.eulerAngles;
+            Vector3 overrideRotation = cameraTarget.localRotation.eulerAngles;
+            overrideRotation.y = 0;
+            overrideRotation.z = 0;
+           
+            overrideTransform.data.rotation = overrideRotation;
             
         }
     }
