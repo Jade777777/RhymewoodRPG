@@ -26,9 +26,10 @@ public class HurtBox : MonoBehaviour
         characterRadius = JadeUtility.GetComponentInParents<CharacterController>(transform).radius;
     }
 
+    
     public void TakeDamage(HitBox hitBox)
     {
-        cnc.SruckByHitBox(hitBox, this);
+            cnc.SruckByHitBox(hitBox, this);
     }
 
 }

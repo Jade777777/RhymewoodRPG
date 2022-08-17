@@ -106,7 +106,7 @@ public class CharacterNerveCenter : MonoBehaviour
 
     //Environmental Interaction
     float resetPoiseTime = 0;
-    private int lastHitID;
+  
     public void StartBlocking()
     {
 
@@ -115,19 +115,28 @@ public class CharacterNerveCenter : MonoBehaviour
     {
 
     }
+    Queue<int> hitIDs = new();
+    int maxSize = 10;
     public void SruckByHitBox(HitBox hitBox,HurtBox hurtBox)
     {
-        //if (gameObject.activeSelf == false) return;
-
-        WeaponHitBox whb = hitBox as WeaponHitBox;
-        if (hitBox.hitID == lastHitID || (whb!=null&&whb.cnc ==this)) 
+        if (!hitIDs.Contains(hitBox.hitID))
         {
-            return;//skip if the hitbox
+            while (hitIDs.Count >= maxSize)
+            {
+                hitIDs.Dequeue();
+            }
+            hitIDs.Enqueue(hitBox.hitID);
         }
         else
         {
-            lastHitID = hitBox.hitID;
+            return;//don't do anything if the hitbox has already hit this target
         }
+            WeaponHitBox whb = hitBox as WeaponHitBox;
+        if ((whb!=null&&whb.cnc ==this)) 
+        {
+            return;//skip if the hitbox
+        }
+
         float totalDamage=0f;
         foreach (KeyValuePair<string, float> damage in hitBox.GetDamage())
         {

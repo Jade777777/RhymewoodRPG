@@ -355,10 +355,15 @@ public class BaseState : MonoBehaviour
         }
 
         movement();
-        
-        characterController.Move(animatedOverride * animator.speed * (moveDistance + (hitStop.knockBackVelocity*Time.deltaTime)));
+        characterController.Move(animatedOverride
+                        * animator.speed
+                        * (moveDistance + (hitStop.knockBackVelocity * Time.deltaTime))
+                        );
         animatedOverride = 1;
-        
+
+
+
+        Vector3 headOffset;
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {
             Vector3 camPos = head.position + cameraTarget.TransformDirection(cOffset);
@@ -372,10 +377,37 @@ public class BaseState : MonoBehaviour
             Quaternion camRot = weightedHeadRotation * cameraTarget.rotation;
 
             cameraController.SetPositionAndRotation(camPos, camRot);
+            head.localScale = Vector3.zero;
+            headOffset = transform.InverseTransformPoint(camPos);
+        }
+        else
+        {
+            headOffset = transform.InverseTransformPoint(head.position);
+            head.localScale = Vector3.one;
+        }
+        
+
+        headOffset.y = 0;
+        float excess = headOffset.magnitude - characterController.radius*0.7f;
+        Vector3 controllerOffsetDelta = Vector3.zero;
+        if (excess > 0f)//if its less than zero we do nothing, if its more we adjust
+        {
+            if (cnc.IsPlayer)
+                Debug.Log(excess);
+            Vector3 controllerOffset = headOffset.normalized*excess;
+            controllerOffsetDelta = controllerOffset - characterController.center;
+            controllerOffsetDelta.y = 0;
+            controllerOffsetDelta = transform.TransformVector(controllerOffsetDelta);
+
+
+            //characterController.center =new(controllerOffset.x,characterController.center.y,controllerOffset.z);
         }
 
-    }
 
+        
+
+    }
+    
     private delegate void Movement();
 
 
