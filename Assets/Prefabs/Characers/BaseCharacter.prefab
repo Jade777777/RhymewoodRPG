@@ -3760,6 +3760,7 @@ MonoBehaviour:
   radius: 0.3
   step: 10
   maxSlope: 40
+  originY: 0.88
 --- !u!114 &3773849262516254003
 MonoBehaviour:
   m_ObjectHideFlags: 0

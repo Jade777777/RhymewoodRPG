@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class HitStop : MonoBehaviour
 {
-    static readonly float hitPauseTime = 0.033f;//how long the animation initialy stops at 0 for( 1 frame at 30 fps )
-    static readonly float cleaveTime = 0.6f;
-    static readonly float cleaveSpeed = 0.4f;//how fast the hitstop starts at
-    static readonly float impactPauseTime = 0.25f;// how long the impact pauses for before the animation resumes.
-    static readonly float hitBoostSpeed = 2f;// the speed at which the animation accelerates to
-    static readonly float impactAccelerateTime = 0.1f;// how long the animation accelerates to this speed for;
+    public static readonly float hitPauseTime = 0.033f;//how long the animation initialy stops at 0 for( 1 frame at 30 fps )
+    public static readonly float cleaveTime = 0.6f;
+    public static readonly float cleaveSpeed = 0.4f;//how fast the hitstop starts at
+    public static readonly float impactPauseTime = 0.25f;// how long the impact pauses for before the animation resumes.
+    public static readonly float hitBoostSpeed = 2f;// the speed at which the animation accelerates to
+    public static readonly float impactAccelerateTime = 0.1f;// how long the animation accelerates to this speed for;
     
     private Animator animator;
     private float impactTime;// How long this hitstop occurs for in total;

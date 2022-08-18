@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7701296260793429412}
   - component: {fileID: 1879792480782465433}
   - component: {fileID: -6178901652283271852}
-  - component: {fileID: 6771530727532952024}
+  - component: {fileID: 20885710810031849}
   m_Layer: 7
   m_Name: Hurt Box
   m_TagString: Untagged
@@ -64,7 +64,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 3
---- !u!114 &6771530727532952024
+--- !u!114 &20885710810031849
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,7 +73,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7923835111867215480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b17d7d4fb7ede64a80b6d16f9447452, type: 3}
+  m_Script: {fileID: 11500000, guid: 554778474e86f5f41be003d9ffe75201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cnc: {fileID: 0}

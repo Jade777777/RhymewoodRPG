@@ -171,7 +171,7 @@ public class CharacterNerveCenter : MonoBehaviour
         if (whb != null)
         {
             statWarden.GetLivingStat("Health", out _, out float maxValue);
-            hurtBox.cnc.ImpactAgro(whb.cnc.gameObject, (totalDamage / maxValue) + (enemyKnockback.magnitude/60));
+            ImpactAgro(whb.cnc.gameObject, (totalDamage / maxValue) + (enemyKnockback.magnitude/60));
 
         }
 
@@ -180,7 +180,7 @@ public class CharacterNerveCenter : MonoBehaviour
     public void StrikeHurtBox(WeaponHitBox hitBox, HurtBox hurtBox)
     {
 
-            Debug.Log(transform.name + " Struck hurtbox " + hurtBox.cnc.transform.name);
+            Debug.Log(transform.name + " Struck hurtbox " + hurtBox.sourceObject.name);
             GetComponent<HitStop>().ActivateHitStop(hitBox.hitStop);//0.13 is the default
 
             hitBox.GetKnockbackDistance(hurtBox, out Vector3 _,out Vector3 selfKnockback);

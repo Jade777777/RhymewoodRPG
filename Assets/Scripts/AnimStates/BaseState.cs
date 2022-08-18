@@ -386,19 +386,14 @@ public class BaseState : MonoBehaviour
             head.localScale = Vector3.one;
         }
         
-
+        //The controlleroffset can be used to adjust the modelas well as the camera to ensure it does not collide with geometry
         headOffset.y = 0;
         float excess = headOffset.magnitude - characterController.radius*0.7f;
         Vector3 controllerOffsetDelta = Vector3.zero;
         if (excess > 0f)//if its less than zero we do nothing, if its more we adjust
         {
-            if (cnc.IsPlayer)
-                Debug.Log(excess);
-            Vector3 controllerOffset = headOffset.normalized*excess;
-            controllerOffsetDelta = controllerOffset - characterController.center;
-            controllerOffsetDelta.y = 0;
-            controllerOffsetDelta = transform.TransformVector(controllerOffsetDelta);
 
+            Vector3 controllerOffset = headOffset.normalized*excess;
 
             //characterController.center =new(controllerOffset.x,characterController.center.y,controllerOffset.z);
         }

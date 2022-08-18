@@ -258,7 +258,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.265
+  near clip plane: 0.09
   far clip plane: 1000
   field of view: 45
   orthographic: 0
@@ -802,6 +802,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1867846947054384809, guid: b68f0db0a92116d42b3b92e0af19b60b, type: 3}
       propertyPath: m_TranslationOffset.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2001433681170226150, guid: b68f0db0a92116d42b3b92e0af19b60b, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2042515443177878047, guid: b68f0db0a92116d42b3b92e0af19b60b, type: 3}
@@ -1535,6 +1539,10 @@ PrefabInstance:
     - target: {fileID: 7159751623108989565, guid: b68f0db0a92116d42b3b92e0af19b60b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.0000000034511518
+      objectReference: {fileID: 0}
+    - target: {fileID: 7268774438625907029, guid: b68f0db0a92116d42b3b92e0af19b60b, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7414749967613793196, guid: b68f0db0a92116d42b3b92e0af19b60b, type: 3}
       propertyPath: m_LocalRotation.w
