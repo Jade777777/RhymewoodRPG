@@ -100,6 +100,8 @@ public class PlayerFate : BaseFate
         }
     }
 
+
+    //Debuging
     public void OnSwapToWeapon1(InputValue input)
     {
         cnc.SwapToWeapon1();
@@ -112,5 +114,15 @@ public class PlayerFate : BaseFate
     {
         cnc.SwapToWeapon3();
     }
+
+
+    //FirstPlayableControls
+    public void OnEscape()
+    {
+        Application.Quit();
+        Debug.Log("You are in the editor");
+    }
+
+
     #endregion
 }

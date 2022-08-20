@@ -115,7 +115,8 @@ public class PhysicalInput : MonoBehaviour
                         Vector3 hitorigin = origin;
                         hitorigin.y = 0;
                         Vector3 offset = hitspot - hitorigin;
-                        offset = offset.normalized * 0.01f*Vector3.Dot(hit.normal,Vector3.up) + (Vector3.up * 0.1f);// make sure raycast doesn't miss the edge.
+                        
+                        offset = offset.normalized * (0.01f+(0.001f*i))*Vector3.Dot(hit.normal,Vector3.up) + (Vector3.up * 0.1f);// make sure raycast doesn't miss the edge.
                         if (Physics.Raycast(hit.point+offset, Vector3.down, out hit, 0.2f, groundLayerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
                         {
                             //Visualize
@@ -143,9 +144,16 @@ public class PhysicalInput : MonoBehaviour
                 }
             }
         }
-
-        groundInfo.angle = Vector3.Angle(groundInfo.normal, Vector3.up);
-
+        if (groundInfo.detectGround)
+        {
+            groundInfo.angle = Vector3.Angle(groundInfo.normal, Vector3.up);
+            
+        }
+        else
+        {
+            groundInfo.point = transform.position;
+            groundInfo.angle = 90;
+        }
         groundInfo.slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundInfo.normal).normalized;
 
         SendMessage("IsGrounded", groundInfo);

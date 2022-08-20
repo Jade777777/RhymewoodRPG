@@ -3811,7 +3811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementType: 0
-  moveInputWeight: 0.46
+  moveInputWeight: 0
   cameraInputWeight: 0.571
   cameraAnimationWeight: 0
   turnSpeed: 180
@@ -4084,7 +4084,7 @@ MonoBehaviour:
   moveInputWeight: 0
   cameraInputWeight: 1
   cameraAnimationWeight: 0.559
-  turnSpeed: 90
+  turnSpeed: 0
   smoothMoveInput: 4
 --- !u!114 &536630215583321151
 MonoBehaviour:

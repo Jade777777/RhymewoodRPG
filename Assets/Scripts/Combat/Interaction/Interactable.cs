@@ -1,28 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+
 using UnityEngine;
 using UnityEngine.Playables;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [RequireComponent(typeof(PlayableDirector))]
 [RequireComponent(typeof(Collider))]
+[ExecuteInEditMode]
 public class Interactable : MonoBehaviour
 {
     public Object placeholder;
     public Vector3 PositionOffset;
     public Vector3 RotationOffset;
+    [HideInInspector]
+    [SerializeField]
     PlayableDirector playableDirector;
+    [HideInInspector]
+    [SerializeField]
     Object[] keys;
+
     private void Awake()
     {
-        Debug.Assert(gameObject.layer == LayerMask.NameToLayer("Interactable"));
+        if (Application.isPlaying)
+        {
+            Debug.Assert(gameObject.layer == LayerMask.NameToLayer("Interactable"));
+        }
+#if UNITY_EDITOR
+        gatherPlayableDirectorData();
+#endif
+    }
+
+    //Only available in editor
+#if UNITY_EDITOR
+    private void gatherPlayableDirectorData()
+    {
+        Debug.Log("Updateing interactable keys.");
         playableDirector = GetComponent<PlayableDirector>();
-
-
         var obj = new SerializedObject(playableDirector);
         var bindings = obj.FindProperty("m_SceneBindings");
-        
-        keys = new Object[bindings.arraySize+1];
+
+        keys = new Object[bindings.arraySize + 1];
         if (bindings.arraySize > 0)
         {
             var outputs = playableDirector.playableAsset.outputs;
@@ -30,16 +51,13 @@ public class Interactable : MonoBehaviour
             foreach (var output in outputs)
             {
                 keys[i] = output.sourceObject;
-                
+
                 Debug.Log(i + "    " + output.sourceObject.name);
                 i++;
             }
         }
-
-
-
-
     }
+
     public static void DisplayBindings(PlayableDirector director)
     {
         var obj = new SerializedObject(director);
@@ -51,11 +69,10 @@ public class Interactable : MonoBehaviour
             var sceneObjProp = binding.FindPropertyRelative("value");
             var track = trackProp.objectReferenceValue;
             var sceneObj = sceneObjProp.objectReferenceValue;
-
-
             Debug.LogFormat("Binding {0} {1}", track != null ? track.name : "Null", sceneObj != null ? sceneObj.name : "Null");
         }
     }
+#endif
     public virtual void Activate(Animator animator)
     {
         Debug.Assert(playableDirector.duration > 0);

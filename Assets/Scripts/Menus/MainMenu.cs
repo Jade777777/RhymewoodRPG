@@ -8,10 +8,15 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.None;
+        Screen.fullScreen = true;
     }
     public void LoadFirstLevel()
     {
         Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(2);
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

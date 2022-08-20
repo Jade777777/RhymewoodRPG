@@ -9,21 +9,21 @@ public static class ScreenShake
 
     static float max = 10f;
     static float apex = 0.2f;
-    public static void Shake(float time, float magnitude,float frequency)
+    public static void Shake(float time, float maxAngle,float frequency)
     {
        
         if(cameraController == null)
         {
             cameraController = Camera.main.GetComponent<CameraController>();
         }
-        StaticCoroutine.Start(ShakeProcess(time,magnitude,frequency));
+        StaticCoroutine.Start(ShakeProcess(time,maxAngle,frequency));
 
     }
     
     static IEnumerator ShakeProcess(float time, float maxAngle, float frequency)
     {
         maxAngle = Mathf.Clamp(maxAngle, 0, max);
-        float position = 0;
+        float position;
         
         float startTime = Time.time;
         float apexTime = Time.time + (time * apex);
@@ -34,15 +34,15 @@ public static class ScreenShake
 
         while (endTime>Time.time) {
 
-            float smooth;
+            float fade;
             if (apexTime >= Time.time)// increas linear
             {
-                smooth =  Mathf.InverseLerp(startTime, apexTime, Time.time);
+                fade =  Mathf.InverseLerp(startTime, apexTime, Time.time);
             }
             else
             {
-                smooth = 1-Mathf.InverseLerp(apexTime, endTime, Time.time);
-                smooth *= smooth;//exponential fall off
+                fade = 1-Mathf.InverseLerp(apexTime, endTime, Time.time);
+                fade *= fade;//exponential fall off
             }
             position = frequency * Time.time;
      
@@ -52,7 +52,7 @@ public static class ScreenShake
                                                   Mathf.PerlinNoise(position, 30f) - 0.5f) *maxAngle;
             
 
-            cameraController.OffsetCamera(Vector3.zero, offsetRotation*smooth);
+            cameraController.OffsetCamera(Vector3.zero, offsetRotation*fade);
             yield return null;
         }
         Debug.Log("It's working!");

@@ -38,12 +38,13 @@ public class BaseState : MonoBehaviour
     protected PhysicalInput         physicalInput;
     protected Animator              animator;
     protected HitStop               hitStop;
-    protected CameraController                cameraController;
-    protected Transform                       head;
-    protected Transform                       cameraTarget;
-    protected CharacterNerveCenter            cnc;
-    protected AnimatorScriptControl           animatorScriptControl;
-    
+    protected CameraController      cameraController;
+    protected Transform             head;
+    protected Transform             cameraTarget;
+    protected CharacterNerveCenter  cnc;
+    protected AnimatorScriptControl animatorScriptControl;
+
+
     public enum MovementType { Ground, GroundSnap, Horizontal, Slide, Airborn, Animated };
 
     private Movement movement;
@@ -59,7 +60,7 @@ public class BaseState : MonoBehaviour
         cameraController          = Camera.main.GetComponent<CameraController>();
         characterStats      = GetComponent<StatWarden>().characterStats;
         hitStop             = GetComponent<HitStop>();
-
+ 
     }
     private void Start()
     {
@@ -93,69 +94,100 @@ public class BaseState : MonoBehaviour
     Vector3 moveDistance;
     protected void MoveAllongGround()
     {
-        Vector3 dir = (physicalInput.moveInput);
+        Vector3 dir = physicalInput.moveInput;
         dir.y = 0f;
-        Vector3 inputDirOnGround;
+        dir = dir.normalized * physicalInput.moveInput.magnitude;
+        Vector3 inputDirOnGround=dir;
         if (physicalInput.GroundData.angle < physicalInput.maxSlope)
         {
             inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
         }
-        else
-        {
-            inputDirOnGround = physicalInput.moveInput;
-        }
+
         inputDirOnGround.y = 0f;
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
 
         float targetY;
 
         float distToGround = physicalInput.GroundData.point.y - transform.position.y;
-        float fallDist = (physicalInput.internalVelocity.y - (9.8f * Time.deltaTime)) * Time.deltaTime;
+        float fallDist = 0;
 
-        if(physicalInput.GroundData.detectGround) fallDist = Mathf.Clamp(fallDist, distToGround, Mathf.Infinity);
-        targetY = physicalInput.GroundData.detectGround&&hitStop.knockBackVelocity==Vector3.zero ? distToGround : fallDist;
-        
-        targetY = Mathf.Sign(targetY) * Mathf.Pow(targetY,2f) * 50 * Time.deltaTime;
+        if (physicalInput.GroundData.angle < physicalInput.maxSlope && hitStop.knockBackVelocity == Vector3.zero)
+        {
+            targetY = Mathf.Sign(distToGround) * Mathf.Pow(distToGround, 2f) * 50 * Time.deltaTime;
+        }
+        else
+        {
+            fallDist = (physicalInput.internalVelocity.y - (9.8f * Time.deltaTime));
+            targetY = fallDist*Time.deltaTime;
+            Debug.Log(fallDist);
+            if (physicalInput.GroundData.detectGround)
+            {
+                targetY = Mathf.Clamp(targetY, distToGround, Mathf.Infinity);
+            }
+        }
+
 
         Vector3 moveSpeed = inputDirOnGround + physicalInput.GroundData.lastHitPointVelocity;
         moveDistance = (moveSpeed) * Time.deltaTime+(Vector3.up*targetY);
         
-        physicalInput.internalVelocity = moveSpeed;
+        physicalInput.internalVelocity = dir*characterStats.PrimalStats()["Move Speed"]
+                                         + physicalInput.GroundData.lastHitPointVelocity
+                                         + Vector3.up*fallDist;
     }
+    
     protected void SnapToGround()
     {
 
         float snapSpeed=Mathf.Max(Mathf.Abs(physicalInput.internalVelocity.y)*1.5f,0)  * Time.deltaTime;//snap to ground 1.5 times as fast as the fall speed
-        Vector3 dir = (physicalInput.moveInput);
+        Vector3 dir = physicalInput.moveInput;
         dir.y = 0f;
-        Vector3 inputDirOnGround;
+        dir = dir.normalized * physicalInput.moveInput.magnitude;
+        Vector3 inputDirOnGround = dir;
         if (physicalInput.GroundData.angle < physicalInput.maxSlope)
         {
             inputDirOnGround = Vector3.ProjectOnPlane(dir, physicalInput.GroundData.normal).normalized * physicalInput.moveInput.magnitude;
+            
         }
-        else
-        {
-            inputDirOnGround = physicalInput.moveInput;
-        }
+
         inputDirOnGround.y = 0f;
         inputDirOnGround *= characterStats.PrimalStats()["Move Speed"];
 
         float targetY;
 
         float distToGround = physicalInput.GroundData.point.y - transform.position.y;
-        float fallDist = (physicalInput.internalVelocity.y - (9.8f * Time.deltaTime)) * Time.deltaTime;
+        float fallDist = 0f; //(physicalInput.internalVelocity.y); 
 
-        if (physicalInput.GroundData.detectGround) fallDist = Mathf.Clamp(fallDist, distToGround, Mathf.Infinity);
-        targetY = physicalInput.GroundData.detectGround && hitStop.knockBackVelocity == Vector3.zero ? distToGround : fallDist;
-        if(Mathf.Abs(targetY) > snapSpeed*2)
+
+        if (physicalInput.GroundData.angle < physicalInput.maxSlope && hitStop.knockBackVelocity == Vector3.zero)
+        {
+            targetY = distToGround;
+            Debug.Log(targetY);
+
+        }
+        else
+        {
+            fallDist = physicalInput.internalVelocity.y; //- (9.8f * Time.deltaTime);
+            targetY = fallDist * Time.deltaTime;
+
+            if (physicalInput.GroundData.detectGround)
+            {
+                targetY = Mathf.Clamp(targetY, distToGround, Mathf.Infinity);
+            }
+        }
+
+
+        if (Mathf.Abs(targetY) > snapSpeed*2)
         {
             targetY = snapSpeed*Mathf.Sign(targetY);
         }
-
+ 
         Vector3 moveSpeed = inputDirOnGround + physicalInput.GroundData.lastHitPointVelocity;
+        
         moveDistance = (moveSpeed) * Time.deltaTime + (Vector3.up * targetY);
 
-        physicalInput.internalVelocity = moveSpeed+ Vector3.up*(physicalInput.internalVelocity.y-9.8f*2*Time.deltaTime);
+        physicalInput.internalVelocity = dir * characterStats.PrimalStats()["Move Speed"]
+                                         + physicalInput.GroundData.lastHitPointVelocity
+                                         + Vector3.up*(physicalInput.internalVelocity.y-9.8f*2*Time.deltaTime);
     }
 
     protected void MoveHorizontaly()
@@ -176,11 +208,12 @@ public class BaseState : MonoBehaviour
 
         float acceleration = 9.8f;
         float maxSpeed = 100;
+        float minSpeed = 4;
 
         Vector3 vel = physicalInput.internalVelocity;
         float inclineMultiplier = 1;
 
-        if (physicalInput.GroundData.detectGround)
+        if (physicalInput.GroundData.detectGround&&physicalInput.GroundData.angle> physicalInput.maxSlope)
         {
             vel = Vector3.ProjectOnPlane(vel, physicalInput.GroundData.normal);
             inclineMultiplier = physicalInput.GroundData.angle / 90;// slide less the shallower the angle.
@@ -189,8 +222,9 @@ public class BaseState : MonoBehaviour
         vel.y = Mathf.Clamp(vel.y, float.NegativeInfinity, 0);
         vel = Vector3.ClampMagnitude(vel, maxSpeed); 
         
-        Vector3 targetSlope =physicalInput.GroundData.slopeDir != Vector3.zero ? physicalInput.GroundData.slopeDir : Vector3.down;
-        //targetSlope = (targetSlope * (1 - slideControl));
+        Vector3 targetSlope =physicalInput.GroundData.slopeDir != Vector3.zero 
+                && physicalInput.GroundData.angle > physicalInput.maxSlope ? physicalInput.GroundData.slopeDir : Vector3.down;
+
         targetSlope.Normalize();
         Vector3 moveSpeed = Vector3.MoveTowards(vel, targetSlope * maxSpeed, (acceleration * Time.deltaTime) * inclineMultiplier);
         //Remove down vector from moveSpeed;
@@ -217,7 +251,6 @@ public class BaseState : MonoBehaviour
         }
         else
         {
-            float minSpeed= 3;
             down = Vector3.MoveTowards(down, targetSlope*minSpeed, -inputDirDown * AirControl * slideControl * Time.deltaTime);
         }
 
@@ -226,7 +259,9 @@ public class BaseState : MonoBehaviour
         moveSpeed += down;
 
         moveDistance =(moveSpeed*Time.deltaTime);
-        if (physicalInput.GroundData.detectGround && physicalInput.GroundData.angle<70)
+        if (physicalInput.GroundData.detectGround 
+            && physicalInput.GroundData.angle<70
+            &&physicalInput.GroundData.angle>physicalInput.maxSlope)
         {
             float targetY =physicalInput.GroundData.point.y - transform.position.y;
             targetY = Mathf.Sign(targetY) * Mathf.Pow(targetY, 2f) * 50 * Time.deltaTime;

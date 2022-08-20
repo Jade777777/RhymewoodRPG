@@ -126,11 +126,11 @@ MonoBehaviour:
       TargetLook:
         targetType: 6
         defaultPoint: {fileID: 0}
-      Type: 1
+      Type: 0
       buttonPress: 1
       Speed: 1
-      Angle: 110
-      MaxDistance: 0.2
+      Angle: 20
+      MaxDistance: 0.4
       MinDistance: 0
       BaseWaitTime: 2
       WaitTimeRandomize: 0.6
@@ -140,11 +140,11 @@ MonoBehaviour:
       TargetLook:
         targetType: 6
         defaultPoint: {fileID: 0}
-      Type: 1
+      Type: 0
       buttonPress: 1
       Speed: 1
-      Angle: 180
-      MaxDistance: 0.2
+      Angle: 20
+      MaxDistance: 0.4
       MinDistance: 0
       BaseWaitTime: 0.65
       WaitTimeRandomize: 0
@@ -158,7 +158,7 @@ MonoBehaviour:
       buttonPress: 1
       Speed: 0.5
       Angle: 0
-      MaxDistance: 0.2
+      MaxDistance: 0.4
       MinDistance: 0
       BaseWaitTime: 0.6
       WaitTimeRandomize: 0
@@ -176,7 +176,7 @@ MonoBehaviour:
       Speed: 1
       Angle: 0
       MaxDistance: 0.35
-      MinDistance: 0.3
+      MinDistance: 0.4
       BaseWaitTime: 1
       WaitTimeRandomize: 2
     - TargetPosition:
@@ -189,9 +189,9 @@ MonoBehaviour:
       buttonPress: 2
       Speed: 1
       Angle: 110
-      MaxDistance: 0.2
+      MaxDistance: 0.4
       MinDistance: 0
-      BaseWaitTime: 1.4
+      BaseWaitTime: 1.9
       WaitTimeRandomize: 0
     - TargetPosition:
         targetType: 6
@@ -203,9 +203,9 @@ MonoBehaviour:
       buttonPress: 1
       Speed: 1
       Angle: 0
-      MaxDistance: 0.2
+      MaxDistance: 0.4
       MinDistance: 0
-      BaseWaitTime: 0.65
+      BaseWaitTime: 0.75
       WaitTimeRandomize: 0
     - TargetPosition:
         targetType: 6
@@ -217,9 +217,9 @@ MonoBehaviour:
       buttonPress: 1
       Speed: 1
       Angle: 0
-      MaxDistance: 0.2
+      MaxDistance: 0.4
       MinDistance: 0
-      BaseWaitTime: 0.6
+      BaseWaitTime: 0.8
       WaitTimeRandomize: 0
     - TargetPosition:
         targetType: 6
@@ -244,13 +244,27 @@ MonoBehaviour:
       TargetLook:
         targetType: 6
         defaultPoint: {fileID: 0}
-      Type: 1
+      Type: 2
       buttonPress: 0
       Speed: 0.5
       Angle: 180
       MaxDistance: 0.7
       MinDistance: 0.2
-      BaseWaitTime: 0.65
+      BaseWaitTime: 0.3
+      WaitTimeRandomize: 0
+    - TargetPosition:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      TargetLook:
+        targetType: 6
+        defaultPoint: {fileID: 0}
+      Type: 3
+      buttonPress: 1
+      Speed: 1
+      Angle: 0
+      MaxDistance: 0
+      MinDistance: 0
+      BaseWaitTime: 0.9
       WaitTimeRandomize: 0
     - TargetPosition:
         targetType: 6
@@ -260,24 +274,10 @@ MonoBehaviour:
         defaultPoint: {fileID: 0}
       Type: 3
       buttonPress: 2
-      Speed: 1
-      Angle: 0
-      MaxDistance: 0
-      MinDistance: 0
-      BaseWaitTime: 0.6
-      WaitTimeRandomize: 0
-    - TargetPosition:
-        targetType: 6
-        defaultPoint: {fileID: 0}
-      TargetLook:
-        targetType: 6
-        defaultPoint: {fileID: 0}
-      Type: 3
-      buttonPress: 0
-      Speed: 1
+      Speed: 0.8
       Angle: 0
       MaxDistance: 100
-      MinDistance: 5
+      MinDistance: 10
       BaseWaitTime: 1
       WaitTimeRandomize: 5
   - BehaviorName: Retreat
@@ -301,7 +301,7 @@ MonoBehaviour:
         targetType: 6
         defaultPoint: {fileID: 0}
       TargetLook:
-        targetType: 6
+        targetType: 0
         defaultPoint: {fileID: 0}
       Type: 3
       buttonPress: 0

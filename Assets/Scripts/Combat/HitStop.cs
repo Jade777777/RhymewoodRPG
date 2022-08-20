@@ -21,11 +21,14 @@ public class HitStop : MonoBehaviour
     public void ActivateHitStop()
     {
         ActivateHitStop(0.13f);
+        
     }
     Coroutine cref;
     public void ActivateHitStop(float impactTime)
     {
-        if(impactTime == 0f)
+        ScreenShake.Shake(impactTime*1, 1,15);
+
+        if (impactTime == 0f)
         {
             return;
         }

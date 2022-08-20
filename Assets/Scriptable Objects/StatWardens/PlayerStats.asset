@@ -39,7 +39,7 @@ MonoBehaviour:
     multiplyModifiers: []
     curveModifiers: []
   - name: Air Control
-    flatModifier: 6
+    flatModifier: 3
     multiplyModifiers: []
     curveModifiers: []
   emergentStats:

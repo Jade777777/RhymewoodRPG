@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryWeaponModel: {fileID: 6828611147035003804, guid: 6bd13b84eb861834587be3afe2610cb1, type: 3}
   secondaryWeaponModel: {fileID: 6828611147035003804, guid: 6bd13b84eb861834587be3afe2610cb1, type: 3}
-  engagementDistance: 2
+  engagementDistance: 1.5
   pushDistance: 0.3
   attacks:
   - {fileID: 11400000, guid: 0696704e72c8e3042af042bc48ba63c2, type: 2}

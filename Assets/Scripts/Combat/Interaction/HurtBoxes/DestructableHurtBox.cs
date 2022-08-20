@@ -16,7 +16,7 @@ public class DestructableHurtBox : RigidBodyHurtBox
     private void OnEnable()
     {
         GetComponent<Collider>().isTrigger = false;
-        rb.isKinematic = false;
+        rb.isKinematic = true;
     }
     public override float CenterToBounds(Transform t)
     {
