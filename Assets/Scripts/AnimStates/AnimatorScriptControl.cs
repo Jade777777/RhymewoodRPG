@@ -19,11 +19,16 @@ public class AnimatorScriptControl : MonoBehaviour
     public float moveInputWeight = 1f;
     [Range(0f, 1f)]
     public float cameraInputWeight = 1f;
+    [HideInInspector]
     [Range(0f, 1f)]
     public float cameraAnimationWeight = 0.2f;
+    [SerializeField]
+    [Range(0f, 1f)]
+    public float cameraAnimationWeightTarget = 0.2f;
+    private float cameraAnimationWeightVelocity = 2f;
     public float turnSpeed = 360;
     public float smoothMoveInput = 4f;
-
+    
 
 
 
@@ -46,6 +51,7 @@ public class AnimatorScriptControl : MonoBehaviour
         currentScript = GetComponent(currentState) as BaseState;
         if (currentScript != null) currentScript.enabled = true;
     }
+
     private void LateUpdate()
     {
         string newState = CheckState();
@@ -60,6 +66,9 @@ public class AnimatorScriptControl : MonoBehaviour
                 ResetCurrentStateVar();
             }
         }
+        MoveTowardsTargetValues();
+
+
     }
     private void ResetCurrentStateVar()
     {
@@ -67,12 +76,17 @@ public class AnimatorScriptControl : MonoBehaviour
         movementType = currentState.movementType;
         moveInputWeight = currentState.moveInputWeight;
         cameraInputWeight = currentState.cameraInputWeight;
-        cameraAnimationWeight = currentState.cameraAnimationWeight;
+        cameraAnimationWeightTarget = currentState.cameraAnimationWeight;
         turnSpeed = currentState.turnSpeed;
         smoothMoveInput = currentState.smoothMoveInput;
         // Debug.Log("reset values!" +moveType);
     }
 
+    //adds smoothing to the adjustment of float values. This is done here to avoid extra complexity within the states.
+    private void MoveTowardsTargetValues()
+    {
+        cameraAnimationWeight = Mathf.MoveTowards(cameraAnimationWeight, cameraAnimationWeightTarget, cameraAnimationWeightVelocity * Time.deltaTime);
+    }
 
     private string CheckState()
     {
@@ -102,7 +116,7 @@ public class AnimatorScriptControl : MonoBehaviour
     }
     public void ASC_SetCameraAnimationWeight01(float value)
     {
-        cameraAnimationWeight = value;
+        cameraAnimationWeightTarget = value;
     }
     public void ASC_SetTurnSpeed(float value)
     {
@@ -112,6 +126,8 @@ public class AnimatorScriptControl : MonoBehaviour
     {
         smoothMoveInput = value;
     }
+
+
 
 }
 

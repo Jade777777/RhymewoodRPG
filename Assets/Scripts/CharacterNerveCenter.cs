@@ -85,7 +85,7 @@ public class CharacterNerveCenter : MonoBehaviour
     }
     public void Interact()
     {
-        SetTrigger("Interact");
+        GetComponent<CharacterInteraction>().CI_Interact();
     }
 
 

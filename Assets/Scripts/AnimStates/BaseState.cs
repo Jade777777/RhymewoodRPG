@@ -24,6 +24,18 @@ public class BaseState : MonoBehaviour
     public float cameraAnimationWeight = 0.2f;
 
     [SerializeField]
+    [Range(0f, 1f)]
+    public float stabalizeCameraY = 0f;
+
+    [SerializeField]
+    [Range(0f, 1f)]
+    public float stabalizeCameraX = 0f;
+
+    [SerializeField]
+    [Range(0f, 1f)]
+    public float stabalizeCameraZ = 0f;
+
+    [SerializeField]
     public float turnSpeed = 360;
 
     [SerializeField]
@@ -91,7 +103,16 @@ public class BaseState : MonoBehaviour
     #endregion
 
     #region Movement types
+
     Vector3 moveDistance;
+    private void MoveCC()
+    {
+        characterController.Move(animator.speed
+                                * (moveDistance + (hitStop.knockBackVelocity * Time.deltaTime))
+                                );
+    }
+
+   
     protected void MoveAllongGround()
     {
         Vector3 dir = physicalInput.moveInput;
@@ -119,7 +140,6 @@ public class BaseState : MonoBehaviour
         {
             fallDist = (physicalInput.internalVelocity.y - (9.8f * Time.deltaTime));
             targetY = fallDist*Time.deltaTime;
-            Debug.Log(fallDist);
             if (physicalInput.GroundData.detectGround)
             {
                 targetY = Mathf.Clamp(targetY, distToGround, Mathf.Infinity);
@@ -133,6 +153,8 @@ public class BaseState : MonoBehaviour
         physicalInput.internalVelocity = dir*characterStats.PrimalStats()["Move Speed"]
                                          + physicalInput.GroundData.lastHitPointVelocity
                                          + Vector3.up*fallDist;
+
+        MoveCC();
     }
     
     protected void SnapToGround()
@@ -155,18 +177,16 @@ public class BaseState : MonoBehaviour
         float targetY;
 
         float distToGround = physicalInput.GroundData.point.y - transform.position.y;
-        float fallDist = 0f; //(physicalInput.internalVelocity.y); 
+        
 
 
         if (physicalInput.GroundData.angle < physicalInput.maxSlope && hitStop.knockBackVelocity == Vector3.zero)
         {
             targetY = distToGround;
-            Debug.Log(targetY);
-
         }
         else
         {
-            fallDist = physicalInput.internalVelocity.y; //- (9.8f * Time.deltaTime);
+            float fallDist = physicalInput.internalVelocity.y; //- (9.8f * Time.deltaTime);
             targetY = fallDist * Time.deltaTime;
 
             if (physicalInput.GroundData.detectGround)
@@ -188,6 +208,8 @@ public class BaseState : MonoBehaviour
         physicalInput.internalVelocity = dir * characterStats.PrimalStats()["Move Speed"]
                                          + physicalInput.GroundData.lastHitPointVelocity
                                          + Vector3.up*(physicalInput.internalVelocity.y-9.8f*2*Time.deltaTime);
+
+        MoveCC();
     }
 
     protected void MoveHorizontaly()
@@ -200,6 +222,8 @@ public class BaseState : MonoBehaviour
         moveDistance =(moveSpeed) * Time.deltaTime;
         physicalInput.internalVelocity = moveSpeed;
 
+
+        MoveCC();
     }
 
 
@@ -269,6 +293,10 @@ public class BaseState : MonoBehaviour
         }
 
         physicalInput.internalVelocity = moveSpeed;
+
+
+
+        MoveCC();
     }
     private void Airborn()
     {
@@ -299,12 +327,14 @@ public class BaseState : MonoBehaviour
             
         }
         physicalInput.internalVelocity = moveSpeed+ Vector3.up*physicalInput.Velocity.y;
+
+
+
+        MoveCC();
     }
 
-    float animatedOverride;
     private void Animated()
     {
-        animatedOverride = 0;
         moveDistance = Vector3.zero;
         physicalInput.internalVelocity = physicalInput.Velocity;
     }
@@ -323,12 +353,15 @@ public class BaseState : MonoBehaviour
            
             Vector3 lookY = new Vector3(-weightedLookInput.y, 0, 0) * 0.05f;
             lookY = cameraTarget.localRotation.eulerAngles + lookY;
-            lookY.x = JadeMath.ClampAngle(lookY.x, -89, 89);
+            lookY.x = JadeMath.ClampAngle(lookY.x, -85, 85);
             cameraTarget.localRotation = Quaternion.Euler(lookY);
 
         }
     }
-    
+    public void ResetLookInput()
+    {
+        cameraTarget.localRotation = Quaternion.identity;
+    }
     public void NPCLookInput(Vector3 direction)//add in rotation speed
     {
        
@@ -390,15 +423,27 @@ public class BaseState : MonoBehaviour
         }
 
         movement();
-        characterController.Move(animatedOverride
-                        * animator.speed
-                        * (moveDistance + (hitStop.knockBackVelocity * Time.deltaTime))
-                        );
-        animatedOverride = 1;
 
 
 
-        Vector3 headOffset;
+        CameraPosAndRot(out Vector3 headOffset, out float excess);
+
+        Vector3 controllerOffsetDelta = Vector3.zero;
+        if (excess > 0f)//if its less than zero we do nothing, if its more we adjust
+        {
+
+            Vector3 controllerOffset = headOffset.normalized * excess;
+
+            //characterController.center =new(controllerOffset.x,characterController.center.y,controllerOffset.z);
+        }
+
+
+
+
+    }
+
+    private void CameraPosAndRot(out Vector3 headOffset, out float excess)
+    {
         if (cnc.IsPlayer)//if the character is being controlled by the player as of Awake
         {
             Vector3 camPos = head.position + cameraTarget.TransformDirection(cOffset);
@@ -407,9 +452,9 @@ public class BaseState : MonoBehaviour
             camPos.z = Mathf.Clamp(camPos.z, -0.15f, float.PositiveInfinity);
             camPos = head.TransformPoint(camPos); // change them back to global
 
-            Quaternion weightedHeadRotation = head.rotation * Quaternion.Inverse(transform.rotation);
-            weightedHeadRotation = Quaternion.Lerp(Quaternion.identity, weightedHeadRotation, animatorScriptControl.cameraAnimationWeight);
-            Quaternion camRot = weightedHeadRotation * cameraTarget.rotation;
+            Quaternion relativeHeadRotation = head.rotation * Quaternion.Inverse(transform.rotation);
+            Quaternion weightedHeadRotation = Quaternion.Lerp(cameraTarget.rotation, relativeHeadRotation * transform.rotation, animatorScriptControl.cameraAnimationWeight);
+            Quaternion camRot = weightedHeadRotation;
 
             cameraController.SetPositionAndRotation(camPos, camRot);
             head.localScale = Vector3.zero;
@@ -420,24 +465,12 @@ public class BaseState : MonoBehaviour
             headOffset = transform.InverseTransformPoint(head.position);
             head.localScale = Vector3.one;
         }
-        
+
         //The controlleroffset can be used to adjust the modelas well as the camera to ensure it does not collide with geometry
         headOffset.y = 0;
-        float excess = headOffset.magnitude - characterController.radius*0.7f;
-        Vector3 controllerOffsetDelta = Vector3.zero;
-        if (excess > 0f)//if its less than zero we do nothing, if its more we adjust
-        {
-
-            Vector3 controllerOffset = headOffset.normalized*excess;
-
-            //characterController.center =new(controllerOffset.x,characterController.center.y,controllerOffset.z);
-        }
-
-
-        
-
+        excess = headOffset.magnitude - characterController.radius * 0.7f;
     }
-    
+
     private delegate void Movement();
 
 

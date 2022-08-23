@@ -71,8 +71,8 @@ public class PhysicalInput : MonoBehaviour
 
     private void GatherGroundInfo()
     {
-        float groundDistance = this.groundDistance+ Mathf.Clamp(velocity.y*Time.deltaTime, float.NegativeInfinity, 0);//keeps landing from feeling squishy due to a partial move.
-        
+        float groundDistance = this.groundDistance + Mathf.Clamp(velocity.y * Time.deltaTime, float.NegativeInfinity, 0);//keeps landing from feeling squishy due to a partial move.
+
         Vector3 origin = transform.position + (Vector3.up * originY);
         float minYPoint = transform.position.y - groundDistance;
 
@@ -84,19 +84,19 @@ public class PhysicalInput : MonoBehaviour
         bool isSlideSlope = false;
         if (grounded)
         {
-                Debug.DrawRay(origin, Vector3.down * (hit.distance), Color.red, 0);
-                groundInfo.detectGround = true;
-                groundInfo.normal = hit.normal;
-                groundInfo.point = hit.point;
+            Debug.DrawRay(origin, Vector3.down * (hit.distance), Color.red, 0);
+            groundInfo.detectGround = true;
+            groundInfo.normal = hit.normal;
+            groundInfo.point = hit.point;
 
-                Rigidbody target = hit.rigidbody;
-                groundInfo.lastHitPointVelocity = target != null ? target.GetPointVelocity(hit.point) : Vector3.zero;
+            Rigidbody target = hit.rigidbody;
+            groundInfo.lastHitPointVelocity = target != null ? target.GetPointVelocity(hit.point) : Vector3.zero;
 
             if (Vector3.Angle(hit.normal, Vector3.up) >= maxSlope) isSlideSlope = true;
 
 
         }
-        if (grounded == false||isSlideSlope)
+        if (grounded == false || isSlideSlope)
         {
 
             for (int i = 1; i < step; i++)//start at 1 because we already did one check with the raycast above
@@ -105,20 +105,33 @@ public class PhysicalInput : MonoBehaviour
 
 
 
-                if (Physics.SphereCast(origin,currentRadius,Vector3.down,out hit, groundDistance + originY, groundLayerMask, QueryTriggerInteraction.Ignore))
+                if (Physics.SphereCast(origin, currentRadius, Vector3.down, out hit, groundDistance + originY, groundLayerMask, QueryTriggerInteraction.Ignore))
                 {
                     if (hit.point.y >= minYPoint)
                     {
                         Vector3 hitspot = hit.point;
-                        
+
                         hitspot.y = 0;
                         Vector3 hitorigin = origin;
                         hitorigin.y = 0;
-                        Vector3 offset = hitspot - hitorigin;
-                        
-                        offset = offset.normalized * (0.01f+(0.001f*i))*Vector3.Dot(hit.normal,Vector3.up) + (Vector3.up * 0.1f);// make sure raycast doesn't miss the edge.
-                        if (Physics.Raycast(hit.point+offset, Vector3.down, out hit, 0.2f, groundLayerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
+                        Vector3 offsetXZ = hitspot - hitorigin;
+
+                        offsetXZ = offsetXZ.normalized * (0.01f + (0.001f * i)) * Vector3.Dot(hit.normal, Vector3.up);
+                        Vector3 offsetY=(Vector3.up * 0.1f);// make sure raycast doesn't miss the edge.
+                        bool altRay = Physics.Raycast(hit.point + offsetY - offsetXZ, Vector3.down, out RaycastHit altHit, 0.2f, groundLayerMask, QueryTriggerInteraction.Ignore);
+                        Debug.Log(altRay);
+                        if (Physics.Raycast(hit.point + offsetY + offsetXZ, Vector3.down, out hit, 0.2f, groundLayerMask, QueryTriggerInteraction.Ignore))//check the ground with a raycast to account for corner normals
                         {
+                            Debug.Log("Ray "+ Vector3.Angle(hit.normal, Vector3.up)+ "AltRay " + Vector3.Angle(altHit.normal, Vector3.up));
+                            if (altRay && Vector3.Angle(hit.normal, Vector3.up) >= maxSlope)
+                            {
+  
+                                //check if the altray is greater than the normal angle, if it is swaped.// this isn't wokring
+                                if (Vector3.Angle(altHit.normal, Vector3.up)> Vector3.Angle(hit.normal, Vector3.up))
+                                {
+                                    hit = altHit;
+                                }
+                            }
                             //Visualize
                             Debug.DrawRay(origin + Vector3.back * currentRadius, Vector3.down * (groundDistance + originY), Color.red, 0);
                             Debug.DrawRay(origin + Vector3.forward * currentRadius, Vector3.down * (groundDistance + originY), Color.red, 0);
@@ -127,7 +140,8 @@ public class PhysicalInput : MonoBehaviour
                             //--------------
 
                             //We are grounded! lets get outa here!
-                            Debug.DrawRay(groundInfo.point + (Vector3.up * 0.1f), Vector3.down * 0.1f, Color.green, 0f);
+                            Debug.DrawRay(altHit.point + (Vector3.up * 0.1f), Vector3.down * 0.1f, Color.blue, .01f);
+                            Debug.DrawRay(groundInfo.point + (Vector3.up * 0.1f), Vector3.down * 0.1f, Color.green, .01f);
                             groundInfo.detectGround = true;
                             groundInfo.normal = hit.normal;
                             groundInfo.point = hit.point;
@@ -137,24 +151,27 @@ public class PhysicalInput : MonoBehaviour
 
                             if (Vector3.Angle(hit.normal, Vector3.up) >= maxSlope) isSlideSlope = true;
                             if (!isSlideSlope)
-                            break;
+                                break;
 
                         }
                     }
                 }
             }
         }
-        if (groundInfo.detectGround)
+        if (groundInfo.detectGround) 
         {
-            groundInfo.angle = Vector3.Angle(groundInfo.normal, Vector3.up);
             
+            Debug.DrawRay(groundInfo.point + (Vector3.up * 0.5f), Vector3.down * 0.5f, Color.green, 0f);
+            groundInfo.angle = Vector3.Angle(groundInfo.normal, Vector3.up);
+            groundInfo.slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundInfo.normal).normalized;
         }
         else
         {
             groundInfo.point = transform.position;
             groundInfo.angle = 90;
+            groundInfo.slopeDir = Vector3.down;
         }
-        groundInfo.slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundInfo.normal).normalized;
+
 
         SendMessage("IsGrounded", groundInfo);
     }

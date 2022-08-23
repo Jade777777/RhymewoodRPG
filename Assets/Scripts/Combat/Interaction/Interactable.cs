@@ -23,20 +23,21 @@ public class Interactable : MonoBehaviour
     [SerializeField]
     Object[] keys;
 
+
     private void Awake()
     {
         if (Application.isPlaying)
-        {
+        { 
             Debug.Assert(gameObject.layer == LayerMask.NameToLayer("Interactable"));
         }
 #if UNITY_EDITOR
-        gatherPlayableDirectorData();
+        GatherPlayableDirectorData();
 #endif
     }
 
     //Only available in editor
 #if UNITY_EDITOR
-    private void gatherPlayableDirectorData()
+    private void GatherPlayableDirectorData()
     {
         Debug.Log("Updateing interactable keys.");
         playableDirector = GetComponent<PlayableDirector>();
@@ -73,31 +74,114 @@ public class Interactable : MonoBehaviour
         }
     }
 #endif
+
+
     public virtual void Activate(Animator animator)
     {
-        Debug.Assert(playableDirector.duration > 0);
-        if (playableDirector.duration == 0 || playableDirector.state == PlayState.Playing) return;
+        if (Application.isPlaying)
+        {
+            Debug.Assert(playableDirector.duration > 0);
+            if (playableDirector.duration == 0 || playableDirector.state == PlayState.Playing) return;
+
+            StartCoroutine(ActivateInitiator(animator));
+            if (transform.parent!=null && transform.parent.TryGetComponent<AnimatorScriptControl>(out _))//if they have an animator script control they must have an animator
+            {
+                StartCoroutine(ActivateSource(transform.parent.GetComponent<Animator>()));
+            }
+        }
+    }
+
+
+
+    float smoothTime=1f;
+    IEnumerator ActivateInitiator(Animator animator)
+    {
+        
+        animator.Play("AutoInteract");
+        animator.speed = 0;
         
         GameObject initiator = animator.gameObject;
+
+        initiator.GetComponent<AnimatorScriptControl>().cameraAnimationWeightTarget = 0;
+        
+
+        Vector3 initialPosition = initiator.transform.position;
+        Quaternion initialRotation = initiator.transform.rotation;
+        initiator.transform.SetPositionAndRotation(initialPosition, initialRotation);
        
-        Vector3 characterPos = transform.position + transform.rotation * PositionOffset;
-        initiator.transform.position = characterPos;
-        Vector3 interactablePos = transform.position;
-        Vector3 direction = interactablePos - characterPos;
+
+        Vector3 targetPosition = transform.position + transform.rotation * PositionOffset;
+        Vector3 direction = transform.position - targetPosition;
         direction.y = 0;
-        initiator.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
 
-        playableDirector.ClearGenericBinding(keys[0]);
-        playableDirector.SetGenericBinding(keys[0], initiator);
 
-        playableDirector.Play();
         Debug.Log(gameObject.name + " HAS BEEN ACTIVATED!");
 
 
+        float timer=0;
+        while (timer <= smoothTime)
+        {
+            timer += Time.deltaTime;
+            Vector3 currentPos = Vector3.Slerp(initialPosition-transform.position, targetPosition-transform.position, timer / smoothTime);
+            Quaternion currentRot = Quaternion.Slerp(initialRotation, targetRotation, timer / smoothTime);
+            initiator.transform.SetPositionAndRotation(currentPos+transform.position, currentRot);
+
+
+            yield return null;
+        }
+        initiator.GetComponent<CharacterController>().enabled = false;
+
+
+        animator.gameObject.GetComponent<AnimatorScriptControl>().cameraAnimationWeightTarget = 1;
+        playableDirector.ClearGenericBinding(keys[0]);
+        playableDirector.SetGenericBinding(keys[0], initiator);
+        playableDirector.Play();
+        playableDirector.stopped += x => EndInteraction(animator);
+
+
+
+    }
+    IEnumerator ActivateSource(Animator animator)
+    {
+
+        animator.Play("AutoInteract");
         animator.speed = 0;
-        playableDirector.stopped += x => animator.speed = 1;
-            
+
+        GameObject source = animator.gameObject;
+
+        source.GetComponent<AnimatorScriptControl>().cameraAnimationWeightTarget = 0;
         
 
+
+
+        float timer = 0;
+        while (timer <= smoothTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        source.GetComponent<CharacterController>().enabled = false;
+
+
+        animator.gameObject.GetComponent<AnimatorScriptControl>().cameraAnimationWeightTarget = 1;
+        playableDirector.ClearGenericBinding(keys[1]);
+        playableDirector.SetGenericBinding(keys[1], source);
+        playableDirector.Play();
+        playableDirector.stopped += x => EndInteraction(animator);
+
+
+
+    }
+    private void EndInteraction(Animator animator)
+    {
+       
+        if (gameObject != null&& gameObject.activeInHierarchy)
+        {
+            animator.gameObject.GetComponent<CharacterController>().enabled = true;
+            animator.Rebind();
+            animator.Update(0f);
+            animator.speed = 1;
+        }
     }
 }

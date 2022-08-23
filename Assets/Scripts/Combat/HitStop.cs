@@ -26,8 +26,8 @@ public class HitStop : MonoBehaviour
     Coroutine cref;
     public void ActivateHitStop(float impactTime)
     {
-        ScreenShake.Shake(impactTime*1, 1,15);
 
+        //ScreenShake.Shake(impactTime * 1, 2, 20);
         if (impactTime == 0f)
         {
             return;
@@ -51,9 +51,10 @@ public class HitStop : MonoBehaviour
     IEnumerator HitStopProcess()
     {
         //Allow user to visualy process initial hit
+        
         animator.speed = 0;
         yield return new WaitForSeconds(hitPauseTime);
-
+        
 
         //cleave through the target, put force and motion into the hit
         float cleaveTimer = 0;
@@ -82,6 +83,7 @@ public class HitStop : MonoBehaviour
             yield return null; 
         }
         accelerateTimer = 0f;
+        
         while (accelerateTimer<halfAccelerateTime)
         {
             animator.speed = Mathf.SmoothStep(hitBoostSpeed, 1, accelerateTimer / halfAccelerateTime);
