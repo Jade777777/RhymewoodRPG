@@ -22,7 +22,7 @@ public class BaseDeath : BaseState
             weightedHeadRotation = Quaternion.Lerp(Quaternion.identity, weightedHeadRotation, animatorScriptControl.cameraAnimationWeight);
             Quaternion camRot = weightedHeadRotation * cameraTarget.rotation;
 
-            cameraController.SetPositionAndRotation(camPos, camRot);
+            cameraController.SetPositionAndRotation(camPos, camRot,Vector3.zero);
         }
 
     }

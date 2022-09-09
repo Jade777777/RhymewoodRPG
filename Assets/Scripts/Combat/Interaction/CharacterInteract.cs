@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterInteraction : MonoBehaviour
+public class CharacterInteract : MonoBehaviour
 {
     private Camera mainCamera;
     public float interactionDistance;

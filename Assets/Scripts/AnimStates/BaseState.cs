@@ -456,7 +456,8 @@ public class BaseState : MonoBehaviour
             Quaternion weightedHeadRotation = Quaternion.Lerp(cameraTarget.rotation, relativeHeadRotation * transform.rotation, animatorScriptControl.cameraAnimationWeight);
             Quaternion camRot = weightedHeadRotation;
 
-            cameraController.SetPositionAndRotation(camPos, camRot);
+
+            cameraController.SetPositionAndRotation(camPos, camRot, physicalInput.Velocity);
             head.localScale = Vector3.zero;
             headOffset = transform.InverseTransformPoint(camPos);
         }

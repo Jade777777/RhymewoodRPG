@@ -18,17 +18,17 @@ public class Interactable : MonoBehaviour
     public Vector3 RotationOffset;
     [HideInInspector]
     [SerializeField]
-    PlayableDirector playableDirector;
+    protected PlayableDirector playableDirector;
     [HideInInspector]
     [SerializeField]
-    Object[] keys;
+    protected Object[] keys;
 
 
     private void Awake()
     {
         if (Application.isPlaying)
         { 
-            Debug.Assert(gameObject.layer == LayerMask.NameToLayer("Interactable"));
+            //Debug.Assert(gameObject.layer == LayerMask.NameToLayer("Interactable"));
         }
 #if UNITY_EDITOR
         GatherPlayableDirectorData();
@@ -93,7 +93,7 @@ public class Interactable : MonoBehaviour
 
 
 
-    float smoothTime=1f;
+    float smoothTime= 0.25f;
     IEnumerator ActivateInitiator(Animator animator)
     {
         
@@ -147,13 +147,8 @@ public class Interactable : MonoBehaviour
 
         animator.Play("AutoInteract");
         animator.speed = 0;
-
         GameObject source = animator.gameObject;
-
         source.GetComponent<AnimatorScriptControl>().cameraAnimationWeightTarget = 0;
-        
-
-
 
         float timer = 0;
         while (timer <= smoothTime)
@@ -163,15 +158,11 @@ public class Interactable : MonoBehaviour
         }
         source.GetComponent<CharacterController>().enabled = false;
 
-
         animator.gameObject.GetComponent<AnimatorScriptControl>().cameraAnimationWeightTarget = 1;
         playableDirector.ClearGenericBinding(keys[1]);
         playableDirector.SetGenericBinding(keys[1], source);
         playableDirector.Play();
         playableDirector.stopped += x => EndInteraction(animator);
-
-
-
     }
     private void EndInteraction(Animator animator)
     {

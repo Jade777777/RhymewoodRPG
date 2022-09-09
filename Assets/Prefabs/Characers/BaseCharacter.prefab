@@ -3459,6 +3459,7 @@ GameObject:
   - component: {fileID: 7435372180280949770}
   - component: {fileID: 1846377948934560360}
   - component: {fileID: 5940548488857908987}
+  - component: {fileID: 8336221500933206895}
   - component: {fileID: 563160036216793745}
   - component: {fileID: 6706544252130823730}
   - component: {fileID: 1080491745611857577}
@@ -3490,7 +3491,6 @@ GameObject:
   - component: {fileID: 2485016473862610337}
   - component: {fileID: 5126984437493816003}
   - component: {fileID: 7438201799784866605}
-  - component: {fileID: 7454130599867714753}
   m_Layer: 3
   m_Name: BaseCharacter
   m_TagString: Untagged
@@ -3563,6 +3563,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kin: {fileID: 11400000, guid: 81eaf0b876c534044b3d265f735f80f5, type: 2}
+--- !u!114 &8336221500933206895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682202046665893192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c3861cfb4b64604a9e98142af3afb25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionDistance: 3
+  interactionAngle: 30
 --- !u!114 &563160036216793745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4514,20 +4528,6 @@ MonoBehaviour:
   infusion: {fileID: 11400000, guid: b5f2c66c7e349f445a8c656b73342baa, type: 2}
   primaryWeaponJoint: {fileID: 3944669843628652589}
   secondaryWeaponJoint: {fileID: 7965528478027350606}
---- !u!114 &7454130599867714753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8682202046665893192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69bf76798afcdc046a3d687df52b60b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionDistance: 3
-  interactionAngle: 20
 --- !u!1 &8716332547861254460
 GameObject:
   m_ObjectHideFlags: 0

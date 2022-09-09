@@ -3293,6 +3293,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &1090701226
 GameObject:
   m_ObjectHideFlags: 0
@@ -5000,7 +5001,6 @@ GameObject:
   - component: {fileID: 1600574710}
   - component: {fileID: 1600574709}
   - component: {fileID: 1600574708}
-  - component: {fileID: 1600574712}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -5107,18 +5107,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1600574712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600574707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76fed515c5ff57d4ab842acab0797cba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1621204476
 PrefabInstance:
   m_ObjectHideFlags: 0

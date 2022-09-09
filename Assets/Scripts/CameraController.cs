@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    private const float ease = 0.999999f;
+    private const float tiltMultiplier = 1;
     private Quaternion rotationTarget;
     private Vector3 positionTarget;
     private Vector3 totalOffsetPosition = Vector3.zero;
@@ -15,11 +17,15 @@ public class CameraController : MonoBehaviour
         totalOffsetRotation *= Quaternion.Euler(offsetRotation);
     }
 
-    public void SetPositionAndRotation(Vector3 position, Quaternion rotation) // this should be called once per late update
+    public void SetPositionAndRotation(Vector3 position, Quaternion rotation,Vector3 velocity) // this should be called once per late update
     {
-        rotationTarget = rotation * totalOffsetRotation;
+        Vector3 rollDirection = Vector3.Project(velocity, transform.right);
+        float rollMagnitude = rollDirection.magnitude* -Mathf.Sign(Vector3.Dot(rollDirection, transform.right));
+
+        Quaternion roll = Quaternion.AngleAxis(rollMagnitude*tiltMultiplier,Vector3.forward); 
+
+        rotationTarget = rotation * totalOffsetRotation * roll;
         positionTarget = position + totalOffsetPosition;
-        //transform.SetPositionAndRotation(position + totalOffsetPosition, rotation*totalOffsetRotation);
 
         totalOffsetPosition = Vector3.zero;
         totalOffsetRotation = Quaternion.identity;
@@ -27,6 +33,6 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         transform.position = positionTarget;
-        transform.rotation = JadeMath.EaseQuaternion(transform.rotation, rotationTarget, 0.999999f, Time.deltaTime);// you can tell this has an effect because we can look at the players body.
+        transform.rotation = JadeMath.EaseQuaternion(transform.rotation, rotationTarget, ease, Time.deltaTime);// you can tell this has an effect because we can look at the players body.
     }
 }
